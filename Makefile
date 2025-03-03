@@ -3,16 +3,20 @@ NAME = ircserv
 CXX = c++
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 
-SRC = src/main.cpp src/Span.cpp
+SRC = srcs/main.cpp 
 OBJ_DIR = .build
-OBJ = $(SRC:src/%.cpp=$(OBJ_DIR)/%.o)
+OBJ = $(SRC:srcs/%.cpp=$(OBJ_DIR)/%.o)
+HEADERS = includes/Server.hpp
 
 all: $(NAME)
+
+dev: CFLAGS = -std=c++98
+dev: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CXX) $(CFLAGS) -o $(NAME) $(OBJ)
 
-$(OBJ_DIR)/%.o: src/%.cpp inc/Span.hpp | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: srcs/%.cpp $(HEADERS) | $(OBJ_DIR)
 	$(CXX) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
@@ -26,4 +30,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re dev
