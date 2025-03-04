@@ -9,10 +9,7 @@ int main(int argc, char **argv)
         serv.initialize(argc, argv);
         serv.infos();
     }
-    catch (const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
+    catch (const std::exception& e) {std::cerr << e.what() << '\n'; return 1;}
     
 
 }
