@@ -10,6 +10,7 @@ HEADERS = includes/Server.hpp
 
 all: $(NAME)
 
+# To compile without the flags to test stuff
 dev: CFLAGS = -std=c++98
 dev: $(NAME)
 
