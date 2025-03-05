@@ -7,7 +7,7 @@ int main(int argc, char **argv)
     try
     {
         serv.initialize(argc, argv);
-        serv.infos();
+        serv.start();
     }
     catch (const std::exception& e) {std::cerr << e.what() << '\n'; return 1;}
     
