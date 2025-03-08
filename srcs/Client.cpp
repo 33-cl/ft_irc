@@ -1,8 +1,8 @@
 #include "../includes/Client.hpp"
 
-Client::Client() {}
+Client::Client() : status(UNREGISTERED) {}
 
-Client::Client(int fd)
+Client::Client(int fd) : status(UNREGISTERED)
 {
     this->socket.fd = fd;
     this->socket.events = POLLIN;
@@ -11,10 +11,21 @@ Client::Client(int fd)
 
 Client::~Client() {}
 
-const pollfd    Client::get_socket()
+pollfd    Client::get_socket() const
 {
     return this->socket;
 }
+
+short   Client::get_status() const
+{
+    return this->status;
+}
+
+void    Client::set_status(const short &status)
+{
+    this->status = status;
+}
+
 pollfd  Client::create_socket(int fd, short events, short revents)
 {
     pollfd  new_socket;

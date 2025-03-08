@@ -56,7 +56,7 @@ void    Server::new_client(std::vector<pollfd> &fds)
 
     Client  new_client(client_fd);
 
-    _clients.push_back(new_client);
+    _clients[client_fd] = new_client;
     fds.push_back(new_client.get_socket());
 }
 
@@ -70,8 +70,7 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int i)
     {
         // Afficher le message recu
         buffer[bytes_received] = '\0';
-        std::cout << "Message recu: " << buffer << std::endl;
-        //process_input(buffer);
+        process_input(buffer, _clients[fds[i].fd]);
     }
     else
     {
@@ -83,10 +82,13 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int i)
     }
 }
 
-// void    Server::process_input(char *input)
-// {
-
-// }
+void    Server::process_input(char *input, Client &client)
+{
+    if (client.get_status() == UNREGISTERED)
+        client.set_status(REGISTERED);
+    else
+        std::cout << client.get_status() << input << std::endl;
+}
 
 void    Server::start()
 {

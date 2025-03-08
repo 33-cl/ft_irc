@@ -25,7 +25,9 @@ class Client
 
         void    login();
 
-        const pollfd  get_socket();
+        pollfd  get_socket() const;
+        short   get_status() const;
+        void    set_status(const short &status);
 
         static pollfd  create_socket(int fd, short events, short revents);
 };

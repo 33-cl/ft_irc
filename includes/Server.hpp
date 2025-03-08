@@ -7,16 +7,17 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <vector>
+#include <map>
 #include <poll.h>
 #include <arpa/inet.h>
 
 class Server
 {
     private:
-        std::string         _password;
-        int                 _port;
-        int                 _fd;
-        std::vector<Client> _clients;
+        std::string              _password;
+        int                      _port;
+        int                      _fd;
+        std::map<int, Client>    _clients;
 
     public:
         Server();
@@ -26,7 +27,7 @@ class Server
         void    start();
         void    new_client(std::vector<pollfd> &fds);
         void    process_client_data(std::vector<pollfd> &fds, int i);
-       // void    process_input(char *input);
+        void    process_input(char *input, Client &client);
 
         void    infos();
 };
