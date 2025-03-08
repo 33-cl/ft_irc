@@ -3,10 +3,10 @@ NAME = ircserv
 CXX = c++
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 
-SRC = srcs/main.cpp 
+SRC = srcs/main.cpp srcs/Server.cpp srcs/Client.cpp
 OBJ_DIR = .build
 OBJ = $(SRC:srcs/%.cpp=$(OBJ_DIR)/%.o)
-HEADERS = includes/Server.hpp
+HEADERS = includes/Server.hpp includes/Client.hpp
 
 all: $(NAME)
 
