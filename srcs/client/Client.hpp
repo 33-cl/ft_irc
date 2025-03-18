@@ -1,9 +1,14 @@
 #pragma once
 
+#include "../channel/Channel.hpp"
+
 #include <poll.h>
 #include <arpa/inet.h>
 #include <string>
+#include <map>
+#include <utility>
 #include <iostream>
+#include <algorithm>
 
 enum status {
     UNREGISTERED,
@@ -25,6 +30,7 @@ class Client
         ~Client();
 
         void    login(const std::string& input, const std::string& password);
+        void    join(const std::string& name, std::map<std::string, Channel>& channels);
 
         pollfd      get_socket() const;
         short       get_status() const;

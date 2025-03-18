@@ -3,10 +3,13 @@ NAME = ircserv
 CXX = c++
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 
-SRC = srcs/main.cpp srcs/Server.cpp srcs/Client.cpp srcs/Channel.cpp
+SRC =	srcs/main.cpp \
+		srcs/server/Server.cpp srcs/server/setup.cpp \
+		srcs/client/init.cpp srcs/client/accessors.cpp srcs/client/login.cpp srcs/client/join.cpp \
+		srcs/channel/init.cpp srcs/channel/utils.cpp
 OBJ_DIR = .build
 OBJ = $(SRC:srcs/%.cpp=$(OBJ_DIR)/%.o)
-HEADERS = includes/Server.hpp includes/Client.hpp includes/Channel.hpp
+HEADERS = srcs/server/Server.hpp srcs/client/Client.hpp srcs/channel/Channel.hpp
 
 all: $(NAME)
 
@@ -17,6 +20,7 @@ $(NAME): $(OBJ)
 	$(CXX) $(CFLAGS) -o $(NAME) $(OBJ)
 
 $(OBJ_DIR)/%.o: srcs/%.cpp $(HEADERS) | $(OBJ_DIR)
+	@mkdir -p $(@D)  
 	$(CXX) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):

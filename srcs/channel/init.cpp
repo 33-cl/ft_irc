@@ -1,4 +1,6 @@
-#include "../includes/Channel.hpp"
+#include "Channel.hpp"
+
+Channel::Channel() : name("") {}
 
 Channel::Channel(std::string name, int client_fd)
 {
