@@ -22,7 +22,7 @@ void    Server::initialize(int argc, char **argv)
 
     _password = argv[2];
 
-    // Creer la socket
+    // Creer la socket du server
     _fd = socket(AF_INET, SOCK_STREAM, 0);
     if (_fd == -1)
         throw std::runtime_error("socket() error");
@@ -49,7 +49,7 @@ void    Server::start()
 
     while (true)
     {
-        infos();
+        // infos();
 
         int nb_sockets = poll(sockets.data(), sockets.size(), -1);
         if (nb_sockets == -1)

@@ -1,13 +1,8 @@
 # include "server/Server.hpp"
 
 /*
-    LOGIN
-    - Implementer autres erreurs de login
-    - Finir USER
-    - Supprimer les getters/setters inutiles
-
-    CHANNEL
-    - Implementer la classe channel et les autres en consequences
+    Corriger send() dans JOIN, qui ne fonctionne pas
+    peut etre erreur de socket
 */
 
 int main(int argc, char **argv)

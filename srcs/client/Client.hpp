@@ -22,6 +22,7 @@ class Client
         pollfd      socket;
         std::string nickname;
         std::string username;
+        std::string hostname;
         short       status;
 
     public:
@@ -29,16 +30,22 @@ class Client
         Client(int fd);
         ~Client();
 
-        void    login(const std::string& input, const std::string& password);
+        void    write(const std::string& str);
+
+        void    login(std::string& input, const std::string& password);
         void    join(const std::string& name, std::map<std::string, Channel>& channels);
 
         pollfd      get_socket() const;
         short       get_status() const;
         std::string get_nickname() const;
         std::string get_username() const;
+        std::string get_hostname() const;
         void        set_status(const short& status);
         void        set_nickname(const std::string& nickname);
         void        set_username(const std::string& username);
+        void        set_hostname(const std::string& hostname);
 
         static pollfd  create_socket(int fd, short events, short revents);
 };
+
+bool    is_command_valid(std::string& input, const std::string& command);

@@ -28,15 +28,23 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int i)
     {
         // Afficher le message recu
         buffer[bytes_received] = '\0';
+
+        std::string buffer_str(buffer);
+        std::vector<std::string> commands = split(buffer_str, "\r\n");
+
         try
         {
-            process_input(std::string(buffer), _clients[fds[i].fd]);
+            for (size_t i = 0; i < commands.size(); i++)
+            {
+                std::cout << commands[i];
+                process_input(commands[i], _clients[fds[i].fd]);
+            }
+            std::cout << std::endl;
         }
         catch(const std::exception& e)
         {
             //std::cerr << e.what() << '\n';
-            if (send(fds[i].fd, e.what(), strlen(e.what()), 0) == -1) // Afficher le message d'erreur au client
-                throw std::runtime_error("send() failed");
+            send(fds[i].fd, e.what(), strlen(e.what()), 0);
         }
     }
     else
@@ -74,28 +82,26 @@ void    Server::create_channel(const std::string& channel_name, Client& client)
     }
 }
 
-void    Server::process_input(const std::string& input, Client &client)
+void    Server::process_input(std::string& input, Client &client)
 {
     if (client.get_status() != REGISTERED)
         client.login(input, _password);
     else
     {
-        if (input.size() > 6 && !input.compare(0, 5, "JOIN "))
+        if (is_command_valid(input, "JOIN"))
         {
-            std::string channel_name = input.substr(5, input.length() - 5 - 1);
+            std::cout << "blabla";
+            std::string channel_name = input.substr(5, input.length() - 5);
             if (_channels.find(channel_name) == _channels.end())
                 create_channel(channel_name, client);
             else
                 client.join(channel_name, _channels);
+            std::string client_msg = ":" + client.get_nickname() + "!" + client.get_username() + "@localhost JOIN :" + channel_name + "\r\n";
+            send(client.get_socket().fd, client_msg.c_str(), client_msg.length(), 0);
         }
-        if (input.size() > 6 && !input.compare(0, 8, "PRIVMSG "))
-        {
-            std::string dest = input.substr(5, input.length() - 5 - 1);
-            
-        }
+        // PRIVMSG
     }
 }
-
 
 void    Server::infos()
 {

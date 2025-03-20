@@ -30,8 +30,10 @@ class Server
         void    start();
         void    new_client(std::vector<pollfd>& fds);
         void    process_client_data(std::vector<pollfd>& fds, int i);
-        void    process_input(const std::string& input, Client& client);
+        void    process_input(std::string& input, Client& client);
         void    create_channel(const std::string& channel_name, Client& client);
 
         void    infos();
 };
+
+std::vector<std::string> split(const std::string& str, const std::string& delimiter = "\r\n");
