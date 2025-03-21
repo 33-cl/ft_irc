@@ -15,5 +15,6 @@ class Channel
 
         void    add_client(int fd);
 
+
         std::vector<int>    get_clients() const;  
 };

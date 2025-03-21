@@ -49,7 +49,7 @@ void    Server::start()
 
     while (true)
     {
-        // infos();
+        infos();
 
         int nb_sockets = poll(sockets.data(), sockets.size(), -1);
         if (nb_sockets == -1)
@@ -60,7 +60,10 @@ void    Server::start()
             if (sockets[i].revents & POLLIN)
             {
                 if (sockets[i].fd == _fd)
+                {
+                    std::cout << "----------\nNewClient\n---------\n";
                     new_client(sockets);
+                }
                 else
                     process_client_data(sockets, i);
             }

@@ -18,11 +18,11 @@ void    Server::new_client(std::vector<pollfd> &fds)
     fds.push_back(new_client.get_socket());
 }
 
-void    Server::process_client_data(std::vector<pollfd> &fds, int i)
+void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 {
     // Message d'un client existant
     char    buffer[1024];
-    ssize_t bytes_received = recv(fds[i].fd, buffer, sizeof(buffer) - 1, 0);
+    ssize_t bytes_received = recv(fds[client_index].fd, buffer, sizeof(buffer) - 1, 0);
 
     if (bytes_received > 0)
     {
@@ -37,23 +37,23 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int i)
             for (size_t i = 0; i < commands.size(); i++)
             {
                 std::cout << commands[i];
-                process_input(commands[i], _clients[fds[i].fd]);
+                process_input(commands[i], _clients[fds[client_index].fd]);
             }
             std::cout << std::endl;
         }
         catch(const std::exception& e)
         {
             //std::cerr << e.what() << '\n';
-            send(fds[i].fd, e.what(), strlen(e.what()), 0);
+            send(fds[client_index].fd, e.what(), strlen(e.what()), 0);
         }
     }
     else
     {
         // Supprimer le client deconnecte
         std::cout << "Client deconnecte\n";
-        close(fds[i].fd);
-        fds.erase(fds.begin() + i);
-        i--;
+        close(fds[client_index].fd);
+        fds.erase(fds.begin() + client_index);
+        client_index--;
     }
 }
 
@@ -74,7 +74,7 @@ void    Server::create_channel(const std::string& channel_name, Client& client)
         send(client.get_socket().fd, error_msg.c_str(), error_msg.length(), 0);
         return;
     }
-    
+
     if (_channels.find(channel_name) == _channels.end())
     {
         _channels.insert(std::pair<std::string, Channel>(channel_name, Channel(channel_name, client.get_socket().fd)));
@@ -90,7 +90,6 @@ void    Server::process_input(std::string& input, Client &client)
     {
         if (is_command_valid(input, "JOIN"))
         {
-            std::cout << "blabla";
             std::string channel_name = input.substr(5, input.length() - 5);
             if (_channels.find(channel_name) == _channels.end())
                 create_channel(channel_name, client);
@@ -98,6 +97,8 @@ void    Server::process_input(std::string& input, Client &client)
                 client.join(channel_name, _channels);
             std::string client_msg = ":" + client.get_nickname() + "!" + client.get_username() + "@localhost JOIN :" + channel_name + "\r\n";
             send(client.get_socket().fd, client_msg.c_str(), client_msg.length(), 0);
+
+            // Send ici le message de format :ircserv 353 nickname = #nom_du_canal :nickname1 nickname2 nickname3
         }
         // PRIVMSG
     }
