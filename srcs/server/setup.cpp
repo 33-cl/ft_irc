@@ -56,8 +56,8 @@ void    Server::start()
             break;
 
         for (size_t i = 0; i < sockets.size(); i++)
-        {
-            if (sockets[i].revents & POLLIN)
+        {//on met pollin dans events car c'est ce qu'on surveille, dans revent on trouve ce que poll a detecte
+            if (sockets[i].revents & POLLIN)//isole juste la partie de bit pollin pour voir si il est present
             {
                 if (sockets[i].fd == _fd)
                 {
