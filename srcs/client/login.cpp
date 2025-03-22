@@ -78,13 +78,16 @@ void    Client::login(std::string& input, const std::string& password)
 				this->username = username;
 			else
 				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
+			
 			if (format != "0 *")
 				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
+			
 			if (realname.find('\r') != std::string::npos || realname.find('\n') != std::string::npos)
   				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
 			else
 				this->realname = realname;
-            if (nickname != "")
+            
+			if (nickname != "")
                 status = REGISTERED;
         }
     }
