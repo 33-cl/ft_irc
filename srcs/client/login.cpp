@@ -1,5 +1,17 @@
 #include "Client.hpp"
 
+bool	is_valid_username(const std::string& user)
+{
+	if (user.empty() || user.length() > 9)
+		return false;
+	for (size_t i = 0; i < user.length(); ++i)
+	{
+		if (isspace(user[i]) || user[i] == '\r' || user[i] == '\n')
+			return false;
+	}
+	return true;
+}
+
 void    Client::login(std::string& input, const std::string& password)
 {
     if (status == UNREGISTERED)
@@ -52,7 +64,26 @@ void    Client::login(std::string& input, const std::string& password)
         }
         if (input.size() > 6 && !input.compare(0, 5, "USER "))
         {
-            username = input.substr(5, input.length() - 5 - 1);
+			std::istringstream iss(input);
+			std::string cmd, format, username, realname;
+				
+			iss >> cmd >> username;
+			std::getline(iss, format, ':');
+			std::getline(iss, realname);
+
+			size_t first = format.find_first_not_of(" \t");
+			size_t last = format.find_last_not_of(" \t");
+   			format = format.substr(first, last - first + 1);
+			if (is_valid_username(username))
+				this->username = username;
+			else
+				throw std::invalid_argument(":SERVER 461 * " + username + " USER :Not enough parameters\r\n");
+			if (format != "0 *")
+				throw std::invalid_argument(":SERVER 461 * " + username + " USER :Not enough parameters\r\n");
+			if (realname.find('\r') != std::string::npos || realname.find('\n') != std::string::npos)
+  				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
+			else
+				this->realname = realname;
             if (nickname != "")
                 status = REGISTERED;
         }

@@ -1,7 +1,7 @@
 # include "server/Server.hpp"
 
 /*
-
+	Dans nick, doit commencer par une lettre et accepte -, _, [, ], {, }, \\, |, ^
 */
 
 int main(int argc, char **argv)

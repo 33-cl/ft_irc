@@ -9,6 +9,8 @@
 #include <utility>
 #include <iostream>
 #include <algorithm>
+#include <sstream>
+#include <cstdio>
 
 enum status {
     UNREGISTERED,
@@ -22,6 +24,7 @@ class Client
         pollfd      socket;
         std::string nickname;
         std::string username;
+		std::string realname;
         std::string hostname;
         short       status;
 
