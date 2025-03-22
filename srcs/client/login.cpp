@@ -1,6 +1,6 @@
 #include "Client.hpp"
 
-bool	is_valid_username(const std::string& user)
+bool	Client::is_valid_username(const std::string& user)
 {
 	if (user.empty() || user.length() > 9)
 		return false;
@@ -77,9 +77,9 @@ void    Client::login(std::string& input, const std::string& password)
 			if (is_valid_username(username))
 				this->username = username;
 			else
-				throw std::invalid_argument(":SERVER 461 * " + username + " USER :Not enough parameters\r\n");
+				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
 			if (format != "0 *")
-				throw std::invalid_argument(":SERVER 461 * " + username + " USER :Not enough parameters\r\n");
+				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
 			if (realname.find('\r') != std::string::npos || realname.find('\n') != std::string::npos)
   				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
 			else

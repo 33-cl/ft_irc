@@ -47,6 +47,7 @@ class Client
         void        set_nickname(const std::string& nickname);
         void        set_username(const std::string& username);
         void        set_hostname(const std::string& hostname);
+		bool		is_valid_username(const std::string& user);
 
         static pollfd  create_socket(int fd, short events, short revents);
 };
