@@ -39,8 +39,6 @@ class Server
         void    process_input(std::string& input, Client& client);
         void    create_channel(const std::string& channel_name, Client& client);
 
-
-
         void    infos();
 };
 
