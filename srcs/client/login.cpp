@@ -11,6 +11,14 @@ bool	Client::is_valid_username(const std::string& user)
 	}
 	return true;
 }
+bool Client::is_nickname_char(char c)
+{
+    return std::isalnum(c) ||
+           c == '-' || c == '_' ||
+           c == '[' || c == ']' ||
+           c == '{' || c == '}' ||
+           c == '\\' || c == '|' || c == '^';
+}
 
 void    Client::login(std::string& input, const std::string& password)
 {
@@ -31,16 +39,14 @@ void    Client::login(std::string& input, const std::string& password)
             std::string new_nick = input.substr(5, input.length() - 5 - 1);
             
             // std::cout << "|" << new_nick << "|\n";
-            if (new_nick.empty())
-                throw std::invalid_argument(":irc.example.com 431 * :No nickname given\r\n");
-            
-            // Erroneous nickname (contains invalid characters)
-            for (size_t i = 0; i < new_nick.length(); i++)
-            {
-                if (!isalnum(new_nick[i]) && new_nick[i] != '-' && new_nick[i] != '_')
-                    throw std::invalid_argument(":irc.example.com 432 * " + new_nick + " :Erroneous nickname\r\n");
-            }
+			if (new_nick.empty())
+				throw std::invalid_argument(":irc.example.com 431 * :No nickname given\r\n");
 
+			for (size_t i = 0; i < new_nick.length(); ++i)
+			{
+				if ((i == 0 && !isalpha(new_nick[i])) || !is_nickname_char(new_nick[i]) || i > 8)
+					throw std::invalid_argument(":irc.example.com 432 * " + new_nick + " :Erroneous nickname\r\n");
+			}
             // Check for existing nickname (this would require access to a list of existing nicknames)
             // Assuming there's a function or way to check if the nickname exists
             // if (isNic kInUse(new_nick))
