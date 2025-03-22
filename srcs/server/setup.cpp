@@ -5,6 +5,13 @@ Server::Server() : _password(""), _port(0) {}
 Server::~Server() 
 {
     close(_fd);
+
+    delete  _commands["JOIN"];
+}
+
+void    Server::init_commands()
+{
+    _commands["JOIN"] = new Join;
 }
 
 void    Server::initialize(int argc, char **argv)
@@ -38,6 +45,8 @@ void    Server::initialize(int argc, char **argv)
     // Mettre en mode ecoute
     if (listen(_fd, 5) == -1)
         throw std::runtime_error("listen() error");
+
+    init_commands();
 
     std::cout << "Server initialized on port " << _port << std::endl;
 }

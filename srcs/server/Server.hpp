@@ -2,6 +2,7 @@
 
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
+#include "../commands/Command.hpp"
 
 #include <iostream>
 #include <utility>
@@ -13,6 +14,8 @@
 #include <arpa/inet.h>
 #include <string.h>
 
+class Command;
+
 class Server
 {
     private:
@@ -21,19 +24,22 @@ class Server
         int                             _fd;
         std::map<int, Client>           _clients;
         std::map<std::string, Channel>  _channels;
+        std::map<std::string, Command*> _commands;
 
     public:
         Server();
         ~Server();
 
+        void    init_commands();
         void    initialize(int argc, char **argv);
         void    start();
+        
         void    new_client(std::vector<pollfd>& fds);
         void    process_client_data(std::vector<pollfd>& fds, int client_index);
         void    process_input(std::string& input, Client& client);
         void    create_channel(const std::string& channel_name, Client& client);
 
-        
+
 
         void    infos();
 };
