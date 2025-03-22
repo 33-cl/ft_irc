@@ -67,14 +67,6 @@ void    Server::create_channel(const std::string& channel_name, Client& client)
         return;
     }
 
-    // Vérifier si le client est enregistré
-    if (client.get_status() != REGISTERED)
-    {
-        std::string error_msg = "ERROR :You must be registered to create a channel\r\n";
-        send(client.get_socket().fd, error_msg.c_str(), error_msg.length(), 0);
-        return;
-    }
-
     if (_channels.find(channel_name) == _channels.end())
     {
         _channels.insert(std::pair<std::string, Channel>(channel_name, Channel(channel_name, client.get_socket().fd)));
@@ -85,44 +77,48 @@ void    Server::create_channel(const std::string& channel_name, Client& client)
 
 void Server::process_input(std::string& input, Client &client)
 {
+    std::vector<std::string> args = split(input, " ");
+
     if (client.get_status() != REGISTERED)
         client.login(input, _password);
     else
     {
         if (check_command(input, "JOIN"))
         {
-            std::string channel_name = input.substr(5, input.length() - 5);
-            if (_channels.find(channel_name) == _channels.end())
-                create_channel(channel_name, client);
-            else
-                client.join(channel_name, _channels);
+            _commands["JOIN"]->execute(client, args);
 
-            // Envoie la réponse JOIN au client
-            std::string client_msg = ":" + client.get_nickname() + "!" + client.get_username() + "@localhost JOIN :" + channel_name + "\r\n";
-            send(client.get_socket().fd, client_msg.c_str(), client_msg.length(), 0);
+            // std::string channel_name = input.substr(5, input.length() - 5);
+            // if (_channels.find(channel_name) == _channels.end())
+            //     create_channel(channel_name, client);
+            // else
+            //     client.join(channel_name, _channels);
 
-            // Envoie la réponse 353 (RPL_NAMREPLY) avec la liste des utilisateurs du canal
-            std::string names_msg = ":ircserv 353 " + client.get_nickname() + " = " + channel_name + " :";
-            Channel& channel = _channels[channel_name];
-            std::vector<int> client_fds = channel.get_clients();
+            // // Envoie la réponse JOIN au client
+            // std::string client_msg = ":" + client.get_nickname() + "!" + client.get_username() + "@localhost JOIN :" + channel_name + "\r\n";
+            // send(client.get_socket().fd, client_msg.c_str(), client_msg.length(), 0);
 
-            for (size_t i = 0; i < client_fds.size(); ++i)
-            {
-                int fd = client_fds[i];
-                if (_clients.find(fd) != _clients.end())
-                {
-                    names_msg += _clients[fd].get_nickname();
-                    if (i < client_fds.size() - 1)
-                        names_msg += " ";
-                }
-            }
-            names_msg += "\r\n";
-            send(client.get_socket().fd, names_msg.c_str(), names_msg.length(), 0);
+            // // Envoie la réponse 353 (RPL_NAMREPLY) avec la liste des utilisateurs du canal
+            // std::string names_msg = ":ircserv 353 " + client.get_nickname() + " = " + channel_name + " :";
+            // Channel& channel = _channels[channel_name];
+            // std::vector<int> client_fds = channel.get_clients();
+
+            // for (size_t i = 0; i < client_fds.size(); ++i)
+            // {
+            //     int fd = client_fds[i];
+            //     if (_clients.find(fd) != _clients.end())
+            //     {
+            //         names_msg += _clients[fd].get_nickname();
+            //         if (i < client_fds.size() - 1)
+            //             names_msg += " ";
+            //     }
+            // }
+            // names_msg += "\r\n";
+            // send(client.get_socket().fd, names_msg.c_str(), names_msg.length(), 0);
         }
         else if (check_command(input, "PRIVMSG"))   {(void)input;}
         else if (check_command(input, "NICK"))      {(void)input;}
         else if (check_command(input, "TOPIC"))     {(void)input;}
-        else if (check_command(input, "MODE"))     {(void)input;}
+        else if (check_command(input, "MODE"))      {(void)input;}
         else if (check_command(input, "TOPIC"))     {(void)input;}
     }
 }
