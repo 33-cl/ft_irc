@@ -48,4 +48,4 @@ class Client
         static pollfd  create_socket(int fd, short events, short revents);
 };
 
-bool    is_command_valid(std::string& input, const std::string& command);
+bool    check_command(std::string& input, const std::string& command);

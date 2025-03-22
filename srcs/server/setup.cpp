@@ -59,7 +59,7 @@ void    Server::start()
         {
             if (sockets[i].revents & POLLIN)
             {
-                if (sockets[i].fd == _fd)
+                if (sockets[i].fd == this->_fd)
                 {
                     std::cout << "----------\nNewClient\n---------\n";
                     new_client(sockets);

@@ -82,68 +82,47 @@ void    Server::create_channel(const std::string& channel_name, Client& client)
     }
 }
 
-void    Server::process_input(std::string& input, Client &client)
+
+void Server::process_input(std::string& input, Client &client)
 {
     if (client.get_status() != REGISTERED)
         client.login(input, _password);
     else
     {
-        if (is_command_valid(input, "JOIN"))
+        if (check_command(input, "JOIN"))
         {
             std::string channel_name = input.substr(5, input.length() - 5);
             if (_channels.find(channel_name) == _channels.end())
                 create_channel(channel_name, client);
             else
                 client.join(channel_name, _channels);
+
+            // Envoie la réponse JOIN au client
             std::string client_msg = ":" + client.get_nickname() + "!" + client.get_username() + "@localhost JOIN :" + channel_name + "\r\n";
             send(client.get_socket().fd, client_msg.c_str(), client_msg.length(), 0);
 
-            // Send ici le message de format :ircserv 353 nickname = #nom_du_canal :nickname1 nickname2 nickname3
-        }
-        // PRIVMSG
-    }
-}
+            // Envoie la réponse 353 (RPL_NAMREPLY) avec la liste des utilisateurs du canal
+            std::string names_msg = ":ircserv 353 " + client.get_nickname() + " = " + channel_name + " :";
+            Channel& channel = _channels[channel_name];
+            std::vector<int> client_fds = channel.get_clients();
 
-void    Server::infos()
-{
-    std::cout << "------------------------\n------------------------\n";
-
-    std::cout << "port     : " << _port     << std::endl
-              << "password : " << _password << std::endl
-              << "server fd: " << _fd       << std::endl;
-    
-    // Afficher les informations des clients
-    std::cout << "\nClients (" << _clients.size() << ") :" << std::endl;
-    if (_clients.empty())
-        std::cout << "  No clients connected" << std::endl;
-    else
-    {
-        for (std::map<int, Client>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
-        {
-            std::cout << "  Client fd: " << it->first << std::endl
-                      << "    Nickname: " << it->second.get_nickname() << std::endl
-                      << "    Username: " << it->second.get_username() << std::endl
-                      << "    Status  : " << it->second.get_status() << std::endl;
-        }
-    }
-    
-    // Afficher les informations des channels
-    std::cout << "\nChannels (" << _channels.size() << ") :" << std::endl;
-    if (_channels.empty())
-        std::cout << "  No channels created" << std::endl;
-    else
-    {
-        for (std::map<std::string, Channel>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
-        {
-            std::cout << "  Channel: " << it->first << std::endl;
-
-            std::vector<int> clients_id = it->second.get_clients();
-
-            for (size_t i = 0; i < clients_id.size(); i++) {
-                // Accès à l'élément aclients_id clients_id[i]
-                std::cout << _clients[clients_id[i]].get_nickname() << "|";
+            for (size_t i = 0; i < client_fds.size(); ++i)
+            {
+                int fd = client_fds[i];
+                if (_clients.find(fd) != _clients.end())
+                {
+                    names_msg += _clients[fd].get_nickname();
+                    if (i < client_fds.size() - 1)
+                        names_msg += " ";
+                }
             }
-            std::cout << std::endl;
+            names_msg += "\r\n";
+            send(client.get_socket().fd, names_msg.c_str(), names_msg.length(), 0);
         }
+        else if (check_command(input, "PRIVMSG"))   {(void)input;}
+        else if (check_command(input, "NICK"))      {(void)input;}
+        else if (check_command(input, "TOPIC"))     {(void)input;}
+        else if (check_command(input, "MODE"))     {(void)input;}
+        else if (check_command(input, "TOPIC"))     {(void)input;}
     }
 }

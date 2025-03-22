@@ -4,7 +4,7 @@ void    Client::login(std::string& input, const std::string& password)
 {
     if (status == UNREGISTERED)
     {
-        if (!is_command_valid(input, "PASS"))
+        if (!check_command(input, "PASS"))
             return;
         std::cout << "password received : |" << input.substr(5, input.length() - 5) << "|" << std::endl;
         std::cout << "real password     : |" << password << "|" << std::endl;
