@@ -13,14 +13,14 @@ bool	Client::is_valid_username(const std::string& user)
 }
 bool Client::is_nickname_char(char c)
 {
-    return std::isalnum(c) ||
-           c == '-' || c == '_' ||
-           c == '[' || c == ']' ||
-           c == '{' || c == '}' ||
-           c == '\\' || c == '|' || c == '^';
+	return std::isalnum(c) ||
+			c == '-' || c == '_' ||
+			c == '[' || c == ']' ||
+			c == '{' || c == '}' ||
+			c == '\\' || c == '|' || c == '^';
 }
 
-void    Client::login(std::string& input, const std::string& password)
+void    Client::login(std::string& input, const std::string& password, Server& server)
 {
     if (status == UNREGISTERED)
     {
@@ -49,6 +49,9 @@ void    Client::login(std::string& input, const std::string& password)
 			}
             // Check for existing nickname (this would require access to a list of existing nicknames)
             // Assuming there's a function or way to check if the nickname exists
+			
+			if (nick_already_used(new_nick, server._clients, *this))
+				throw std::invalid_argument(":irc.example.com 433 * " + new_nick + " :Nickname is already in use\r\n");
             // if (isNic kInUse(new_nick))
             //     throw std::invalid_argument(":irc.example.com 433 * " + new_nick + " :Nickname is already in use\r\n");
 
@@ -80,6 +83,7 @@ void    Client::login(std::string& input, const std::string& password)
 			size_t first = format.find_first_not_of(" \t");
 			size_t last = format.find_last_not_of(" \t");
    			format = format.substr(first, last - first + 1);
+
 			if (is_valid_username(username))
 				this->username = username;
 			else
@@ -98,3 +102,15 @@ void    Client::login(std::string& input, const std::string& password)
         }
     }
 }
+
+bool Client::nick_already_used(const std::string& nick, const std::map<int, Client>& clients, const Client& current_client)
+{
+	for (std::map<int, Client>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		// Ne pas comparer au client actu
+		if (it->second.get_nickname() == nick && &it->second != &current_client)
+			return true;
+	}
+	return false;
+}
+

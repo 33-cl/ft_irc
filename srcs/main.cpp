@@ -1,9 +1,8 @@
 # include "server/Server.hpp"
 
 /*
-	Dans nick, doit commencer par une lettre et accepte -, _, [, ], {, }, \\, |, ^
-
     A Faire
+
         - se renseigner sur les macros pour les erreurs
         - renseignement sur KICK
         - remplacer toutes les utilisations d'accesseur par

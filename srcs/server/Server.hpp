@@ -16,8 +16,11 @@
 
 class Command;
 
+class Client;
+
 class Server
 {
+	friend class Client;
     private:
         std::string                     _password;
         int                             _port;
