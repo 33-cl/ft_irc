@@ -7,6 +7,13 @@
         - renseignement sur KICK -> nouvelle classe ds cmd
         - remplacer toutes les utilisations d'accesseur par
           l'utilisation directe de la variable avec les classes "friends"
+
+
+    A faire en dernier
+
+        - virer les commentaires inutiles
+        - traduire les commentaires utiles en anglais
+        - remplacer les wildcards
 */
 
 int main(int argc, char **argv)

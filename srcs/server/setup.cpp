@@ -9,6 +9,7 @@ Server::~Server()
     delete  _commands["JOIN"];
 	delete  _commands["KICK"];
 	delete  _commands["QUIT"];
+    delete  _commands["PASS"];
 }
 
 void    Server::init_commands()
@@ -16,6 +17,7 @@ void    Server::init_commands()
     _commands["JOIN"] = new Join;
 	_commands["KICK"] = new Kick;
 	_commands["QUIT"] = new Quit;
+    _commands["PASS"] = new Pass;
 }
 
 void    Server::initialize(int argc, char **argv)
@@ -74,7 +76,6 @@ void    Server::start()
             {
                 if (sockets[i].fd == this->_fd)
                 {
-                    std::cout << "----------\nNewClient\n---------\n";
                     new_client(sockets);
                 }
                 else

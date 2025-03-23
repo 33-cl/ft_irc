@@ -2,6 +2,8 @@
 
 /*
     Some sort of ft_split() for strings
+
+    Also suppresses "\r\n" at the end of the string
 */
 
 std::vector<std::string> split(const std::string& str, const std::string& delimiter) 
@@ -13,17 +15,42 @@ std::vector<std::string> split(const std::string& str, const std::string& delimi
     // Dividing the string
     while (end != std::string::npos) 
     {
-        tokens.push_back(str.substr(start, end - start));
+        std::string token = str.substr(start, end - start);
+        tokens.push_back(token);
         start = end + delimiter.length();
         end = str.find(delimiter, start);
     }
 
     // Add the last string 
     if (start < str.length()) {
-        tokens.push_back(str.substr(start));
+        std::string token = str.substr(start);
+
+        // Suppression des "\r\n" à la fin du dernier token en C++98
+        while (!token.empty() && (token[token.size()-1] == '\r' || token[token.size()-1] == '\n')) {
+            token.erase(token.size()-1);
+        }
+        
+        tokens.push_back(token);
     }
 
     return tokens;
+}
+
+/*
+    Checks if the command given in "input" is "command"
+
+    Also removes the "\r\n" at the end of the line
+*/
+
+bool check_command(std::string& input, const std::string& command) {
+    if (input[input.size() - 1] == '\n') // With some clients, the input be followed by '\n'
+        input.erase(input.size() - 1);   // so we remove it the handle the inputs equally
+
+    if (input.size() < command.size() + 2 || input.compare(0, command.size() + 1, command + " ") != 0) {
+        return false;
+    }
+
+    return true;
 }
 
 /*
@@ -34,7 +61,7 @@ std::vector<std::string> split(const std::string& str, const std::string& delimi
 
 void    Server::infos()
 {
-    std::cout << "------------------------\n------------------------\n";
+    std::cout << "     -------------------\n";
 
     // Server
     std::cout << "port     : " << _port     << std::endl

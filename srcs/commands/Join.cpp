@@ -5,10 +5,12 @@ Join::Join() {}
 Join::~Join() {}
 
 /*
-    Erreurs potentielles no gerees
+    Problemes 
+        - "JOIN #general" puis "JOIN #general #autre" cree 2 channels #general
 
-    - nom de channel invalide 
-    - JOIN sans argument          
+    Erreurs non gerees
+        - nom de channel invalide 
+        - JOIN sans argument          
 */
 
 void    Join::execute(Client& client, std::vector<std::string>& args, Server& server)

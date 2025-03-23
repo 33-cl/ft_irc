@@ -62,6 +62,7 @@ class Client
         friend class Join;
 		friend class Kick;
 		friend class Quit;
+        friend class Pass;
 };
 
 bool    check_command(std::string& input, const std::string& command);
