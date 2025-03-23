@@ -64,4 +64,5 @@ void Server::process_input(std::string& input, Client &client)
         return;
 
     _commands[args[0]]->execute(client, args, *this);
+
 }

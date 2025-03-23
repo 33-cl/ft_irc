@@ -104,3 +104,4 @@ class Quit : public Command
 
         void    execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
+

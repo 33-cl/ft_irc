@@ -1,6 +1,8 @@
 # include "server/Server.hpp"
 
 /*
+	Quentin: verifier hasclient(lastpromptgpt to check)
+
 
     A Faire
 

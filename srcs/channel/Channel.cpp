@@ -12,6 +12,17 @@ Channel::~Channel()
 {
 }
 
+bool	Channel::hasClient(int fd) const
+{
+	//A VERIFIER
+	for (size_t i = 0; i < clients.size(); i++)
+	{
+		if (clients[i] == fd)
+			return true;
+	}
+	return false;
+}
+
 std::vector<int>    Channel::get_clients() const
 {
     return this->clients;

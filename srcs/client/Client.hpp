@@ -61,3 +61,5 @@ class Client
         friend class Topic;
         friend class Quit;
 };
+
+bool    check_command(std::string& input, const std::string& command);
