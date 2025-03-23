@@ -43,6 +43,9 @@ class Server
         void    create_channel(const std::string& channel_name, Client& client);
 
         void    infos();
+        
+        friend class Command;
+        friend class Join;
 };
 
 std::vector<std::string> split(const std::string& str, const std::string& delimiter = "\r\n");

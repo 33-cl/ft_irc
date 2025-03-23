@@ -57,6 +57,9 @@ class Client
 		bool		nick_already_used(const std::string& nick, const std::map<int, Client>& clients, const Client& current_client);
 
         static pollfd  create_socket(int fd, short events, short revents);
+
+        friend class Command;
+        friend class Join;
 };
 
 bool    check_command(std::string& input, const std::string& command);
