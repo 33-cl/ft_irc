@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../channel/Channel.hpp"
+#include "../server/Server.hpp"
 
 #include <poll.h>
 #include <arpa/inet.h>
@@ -18,8 +19,11 @@ enum status {
     REGISTERED,
 };
 
+class Server;
+
 class Client
 {
+	friend class Server;
     private:
         pollfd      socket;
         std::string nickname;
@@ -35,7 +39,7 @@ class Client
 
         void    write(const std::string& str);
 
-        void    login(std::string& input, const std::string& password);
+        void    login(std::string& input, const std::string& password, Server& server);
         void    join(const std::string& name, std::map<std::string, Channel>& channels);
 
         pollfd      get_socket() const;
@@ -49,6 +53,7 @@ class Client
         void        set_hostname(const std::string& hostname);
 		bool		is_valid_username(const std::string& user);
 		bool		is_nickname_char(char c);
+		bool		nick_already_used(const std::string& nick, const std::map<int, Client>& clients, const Client& current_client);
 
         static pollfd  create_socket(int fd, short events, short revents);
 };

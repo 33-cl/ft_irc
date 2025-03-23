@@ -1,10 +1,12 @@
 # include "server/Server.hpp"
 
 /*
-	Dans nick, doit commencer par une lettre et accepte -, _, [, ], {, }, \\, |, ^
+	- J'ai mis les classes en friend, 
+	ca me permettais de check les doublons dans login 
+	(j'avais besoin de la map dans server)
 
     A Faire
-        - finir nickname si pas deja fait
+
         - se renseigner sur les macros pour les erreurs
         - implementer Serv& Server::get_instance() pour recuperer
           une copie de la structure pour l'utiliser dans Command

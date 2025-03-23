@@ -80,7 +80,7 @@ void Server::process_input(std::string& input, Client &client)
     std::vector<std::string> args = split(input, " ");
 
     if (client.get_status() != REGISTERED)
-        client.login(input, _password);
+        client.login(input, _password, *this);
     else
     {
         if (check_command(input, "JOIN"))
