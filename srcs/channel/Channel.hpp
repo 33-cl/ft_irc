@@ -14,7 +14,7 @@ class Channel
         ~Channel();
 
         void    add_client(int fd);
-
+		bool	hasClient(int fd) const;
 
         std::vector<int>    get_clients() const;  
 
