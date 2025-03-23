@@ -27,3 +27,12 @@ class Join : public Command
 
         void    execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
+
+class Kick : public Command
+{
+	public:
+		Kick();
+		~Kick();
+
+		void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+};

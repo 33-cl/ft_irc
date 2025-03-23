@@ -46,7 +46,7 @@ SRC =	srcs/main.cpp \
 		srcs/server/Server.cpp srcs/server/setup.cpp srcs/server/utils.cpp \
 		srcs/client/init.cpp srcs/client/accessors.cpp srcs/client/login.cpp srcs/client/join.cpp srcs/client/utils.cpp \
 		srcs/channel/init.cpp srcs/channel/utils.cpp \
-		srcs/commands/Join.cpp srcs/commands/Command.cpp;
+		srcs/commands/Join.cpp srcs/commands/Command.cpp srcs/commands/Kick.cpp;
 
 OBJ_DIR = .build
 OBJ = $(SRC:srcs/%.cpp=$(OBJ_DIR)/%.o)

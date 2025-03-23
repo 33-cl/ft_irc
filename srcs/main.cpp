@@ -4,8 +4,7 @@
 
     A Faire
 
-        - se renseigner sur les macros pour les erreurs
-        - renseignement sur KICK
+        - renseignement sur KICK -> nouvelle classe ds cmd
         - remplacer toutes les utilisations d'accesseur par
           l'utilisation directe de la variable avec les classes "friends"
 */

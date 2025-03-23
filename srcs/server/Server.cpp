@@ -115,6 +115,13 @@ void Server::process_input(std::string& input, Client &client)
             // names_msg += "\r\n";
             // send(client.get_socket().fd, names_msg.c_str(), names_msg.length(), 0);
         }
+		else if (check_command(input, "KICK"))
+		{
+			if(check_command(input, "KICK"))
+			{
+				_commands["KICK"]->execute(client, args, *this);
+			}
+		}
         else if (check_command(input, "PRIVMSG"))   {(void)input;}
         else if (check_command(input, "NICK"))      {(void)input;}
         else if (check_command(input, "TOPIC"))     {(void)input;}
