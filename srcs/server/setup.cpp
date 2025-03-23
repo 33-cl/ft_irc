@@ -8,12 +8,14 @@ Server::~Server()
 
     delete  _commands["JOIN"];
 	delete  _commands["KICK"];
+	delete  _commands["QUIT"];
 }
 
 void    Server::init_commands()
 {
     _commands["JOIN"] = new Join;
 	_commands["KICK"] = new Kick;
+	_commands["QUIT"] = new Quit;
 }
 
 void    Server::initialize(int argc, char **argv)

@@ -47,6 +47,7 @@ class Server
         friend class Command;
         friend class Join;
 		friend class Kick;
+		friend class Quit;
 };
 
 std::vector<std::string> split(const std::string& str, const std::string& delimiter = "\r\n");

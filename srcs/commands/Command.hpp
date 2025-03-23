@@ -36,3 +36,12 @@ class Kick : public Command
 
 		void    execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
+
+class Quit : public Command
+{
+	public:
+		Quit();
+		~Quit();
+
+		void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+};
