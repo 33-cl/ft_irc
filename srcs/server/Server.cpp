@@ -61,9 +61,9 @@ void Server::process_input(std::string& input, Client &client)
 
     if (client.status != REGISTERED)
     {
-        //client.login(input, _password, *this);
-        if (client.status == UNREGISTERED)
-            _commands["PASS"]->execute(client, args, *this);
+        client.login(input, _password, *this);
+        // if (client.status == UNREGISTERED)
+        //     _commands["PASS"]->execute(client, args, *this);
     }
     else
     {

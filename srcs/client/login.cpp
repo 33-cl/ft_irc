@@ -78,7 +78,10 @@ void    Client::login(std::string& input, const std::string& password, Server& s
 
 			size_t first = format.find_first_not_of(" \t");
 			size_t last = format.find_last_not_of(" \t");
-   			format = format.substr(first, last - first + 1);
+			if (first != std::string::npos)
+				format = format.substr(first, last - first + 1);
+			else
+				format = "";
 
 			std::string target = nickname.empty() ? "*" : nickname;
 
