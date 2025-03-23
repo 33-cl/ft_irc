@@ -27,3 +27,12 @@ class Join : public Command
 
         void    execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
+
+class Pass : public Command
+{
+    public:
+        Pass();
+        ~Pass();
+
+        void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+};

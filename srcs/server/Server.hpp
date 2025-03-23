@@ -46,6 +46,8 @@ class Server
         
         friend class Command;
         friend class Join;
+        friend class Pass;
 };
 
-std::vector<std::string> split(const std::string& str, const std::string& delimiter = "\r\n");
+std::vector<std::string>    split(const std::string& str, const std::string& delimiter = "\r\n");
+bool                        check_command(std::string& input, const std::string& command);

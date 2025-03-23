@@ -59,6 +59,5 @@ class Client
 
         friend class Command;
         friend class Join;
+        friend class Pass;
 };
-
-bool    check_command(std::string& input, const std::string& command);

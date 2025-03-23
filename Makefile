@@ -42,11 +42,11 @@ NAME = ircserv
 CXX = c++
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 
-SRC =	srcs/main.cpp \
-		srcs/server/Server.cpp srcs/server/setup.cpp srcs/server/utils.cpp \
-		srcs/client/init.cpp srcs/client/accessors.cpp srcs/client/login.cpp srcs/client/join.cpp srcs/client/utils.cpp \
-		srcs/channel/init.cpp srcs/channel/utils.cpp \
-		srcs/commands/Join.cpp srcs/commands/Command.cpp;
+SRC = 	$(wildcard srcs/*.cpp) \
+		$(wildcard srcs/server/*.cpp) \
+		$(wildcard srcs/client/*.cpp) \
+		$(wildcard srcs/channel/*.cpp) \
+		$(wildcard srcs/commands/*.cpp)
 
 OBJ_DIR = .build
 OBJ = $(SRC:srcs/%.cpp=$(OBJ_DIR)/%.o)
