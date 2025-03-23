@@ -29,7 +29,7 @@ void    Client::login(std::string& input, const std::string& password, Server& s
         std::cout << "password received : |" << input.substr(5, input.length() - 5) << "|" << std::endl;
         std::cout << "real password     : |" << password << "|" << std::endl;
         if (input.substr(5, input.length() - 5) != password) // substr() exclut le \n a la fin du buffer
-            throw std::invalid_argument(":ircserv 464 * :Password incorrect\r\n");
+            throw std::invalid_argument(ERR_PASSWDMISMATCH(std::string("*")));
         status = PENDING_REGISTRATION;
     }
     else if (status == PENDING_REGISTRATION)
@@ -40,20 +40,16 @@ void    Client::login(std::string& input, const std::string& password, Server& s
             
             // std::cout << "|" << new_nick << "|\n";
 			if (new_nick.empty())
-				throw std::invalid_argument(":irc.example.com 431 * :No nickname given\r\n");
+				throw std::invalid_argument(ERR_NONICKNAMEGIVEN(std::string("*")));
 
 			for (size_t i = 0; i < new_nick.length(); ++i)
 			{
 				if ((i == 0 && !isalpha(new_nick[i])) || !is_nickname_char(new_nick[i]) || i > 8)
-					throw std::invalid_argument(":irc.example.com 432 * " + new_nick + " :Erroneous nickname\r\n");
+					throw std::invalid_argument(ERR_ERRONEUSNICKNAME(new_nick));
 			}
-            // Check for existing nickname (this would require access to a list of existing nicknames)
-            // Assuming there's a function or way to check if the nickname exists
 			
 			if (nick_already_used(new_nick, server._clients, *this))
-				throw std::invalid_argument(":irc.example.com 433 * " + new_nick + " :Nickname is already in use\r\n");
-            // if (isNic kInUse(new_nick))
-            //     throw std::invalid_argument(":irc.example.com 433 * " + new_nick + " :Nickname is already in use\r\n");
+				throw std::invalid_argument(ERR_NICKNAMEINUSE(new_nick));
 
             // Nickname collision KILL
             // if (hasNickCollision(new_nick))
@@ -84,16 +80,18 @@ void    Client::login(std::string& input, const std::string& password, Server& s
 			size_t last = format.find_last_not_of(" \t");
    			format = format.substr(first, last - first + 1);
 
+			std::string target = nickname.empty() ? "*" : nickname;
+
 			if (is_valid_username(username))
 				this->username = username;
 			else
-				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
+				throw std::invalid_argument(ERR_NEEDMOREPARAMS(target, "USER"));
 			
 			if (format != "0 *")
-				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
+				throw std::invalid_argument(ERR_NEEDMOREPARAMS(target, "USER"));
 			
 			if (realname.find('\r') != std::string::npos || realname.find('\n') != std::string::npos)
-  				throw std::invalid_argument(":SERVER 461 * " + username + " :Not enough parameters\r\n");
+  				throw std::invalid_argument(ERR_NEEDMOREPARAMS(target, "USER"));
 			else
 				this->realname = realname;
             

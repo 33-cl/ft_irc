@@ -71,6 +71,13 @@ void Server::process_input(std::string& input, Client &client)
         {
             _commands["JOIN"]->execute(client, args, *this);
         }
+		else if (check_command(input, "KICK"))
+		{
+			if(check_command(input, "KICK"))
+			{
+				_commands["KICK"]->execute(client, args, *this);
+			}
+		}
         else if (check_command(input, "PRIVMSG"))   {(void)input;}
         else if (check_command(input, "NICK"))      {(void)input;}
         else if (check_command(input, "TOPIC"))     {(void)input;}

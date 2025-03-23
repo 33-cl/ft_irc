@@ -2,6 +2,7 @@
 
 #include "../channel/Channel.hpp"
 #include "../server/Server.hpp"
+#include "../messages.hpp"
 
 #include <poll.h>
 #include <arpa/inet.h>
@@ -59,5 +60,6 @@ class Client
 
         friend class Command;
         friend class Join;
+		friend class Kick;
         friend class Pass;
 };

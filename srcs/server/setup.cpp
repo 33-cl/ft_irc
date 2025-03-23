@@ -7,12 +7,14 @@ Server::~Server()
     close(_fd);
 
     delete  _commands["JOIN"];
+	delete  _commands["KICK"];
     delete  _commands["PASS"];
 }
 
 void    Server::init_commands()
 {
     _commands["JOIN"] = new Join;
+	_commands["KICK"] = new Kick;
     _commands["PASS"] = new Pass;
 }
 
