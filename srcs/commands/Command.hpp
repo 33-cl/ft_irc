@@ -1,8 +1,10 @@
 #pragma once
 
 #include "../client/Client.hpp"
+#include "../server/Server.hpp"
 
 class Client;
+class Server;
 
 class Command
 {
@@ -10,7 +12,11 @@ class Command
         Command();
         virtual ~Command();
 
-        virtual void    execute(Client& client, std::vector<std::string>& args) = 0;
+        virtual void    execute(Client& client, std::vector<std::string>& args, Server &server) = 0;
+
+        friend class Client;
+        friend class Server;
+        friend class Channel;
 };
 
 class Join : public Command
@@ -19,5 +25,5 @@ class Join : public Command
         Join();
         ~Join();
 
-        void    execute(Client& client, std::vector<std::string>& args);
+        void    execute(Client& client, std::vector<std::string>& args, Server &serv);
 };

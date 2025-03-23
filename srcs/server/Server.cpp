@@ -85,7 +85,7 @@ void Server::process_input(std::string& input, Client &client)
     {
         if (check_command(input, "JOIN"))
         {
-            _commands["JOIN"]->execute(client, args);
+            _commands["JOIN"]->execute(client, args, *this);
 
             // std::string channel_name = input.substr(5, input.length() - 5);
             // if (_channels.find(channel_name) == _channels.end())

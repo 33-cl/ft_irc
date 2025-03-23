@@ -51,6 +51,9 @@ class Client
 		bool		is_nickname_char(char c);
 
         static pollfd  create_socket(int fd, short events, short revents);
+
+        friend class Command;
+        friend class Join;
 };
 
 bool    check_command(std::string& input, const std::string& command);
