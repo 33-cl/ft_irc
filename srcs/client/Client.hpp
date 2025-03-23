@@ -2,6 +2,7 @@
 
 #include "../channel/Channel.hpp"
 #include "../server/Server.hpp"
+#include "../messages.hpp"
 
 #include <poll.h>
 #include <arpa/inet.h>

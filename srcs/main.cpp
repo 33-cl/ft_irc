@@ -1,9 +1,6 @@
 # include "server/Server.hpp"
 
 /*
-	- J'ai mis les classes en friend, 
-	ca me permettais de check les doublons dans login 
-	(j'avais besoin de la map dans server)
 
     A Faire
 

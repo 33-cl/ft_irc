@@ -51,7 +51,7 @@ SRC =	srcs/main.cpp \
 OBJ_DIR = .build
 OBJ = $(SRC:srcs/%.cpp=$(OBJ_DIR)/%.o)
 
-HEADERS = srcs/server/Server.hpp srcs/client/Client.hpp srcs/channel/Channel.hpp srcs/commands/Commands.hpp
+HEADERS = srcs/server/Server.hpp srcs/client/Client.hpp srcs/channel/Channel.hpp srcs/commands/Commands.hpp message.hpp;
 
 all: $(NAME)
 
