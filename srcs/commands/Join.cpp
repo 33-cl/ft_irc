@@ -24,7 +24,7 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
         // Si le channel n'existe pas on le cree puis on ajoute le client
         if (server._channels.find(channel_name) == server._channels.end())
         {
-            server._channels.insert(std::pair<std::string, Channel>(channel_name, Channel(channel_name, client.get_socket().fd)));
+            server._channels.insert(std::pair<std::string, Channel>(channel_name, Channel(channel_name, client.socket.fd)));
             std::cout << "Channel " << channel_name << " created by " << client.nickname << std::endl;
         }
         // Sinon on ajoute le client direct

@@ -4,13 +4,11 @@ Pass::Pass() {}
 
 Pass::~Pass() {}
 
-/*
-    Erreurs non gerees
-        - args.size() != 2
-*/
-
 void    Pass::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
+    if (client.status != UNREGISTERED)
+        return; // a gerer :server 462 <nickname> :You may not reregister
+
     if (args[0] != "PASS")
         return;
 

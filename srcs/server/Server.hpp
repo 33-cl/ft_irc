@@ -44,10 +44,18 @@ class Server
 
         void    infos();
         
+        friend class Client;
+        friend class Channel;
         friend class Command;
-        friend class Join;
         friend class Pass;
-		friend class Kick;
+        friend class Nick;
+        friend class User;
+        friend class Join;
+        friend class Privmsg;
+        friend class Mode;
+        friend class Kick;
+        friend class Topic;
+        friend class Quit;
 };
 
 std::vector<std::string>    split(const std::string& str, const std::string& delimiter = "\r\n");

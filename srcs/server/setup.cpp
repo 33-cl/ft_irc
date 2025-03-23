@@ -6,16 +6,28 @@ Server::~Server()
 {
     close(_fd);
 
-    delete  _commands["JOIN"];
-	delete  _commands["KICK"];
-    delete  _commands["PASS"];
+    delete  _commands["PASS"]; 
+    delete  _commands["NICK"];   
+    delete  _commands["USER"];   
+    delete  _commands["JOIN"];   
+    delete  _commands["PRIVMSG"];
+	delete  _commands["MODE"];
+    delete  _commands["KICK"];   
+    delete  _commands["TOPIC"];
+    delete  _commands["QUIT"]; 
 }
 
 void    Server::init_commands()
 {
-    _commands["JOIN"] = new Join;
-	_commands["KICK"] = new Kick;
-    _commands["PASS"] = new Pass;
+    _commands["PASS"]    = new Pass;
+    _commands["NICK"]    = new Nick;
+    _commands["USER"]    = new User;
+    _commands["JOIN"]    = new Join;
+    _commands["PRIVMSG"] = new Privmsg;
+	_commands["MODE"]    = new Mode;
+    _commands["KICK"]    = new Kick;
+    _commands["TOPIC"]   = new Topic;
+    _commands["QUIT"]    = new Quit;
 }
 
 void    Server::initialize(int argc, char **argv)
@@ -69,13 +81,11 @@ void    Server::start()
             break;
 
         for (size_t i = 0; i < sockets.size(); i++)
-        {//on met pollin dans events car c'est ce qu'on surveille, dans revent on trouve ce que poll a detecte
-            if (sockets[i].revents & POLLIN)//isole juste la partie de bit pollin pour voir si il est present
+        {
+            if (sockets[i].revents & POLLIN)
             {
                 if (sockets[i].fd == this->_fd)
-                {
                     new_client(sockets);
-                }
                 else
                     process_client_data(sockets, i);
             }

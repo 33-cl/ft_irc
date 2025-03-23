@@ -18,6 +18,8 @@ class Channel
 
         std::vector<int>    get_clients() const;  
 
+        friend class Server;
+        friend class Client;
         friend class Command;
         friend class Join;
 };
