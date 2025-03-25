@@ -1,4 +1,3 @@
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -7,7 +6,7 @@
 /*   By: qordoux <qordoux@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 19:33:24 by qordoux           #+#    #+#             */
-/*   Updated: 2025/03/23 20:57:18 by qordoux          ###   ########.fr       */
+/*   Updated: 2025/03/25 16:04:52 by qordoux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +23,7 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
 	//message de deconnection ou non
 	std::string quitMessage = (args.empty() ? "Client disconnected" : args[0]);
 
-	std::string message = ":" + client.nickname + " QUIT :" + quitMessage;
+	std::string message = ":" + client.get_nickname() + " QUIT :" + quitMessage;
 
 	  // Parcourir la map des channels du serveur avec un itérateur classique
     for (std::map<std::string, Channel>::iterator it = server._channels.begin();

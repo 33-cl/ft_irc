@@ -37,7 +37,7 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 
             for (size_t i = 0; i < commands.size(); i++)
             {
-                std::cout << "command: " << commands[i] << std::endl;
+                //std::cout << "command: " << commands[i] << std::endl;
                 process_input(commands[i], _clients[fds[client_index].fd]);
             }
         }
@@ -62,7 +62,16 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 void Server::process_input(std::string& input, Client &client)
 {
     std::vector<std::string> args = split(input, " ");
-
+    
+    // A SUPPRIMER AVANT DE PUSH
+    std::cout << "|" << input << "|\n";
+    if (input == "ADMIN")
+    {
+        client.nickname = "admin";
+        client.username = "admin";
+        client.status = REGISTERED;
+    }
+        
     // Cas ou input n'est pas une commande
     if (_commands.find(args[0]) == _commands.end())
         return;
