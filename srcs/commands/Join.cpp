@@ -45,7 +45,7 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
         }
 
         // Envoyer la reponse JOIN au client 
-        std::string join_msg = ":" + client.nickname + "!" + client.username + "@" + "localhost JOIN " + channel_name + "\r\n";
+        std::string join_msg = ":" + client.nickname + "!" + client.username + "@localhost JOIN " + channel_name + "\r\n";
         send(client.socket.fd, join_msg.c_str(), join_msg.length(), 0);
     }
 }

@@ -17,7 +17,8 @@ void 	Privmsg::execute(Client& client, std::vector<std::string>& args, Server& s
 
 	if (!args[1].empty() && args[1][0] == '#')
 	{
-		server._channels[args[1]].broadcast(args[2]);
+		if (!args[2].empty() && args[2][0] == ':')
+			server._channels[args[1]].broadcast(args[2]);
 	}
 	else
 		client.write(args[2]); // send to client
