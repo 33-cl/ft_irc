@@ -5,7 +5,7 @@ Privmsg::Privmsg() {}
 Privmsg::~Privmsg() {}
 
 /*
-	Tout parses
+	Tout parser
 */
 
 void 	Privmsg::execute(Client& client, std::vector<std::string>& args, Server& server)
