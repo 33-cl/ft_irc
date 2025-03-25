@@ -16,6 +16,7 @@
         - virer les commentaires inutiles
         - traduire les commentaires utiles en anglais
         - remplacer les wildcards
+        - supprimer ADMIN
 */
 
 int main(int argc, char **argv)
