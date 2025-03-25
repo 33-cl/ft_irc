@@ -14,7 +14,6 @@ Channel::~Channel()
 
 bool	Channel::hasClient(int fd) const
 {
-	//A VERIFIER
 	for (size_t i = 0; i < clients.size(); i++)
 	{
 		if (clients[i] == fd)
@@ -45,4 +44,16 @@ void    Channel::broadcast(const std::string& str)
 std::vector<int>    Channel::get_clients() const
 {
     return this->clients;
+}
+
+void Channel::removeClient(int fd)
+{
+	for (std::vector<int>::iterator it = clients.begin(); it != clients.end(); ++it)
+	{
+		if (*it == fd)
+		{
+			clients.erase(it);
+			break;
+		}
+	}
 }

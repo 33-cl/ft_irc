@@ -12,6 +12,7 @@
 #include <arpa/inet.h>
 #include <string.h>
 
+
 class Channel
 {
     private:
@@ -24,6 +25,7 @@ class Channel
 
         void    add_client(int fd);
 		bool	hasClient(int fd) const;
+		void	removeClient(int fd);
 
         void    broadcast(const std::string& str);
 
