@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Quit.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qordoux <qordoux@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maeferre <maeferre@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 19:33:24 by qordoux           #+#    #+#             */
-/*   Updated: 2025/03/25 17:00:22 by qordoux          ###   ########.fr       */
+/*   Updated: 2025/03/25 18:42:01 by maeferre         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
         Channel& channel = it->second;
         if (channel.hasClient(client.socket.fd))
         {
-            channel.broadcast(message);
+            channel.broadcast(message, client);
             channel.removeClient(client.socket.fd);
         }
     }

@@ -9,28 +9,39 @@
 std::vector<std::string> split(const std::string& str, const std::string& delimiter) 
 {
     std::vector<std::string> tokens;
-    size_t start = 0;              
+    size_t start = 0;
     size_t end = str.find(delimiter);
+    bool colon_found = false;
 
-    // Dividing the string
-    while (end != std::string::npos) 
+    while (end != std::string::npos && !colon_found) 
     {
+        // Vérifier si ':' est présent dans le segment courant
+        size_t colon_pos = str.find(':', start);
+        if (colon_pos != std::string::npos && colon_pos < end) 
+        {
+            // Si ':' est trouvé avant le prochain délimiteur, tout mettre dans le dernier token
+            colon_found = true;
+            break;
+        }
+
         std::string token = str.substr(start, end - start);
         tokens.push_back(token);
         start = end + delimiter.length();
         end = str.find(delimiter, start);
     }
 
-    // Add the last string 
-    if (start < str.length()) {
-        std::string token = str.substr(start);
-
-        // Suppression des "\r\n" à la fin du dernier token en C++98
-        while (!token.empty() && (token[token.size()-1] == '\r' || token[token.size()-1] == '\n')) {
-            token.erase(token.size()-1);
+    // Gérer le reste de la chaîne (soit après le dernier délimiteur, soit après ':')
+    if (start < str.length()) 
+    {
+        std::string remaining = str.substr(start);
+        
+        // Suppression des "\r\n" à la fin
+        while (!remaining.empty() && (remaining[remaining.size()-1] == '\r' || remaining[remaining.size()-1] == '\n')) 
+        {
+            remaining.erase(remaining.size()-1);
         }
         
-        tokens.push_back(token);
+        tokens.push_back(remaining);
     }
 
     return tokens;

@@ -15,7 +15,7 @@ class Command
         Command() {};
         virtual ~Command() {};
 
-        virtual void    execute(Client& client, std::vector<std::string>& args, Server &server) = 0;
+        virtual void    execute(Client& client, std::vector<std::string>& args, Server &serv) = 0;
 
         friend class Client;
         friend class Server;

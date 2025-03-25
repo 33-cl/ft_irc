@@ -71,7 +71,7 @@ void Server::process_input(std::string& input, Client &client)
         client.username = "admin";
         client.status = REGISTERED;
     }
-        
+
     // Cas ou input n'est pas une commande
     if (_commands.find(args[0]) == _commands.end())
         return;

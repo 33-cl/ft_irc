@@ -37,18 +37,13 @@ class Client
         Client(int fd);
         ~Client();
 
+        std::string get_mask();
+        
+        static pollfd  create_socket(int fd, short events, short revents);
+        
         void    send_msg(const std::string& str);
         void    write(const std::string& str);
-
-        void    login(std::string& input, const std::string& password, Server& server);
-        void    join(const std::string& name, std::map<std::string, Channel>& channels);
-
-		bool		is_valid_username(const std::string& user);
-		bool		is_nickname_char(char c);
-		bool		nick_already_used(const std::string& nick, const std::map<int, Client>& clients, const Client& current_client);
-
-        static pollfd  create_socket(int fd, short events, short revents);
-
+        
         friend class Server;
         friend class Channel;
         friend class Command;

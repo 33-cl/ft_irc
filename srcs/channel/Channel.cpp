@@ -27,16 +27,14 @@ void    Channel::add_client(Client new_client)
     clients.push_back(new_client);
 }
 
-void    Channel::broadcast(const std::string& str)
+void    Channel::broadcast(const std::string& str, const Client& src)
 {
 	(void)str;
 	for (size_t i = 0; i < clients.size(); i++)
 	{
-		std::string message = str + "\r\n";
-		ssize_t bytes_sent = send(clients[i].socket.fd, message.c_str(), message.length(), 0);
-		if (bytes_sent == -1) {
-			std::cerr << "Error while sending data" << std::endl;
-		}
+		(void)src;
+		// if (src.socket.fd == clients[i].socket.fd)
+			clients[i].write(str);
 	}	
 }
 

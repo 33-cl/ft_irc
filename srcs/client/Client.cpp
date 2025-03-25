@@ -11,6 +11,12 @@ Client::Client(int fd) : nickname(""), username(""), status(UNREGISTERED)
 
 Client::~Client() {}
 
+std::string Client::get_mask()
+{
+    std::string mask = ":" + nickname + "!" + username + "@localhost ";
+    return mask;
+}
+
 pollfd  Client::create_socket(int fd, short events, short revents)
 {
     pollfd  new_socket;

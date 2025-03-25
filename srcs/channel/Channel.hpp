@@ -27,7 +27,7 @@ class Channel
 		bool	hasClient(int fd) const;
 		void	removeClient(int fd);
 
-        void    broadcast(const std::string& str);
+        void    broadcast(const std::string& str, const Client& src);
 
         std::vector<Client>    get_clients() const;  
 
