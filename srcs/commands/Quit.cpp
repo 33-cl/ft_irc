@@ -6,7 +6,7 @@
 /*   By: qordoux <qordoux@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 19:33:24 by qordoux           #+#    #+#             */
-/*   Updated: 2025/03/23 20:44:15 by qordoux          ###   ########.fr       */
+/*   Updated: 2025/03/23 20:57:18 by qordoux          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
     {
         Channel& channel = it->second;
         // Vérifier si le client est présent dans ce canal
-        if (channel.hasClient(client))
+        if (channel.hasClient(client.socket.fd))
         {
             // Diffuser le message de déconnexion aux autres membres du canal
             // channel.broadcast(message, client);
