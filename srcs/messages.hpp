@@ -1,24 +1,75 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   messages.hpp                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: qordoux <qordoux@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/23 17:01:21 by qordoux           #+#    #+#             */
-/*   Updated: 2025/03/23 17:42:41 by qordoux          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+/*
+    GESTION D'ERREURS
 
-#ifndef MESSAGES_HPP
-# define MESSAGES_HPP
+    1.Erreurs récupérables
+        Exemples : Mot de passe incorrect, commande mal formatée, canal inexistant.
+        Traitement : try -> catch, envoyer un message d'erreur via send(), permettre au client de réessayer.
 
-//Error message
+    2.Erreurs critiques
+        Exemples : Défaillance du serveur, erreur de mémoire, problème réseau.
+        Traitement : try -> catch, journaliser l'erreur, fermer la connexion ou redémarrer, ne pas permettre de réessayer immédiatement.
 
-#define ERR_NONICKNAMEGIVEN(client) "431 " + client + " :No nickname given"
-#define ERR_ERRONEUSNICKNAME(nick) "432 " + nick + " :Erroneous nickname"
-#define ERR_NICKNAMEINUSE(nick) "433 " + nick + " " + nick + " nickname is already in use"
-#define ERR_NEEDMOREPARAMS(client, command) "461 " + client + " " + command + " :Not enough parameters"
-#define ERR_PASSWDMISMATCH(client) "464 " + client + " :Password incorrect"
+    3.Erreurs de validation
+        Exemples : Pseudonyme déjà utilisé, canal plein, tentative non autorisée.
+        Traitement : Envoyer un message d'erreur via send(), bloquer l'action, permettre une nouvelle tentative avec des données valides.
 
-#endif
+    En bref :
+    Récupérables : Client peut réessayer.
+    Critiques : Problème grave, fermer ou redémarrer.
+    Validation : Bloquer l'action, demander une correction.
+
+*/
+
+#pragma once
+
+#include <iostream>
+#include <utility>
+#include <cstdlib>
+#include <unistd.h>
+#include <vector>
+#include <map>
+#include <poll.h>
+#include <arpa/inet.h>
+#include <string.h>
+
+#define SERVER_NAME "ircserv"
+
+#define ERR_NONICKNAMEGIVEN(nick)        ("431 " + std::string(nick) + " :No nickname given")
+#define ERR_ERRONEUSNICKNAME(nick)       ("432 " + std::string(nick) + " :Erroneous nickname")
+#define ERR_NICKNAMEINUSE(nick)          ("433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use")
+#define ERR_USERONCHANNEL(nick, channel) ("443 " + std::string(nick) + " " + channel + " :is already on channel")
+#define ERR_NEEDMOREPARAMS(nick, cmd)    ("461 " + std::string(nick) + " " + std::string(cmd) + " :Not enough parameters")
+#define ERR_TOOMANYPARAMS(nick, cmd)     ("461 " + std::string(nick) + " " + std::string(cmd) + " :Too many parameters")
+#define ERR_ALREADYREGISTERED(nick)      ("462 " + std::string(nick) + " :You may not reregister")
+#define ERR_PASSWDMISMATCH(nick)         ("464 " + std::string(nick) + " :Password incorrect")
+#define ERR_BADCHANMASK(channel)         ("476 " + std::string(channel) + " :Bad channel mask")
+
+class critical_error : public std::exception
+{
+    private:
+        std::string message;
+    
+    public:
+        critical_error(const std::string& str) : message(str) {}
+        virtual ~critical_error() throw() {}
+
+        virtual const char* what() const throw()
+        {
+            return message.c_str();
+        }
+};
+
+class recoverable_error : public std::exception
+{
+    private:
+        std::string message;
+    
+    public:
+        recoverable_error(const std::string& str) : message(str) {}
+        virtual ~recoverable_error() throw() {}
+
+        virtual const char* what() const throw()
+        {
+            return message.c_str();
+        }
+};

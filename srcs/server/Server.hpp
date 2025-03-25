@@ -3,6 +3,7 @@
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
 #include "../commands/Command.hpp"
+#include "../messages.hpp"
 
 #include <iostream>
 #include <utility>
@@ -15,7 +16,7 @@
 #include <string.h>
 
 class Command;
-
+class Channel;
 class Client;
 
 class Server
@@ -44,11 +45,18 @@ class Server
 
         void    infos();
         
+        friend class Client;
+        friend class Channel;
         friend class Command;
-        friend class Join;
         friend class Pass;
-		friend class Kick;
-		friend class Quit;
+        friend class Nick;
+        friend class User;
+        friend class Join;
+        friend class Privmsg;
+        friend class Mode;
+        friend class Kick;
+        friend class Topic;
+        friend class Quit;
 };
 
 std::vector<std::string>    split(const std::string& str, const std::string& delimiter = "\r\n");

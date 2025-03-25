@@ -77,9 +77,9 @@ void    Server::infos()
         for (std::map<int, Client>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
         {
             std::cout << "  Client fd: " << it->first << std::endl
-                      << "    Nickname: " << it->second.get_nickname() << std::endl
-                      << "    Username: " << it->second.get_username() << std::endl
-                      << "    Status  : " << it->second.get_status() << std::endl;
+                      << "    Nickname: " << it->second.nickname << std::endl
+                      << "    Username: " << it->second.username << std::endl
+                      << "    Status  : " << it->second.status << std::endl;
         }
     }
     
@@ -93,11 +93,11 @@ void    Server::infos()
         {
             std::cout << "  Channel: " << it->first << std::endl;
 
-            std::vector<int> clients_id = it->second.get_clients();
+            std::vector<int> clients_id = it->second.clients;
 
             for (size_t i = 0; i < clients_id.size(); i++) {
                 // Accès à l'élément aclients_id clients_id[i]
-                std::cout << _clients[clients_id[i]].get_nickname() << "|";
+                std::cout << _clients[clients_id[i]].nickname << "|";
             }
             std::cout << std::endl;
         }

@@ -24,7 +24,6 @@ class Server;
 
 class Client
 {
-	friend class Server;
     private:
         pollfd      socket;
         std::string nickname;
@@ -38,31 +37,30 @@ class Client
         Client(int fd);
         ~Client();
 
+        void    send_msg(const std::string& str);
         void    write(const std::string& str);
 
         void    login(std::string& input, const std::string& password, Server& server);
         void    join(const std::string& name, std::map<std::string, Channel>& channels);
 
-        pollfd      get_socket() const;
-        short       get_status() const;
-        std::string get_nickname() const;
-        std::string get_username() const;
-        std::string get_hostname() const;
-        void        set_status(const short& status);
-        void        set_nickname(const std::string& nickname);
-        void        set_username(const std::string& username);
-        void        set_hostname(const std::string& hostname);
 		bool		is_valid_username(const std::string& user);
 		bool		is_nickname_char(char c);
 		bool		nick_already_used(const std::string& nick, const std::map<int, Client>& clients, const Client& current_client);
 
         static pollfd  create_socket(int fd, short events, short revents);
 
+        friend class Server;
+        friend class Channel;
         friend class Command;
-        friend class Join;
-		friend class Kick;
-		friend class Quit;
         friend class Pass;
+        friend class Nick;
+        friend class User;
+        friend class Join;
+        friend class Privmsg;
+        friend class Mode;
+        friend class Kick;
+        friend class Topic;
+        friend class Quit;
 };
 
 bool    check_command(std::string& input, const std::string& command);

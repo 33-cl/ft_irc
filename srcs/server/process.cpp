@@ -15,7 +15,7 @@ void    Server::new_client(std::vector<pollfd> &fds)
     Client  new_client(client_fd);
 
     _clients[client_fd] = new_client;
-    fds.push_back(new_client.get_socket());
+    fds.push_back(new_client.socket);
 }
 
 void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
@@ -34,14 +34,18 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 
         try
         {
+
             for (size_t i = 0; i < commands.size(); i++)
+            {
+                std::cout << "command: " << commands[i] << std::endl;
                 process_input(commands[i], _clients[fds[client_index].fd]);
-            std::cout << std::endl;
+            }
         }
-        catch(const std::exception& e)
+        catch(const recoverable_error& e)
         {
             //std::cerr << e.what() << '\n';
-            send(fds[client_index].fd, e.what(), strlen(e.what()), 0);
+            _clients[fds[client_index].fd].send_msg(std::string(e.what()));
+            //send(fds[client_index].fd, e.what(), strlen(e.what()), 0);
         }
     }
     else
@@ -59,30 +63,9 @@ void Server::process_input(std::string& input, Client &client)
 {
     std::vector<std::string> args = split(input, " ");
 
-    if (client.status != REGISTERED)
-    {
-        client.login(input, _password, *this);
-        // if (client.status == UNREGISTERED)
-        //     _commands["PASS"]->execute(client, args, *this);
-    }
-    else
-    {
-        if (check_command(input, "JOIN"))
-        {
-            _commands["JOIN"]->execute(client, args, *this);
-        }
-		else if (check_command(input, "KICK"))
-		{
-			_commands["KICK"]->execute(client, args, *this);
-		}
-		else if (check_command(input, "QUIT"))
-		{
-			_commands["QUIT"]->execute(client, args, *this);
-		}
-        else if (check_command(input, "PRIVMSG"))   {(void)input;}
-        else if (check_command(input, "NICK"))      {(void)input;}
-        else if (check_command(input, "TOPIC"))     {(void)input;}
-        else if (check_command(input, "MODE"))      {(void)input;}
-        else if (check_command(input, "TOPIC"))     {(void)input;}
-    }
+    // Cas ou input n'est pas une commande
+    if (_commands.find(args[0]) == _commands.end())
+        return;
+
+    _commands[args[0]]->execute(client, args, *this);
 }
