@@ -37,6 +37,7 @@ class Client
         Client(int fd);
         ~Client();
 
+        void    send_msg(const std::string& str);
         void    write(const std::string& str);
 
         void    login(std::string& input, const std::string& password, Server& server);

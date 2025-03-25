@@ -22,8 +22,54 @@
 
 #pragma once
 
-#define ERR_NONICKNAMEGIVEN(client) "431 " + client + " :No nickname given"
-#define ERR_ERRONEUSNICKNAME(nick) "432 " + nick + " :Erroneous nickname"
-#define ERR_NICKNAMEINUSE(nick) "433 " + nick + " " + nick + " nickname is already in use"
-#define ERR_NEEDMOREPARAMS(client, command) "461 " + client + " " + command + " :Not enough parameters"
-#define ERR_PASSWDMISMATCH(client) "464 " + client + " :Password incorrect"
+#include <iostream>
+#include <utility>
+#include <cstdlib>
+#include <unistd.h>
+#include <vector>
+#include <map>
+#include <poll.h>
+#include <arpa/inet.h>
+#include <string.h>
+
+#define SERVER_NAME "ircserv"
+
+#define ERR_NONICKNAMEGIVEN(nick)        ("431 " + std::string(nick) + " :No nickname given")
+#define ERR_ERRONEUSNICKNAME(nick)       ("432 " + std::string(nick) + " :Erroneous nickname")
+#define ERR_NICKNAMEINUSE(nick)          ("433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use")
+#define ERR_USERONCHANNEL(nick, channel) ("443 " + std::string(nick) + " " + channel + " :is already on channel")
+#define ERR_NEEDMOREPARAMS(nick, cmd)    ("461 " + std::string(nick) + " " + std::string(cmd) + " :Not enough parameters")
+#define ERR_TOOMANYPARAMS(nick, cmd)     ("461 " + std::string(nick) + " " + std::string(cmd) + " :Too many parameters")
+#define ERR_ALREADYREGISTERED(nick)      ("462 " + std::string(nick) + " :You may not reregister")
+#define ERR_PASSWDMISMATCH(nick)         ("464 " + std::string(nick) + " :Password incorrect")
+#define ERR_BADCHANMASK(channel)         ("476 " + std::string(channel) + " :Bad channel mask")
+
+class critical_error : public std::exception
+{
+    private:
+        std::string message;
+    
+    public:
+        critical_error(const std::string& str) : message(str) {}
+        virtual ~critical_error() throw() {}
+
+        virtual const char* what() const throw()
+        {
+            return message.c_str();
+        }
+};
+
+class recoverable_error : public std::exception
+{
+    private:
+        std::string message;
+    
+    public:
+        recoverable_error(const std::string& str) : message(str) {}
+        virtual ~recoverable_error() throw() {}
+
+        virtual const char* what() const throw()
+        {
+            return message.c_str();
+        }
+};

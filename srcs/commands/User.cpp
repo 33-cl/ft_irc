@@ -14,7 +14,7 @@ void User::execute(Client& client, std::vector<std::string>& args, Server& serve
     std::string format = "0 *";
     
     if (args.size() < 4)
-        throw std::invalid_argument(ERR_NEEDMOREPARAMS(client.nickname.empty() ? "*" : client.nickname, "USER"));
+        throw recoverable_error(ERR_NEEDMOREPARAMS(client.nickname.empty() ? "*" : client.nickname, "USER"));
     
     new_username = args[1];
     
@@ -35,10 +35,10 @@ void User::execute(Client& client, std::vector<std::string>& args, Server& serve
     if (is_valid_username(new_username))
         client.username = new_username;
     else
-        throw std::invalid_argument(ERR_NEEDMOREPARAMS(target, "USER"));
+        throw recoverable_error(ERR_NEEDMOREPARAMS(target, "USER"));
     
     if (args[2] != "0" || args[3] != "*")
-        throw std::invalid_argument(ERR_NEEDMOREPARAMS(target, "USER"));
+        throw recoverable_error(ERR_NEEDMOREPARAMS(target, "USER"));
     
     while (!new_realname.empty() && (new_realname[new_realname.size()-1] == '\r' || new_realname[new_realname.size()-1] == '\n')) {
         new_realname.erase(new_realname.size()-1);

@@ -3,6 +3,7 @@
 #include "../client/Client.hpp"
 #include "../channel/Channel.hpp"
 #include "../commands/Command.hpp"
+#include "../messages.hpp"
 
 #include <iostream>
 #include <utility>
@@ -15,7 +16,7 @@
 #include <string.h>
 
 class Command;
-
+class Channel;
 class Client;
 
 class Server

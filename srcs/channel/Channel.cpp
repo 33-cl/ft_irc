@@ -23,12 +23,26 @@ bool	Channel::hasClient(int fd) const
 	return false;
 }
 
-std::vector<int>    Channel::get_clients() const
-{
-    return this->clients;
-}
-
 void    Channel::add_client(int fd)
 {
     clients.push_back(fd);
+}
+
+void    Channel::broadcast(const std::string& str)
+{
+	(void)str;
+	for (size_t i = 0; i < clients.size(); i++)
+	{
+		std::string message = str + "\r\n";
+		ssize_t bytes_sent = send(clients[i], message.c_str(), message.length(), 0);
+		if (bytes_sent == -1) {
+			std::cerr << "Error while sending data" << std::endl;
+		}
+	}
+	
+}
+
+std::vector<int>    Channel::get_clients() const
+{
+    return this->clients;
 }

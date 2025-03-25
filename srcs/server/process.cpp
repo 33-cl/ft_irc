@@ -34,14 +34,18 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 
         try
         {
+
             for (size_t i = 0; i < commands.size(); i++)
+            {
+                std::cout << "command: " << commands[i] << std::endl;
                 process_input(commands[i], _clients[fds[client_index].fd]);
-            std::cout << std::endl;
+            }
         }
-        catch(const std::exception& e)
+        catch(const recoverable_error& e)
         {
             //std::cerr << e.what() << '\n';
-            send(fds[client_index].fd, e.what(), strlen(e.what()), 0);
+            _clients[fds[client_index].fd].send_msg(std::string(e.what()));
+            //send(fds[client_index].fd, e.what(), strlen(e.what()), 0);
         }
     }
     else
@@ -64,5 +68,4 @@ void Server::process_input(std::string& input, Client &client)
         return;
 
     _commands[args[0]]->execute(client, args, *this);
-
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../messages.hpp"
 #include "../client/Client.hpp"
 #include "../server/Server.hpp"
 
@@ -11,8 +12,8 @@ class Server;
 class Command
 {
     public:
-        Command();
-        virtual ~Command();
+        Command() {};
+        virtual ~Command() {};
 
         virtual void    execute(Client& client, std::vector<std::string>& args, Server &server) = 0;
 

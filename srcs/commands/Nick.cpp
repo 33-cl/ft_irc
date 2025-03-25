@@ -10,7 +10,7 @@ void 	Nick::execute(Client& client, std::vector<std::string>& args, Server& serv
 		return; // a gerer
 	
 	if (args.size() == 0)
-		throw std::invalid_argument(ERR_NONICKNAMEGIVEN(std::string("*")));
+		throw recoverable_error(ERR_NONICKNAMEGIVEN(std::string("*")));
 	if (args.size() != 2)
 		return; // too many params
 
@@ -19,11 +19,11 @@ void 	Nick::execute(Client& client, std::vector<std::string>& args, Server& serv
 	for (size_t i = 0; i < new_nickname.length(); ++i)
 	{
 		if ((i == 0 && !isalpha(new_nickname[i])) || !is_nickname_char(new_nickname[i]) || i > 8)
-			throw std::invalid_argument(ERR_ERRONEUSNICKNAME(new_nickname));
+			throw recoverable_error(ERR_ERRONEUSNICKNAME(new_nickname));
 	}
 
 	if (nick_already_used(new_nickname, server._clients, client))
-		throw std::invalid_argument(ERR_NICKNAMEINUSE(new_nickname));
+		throw recoverable_error(ERR_NICKNAMEINUSE(new_nickname));
 
 	client.nickname = new_nickname;
 	if (client.username != "")

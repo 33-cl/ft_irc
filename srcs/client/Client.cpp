@@ -26,17 +26,16 @@ pollfd  Client::create_socket(int fd, short events, short revents)
     Sends a string to the client
 */
 
-void Client::write(const std::string& str) 
+void    Client::send_msg(const std::string& str)
 {
-    if (socket.fd == -1) {
-        std::cerr << "Erreur : le socket est invalide." << std::endl;
-        return;
-    }
+    std::string error_msg = ":" + std::string(SERVER_NAME) + " " + str + "\r\n";
+    this->write(error_msg);
+}
 
-    std::cout << str << std::endl;
-
-    ssize_t bytes_sent = send(socket.fd, str.c_str(), str.length(), 0);
-    if (bytes_sent == -1) {
-        std::cerr << "Erreur lors de l'envoi des données" << std::endl;
-    }
+void    Client::write(const std::string& str) 
+{
+    std::string message = str + "\r\n";
+    ssize_t bytes_sent = send(socket.fd, message.c_str(), message.length(), 0);
+    if (bytes_sent == -1)
+        std::cerr << "Error while sending data" << std::endl;
 }
