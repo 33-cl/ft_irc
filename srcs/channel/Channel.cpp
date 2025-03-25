@@ -47,9 +47,9 @@ std::vector<Client>    Channel::get_clients() const
 
 void Channel::removeClient(int fd)
 {
-	for (std::vector<int>::iterator it = clients.begin(); it != clients.end(); ++it)
+	for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
 	{
-		if (*it == fd)
+		if (it->socket.fd == fd)
 		{
 			clients.erase(it);
 			break;
