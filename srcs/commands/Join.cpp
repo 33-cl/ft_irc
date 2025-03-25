@@ -25,17 +25,17 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
         // Si le channel n'existe pas on le cree puis on ajoute le client
         if (server._channels.find(channel_name) == server._channels.end())
         {
-            server._channels.insert(std::pair<std::string, Channel>(channel_name, Channel(channel_name, client.socket.fd)));
+            server._channels.insert(std::pair<std::string, Channel>(channel_name, Channel(channel_name, client)));
             std::cout << "Channel " << channel_name << " created by " << client.nickname << std::endl;
         }
         // Sinon on ajoute le client direct
         else
         {
             // Vérifier si le client est déjà dans le channel
-            std::vector<int> channel_clients = server._channels[channel_name].clients;
-            for (std::vector<int>::iterator it = channel_clients.begin(); it != channel_clients.end(); ++it)
+            std::vector<Client> channel_clients = server._channels[channel_name].clients;
+            for (std::vector<Client>::iterator it = channel_clients.begin(); it != channel_clients.end(); ++it)
             {
-                if (*it == client.socket.fd)
+                if (it->socket.fd == client.socket.fd)
                     throw recoverable_error(ERR_USERONCHANNEL(client.nickname, channel_name));
             }
 
@@ -45,7 +45,7 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
         }
 
         // Envoyer la reponse JOIN au client 
-        std::string join_msg = ":" + client.nickname + "!" + client.username + "@" + "localhost JOIN " + channel_name + "\r\n";
+        std::string join_msg = ":" + client.nickname + "!" + client.username + "@localhost JOIN " + channel_name + "\r\n";
         send(client.socket.fd, join_msg.c_str(), join_msg.length(), 0);
     }
 }

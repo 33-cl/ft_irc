@@ -93,11 +93,11 @@ void    Server::infos()
         {
             std::cout << "  Channel: " << it->first << std::endl;
 
-            std::vector<int> clients_id = it->second.clients;
+            std::vector<Client> clients_id = it->second.clients;
 
             for (size_t i = 0; i < clients_id.size(); i++) {
                 // Accès à l'élément aclients_id clients_id[i]
-                std::cout << _clients[clients_id[i]].nickname << "|";
+                std::cout << _clients[clients_id[i].socket.fd].nickname << "|";
             }
             std::cout << std::endl;
         }
