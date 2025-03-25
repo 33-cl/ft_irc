@@ -11,6 +11,7 @@
 
 class Client;
 
+
 class Channel
 {
     private:
@@ -24,6 +25,7 @@ class Channel
 
         void    add_client(Client new_client);
 		bool	hasClient(int fd) const;
+		void	removeClient(int fd);
 
         void    broadcast(const std::string& str);
 
