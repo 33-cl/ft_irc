@@ -28,3 +28,4 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
         }
     }
 }
+
