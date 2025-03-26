@@ -50,5 +50,20 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
         // Envoyer la reponse JOIN au client 
         std::string join_msg = client.get_mask() + "JOIN " + channel_name + "\r\n";
         send(client.socket.fd, join_msg.c_str(), join_msg.length(), 0);
+
+
+
+        Channel& channel = server._channels[channel_name];
+        std::string user_list;
+        const std::vector<Client>& clients = channel.get_clients();
+        
+        for (std::vector<Client>::const_iterator it = clients.begin(); it != clients.end(); ++it) {
+            if (!user_list.empty())
+                user_list += " ";
+            user_list += it->nickname;
+        }
+
+        client.write(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list);
+        client.write(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list");
     }
 }

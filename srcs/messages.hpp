@@ -34,10 +34,11 @@
 
 #define SERVER_NAME "ircserv"
 
+#define RPL_WELCOME(nick, mask)          ("001 " + std::string(nick) + " Welcome to the IRC Network " + std::string(mask))
 #define ERR_NONICKNAMEGIVEN(nick)        ("431 " + std::string(nick) + " :No nickname given")
 #define ERR_ERRONEUSNICKNAME(nick)       ("432 " + std::string(nick) + " :Erroneous nickname")
 #define ERR_NICKNAMEINUSE(nick)          ("433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use")
-#define ERR_USERONCHANNEL(nick, channel) ("443 " + std::string(nick) + " " + channel + " :is already on channel")
+#define ERR_USERONCHANNEL(nick, channel) ("443 " + std::string(nick) + " " + std::string(channel) + " :is already on channel")
 #define ERR_NOTREGISTERED(nick)          ("451 " + std::string(nick) + " :You have not registered")
 #define ERR_NEEDMOREPARAMS(nick, cmd)    ("461 " + std::string(nick) + " " + std::string(cmd) + " :Not enough parameters")
 #define ERR_TOOMANYPARAMS(nick, cmd)     ("461 " + std::string(nick) + " " + std::string(cmd) + " :Too many parameters")

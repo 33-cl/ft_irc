@@ -73,7 +73,7 @@ void Server::process_input(std::string& input, Client &client)
         client.username = "admin";
         client.status = REGISTERED;
     }
-    if (input == "ADMIN2")
+    else if (input == "ADMIN2")
     {
         client.nickname = "admin2";
         client.username = "admin2";

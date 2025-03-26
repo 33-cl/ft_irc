@@ -7,12 +7,12 @@ Nick::~Nick() {}
 void 	Nick::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
 	if (client.status == UNREGISTERED)
-		return; // a gerer
+		throw recoverable_error(ERR_NOTREGISTERED(client.nickname));
 	
 	if (args.size() == 0)
 		throw recoverable_error(ERR_NONICKNAMEGIVEN(std::string("*")));
 	if (args.size() != 2)
-		return; // too many params
+		recoverable_error(ERR_TOOMANYPARAMS(client.nickname, "NICK"));
 
 	std::string new_nickname = args[1];
 
@@ -27,7 +27,10 @@ void 	Nick::execute(Client& client, std::vector<std::string>& args, Server& serv
 
 	client.nickname = new_nickname;
 	if (client.username != "")
+	{
+		client.send_msg(RPL_WELCOME(client.nickname, client.get_mask()));
 		client.status = REGISTERED;
+	}
 }
 
 // UTILS

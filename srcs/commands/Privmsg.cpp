@@ -4,9 +4,6 @@ Privmsg::Privmsg() {}
 
 Privmsg::~Privmsg() {}
 
-/*
-	Tout parser
-*/
 
 void 	Privmsg::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
@@ -24,18 +21,16 @@ void 	Privmsg::execute(Client& client, std::vector<std::string>& args, Server& s
 		if (!args[2].empty() && args[2][0] == ':')
 		{
 			std::string to_send = client.get_mask() + "PRIVMSG " + args[1] + " " + args[2];
-			std::cout << "|" << to_send << "|\n";
 			server._channels[args[1]].broadcast(to_send, client);
 		}
 	}
 	else
 	{
-		// if (!args[2].empty() && args[2][0] == ':')
-		// {
-		// 	std::string to_send = client.get_mask() + "PRIVMSG " + args[1] + " " + args[2];
-		// 	std::cout << "|" << to_send << "|\n";
-		// 	server._clients[]
-		// 	server._channels[args[1]].broadcast(to_send, client);
-		// }
+		if (!args[2].empty() && args[2][0] == ':')
+		{
+			std::string to_send = client.get_mask() + "PRIVMSG " + args[1] + " " + args[2];
+			Client	dest = server.find_client(args[1]);
+			dest.write(to_send);
+		}
 	}
 }

@@ -33,22 +33,22 @@ void    Server::init_commands()
 void    Server::initialize(int argc, char **argv)
 {
     if (argc != 3)
-        throw std::invalid_argument("Invalid nb of args\nusage: ./ircserv <port> <password>");
+        throw critical_error("Invalid nb of args\nusage: ./ircserv <port> <password>");
     
     std::string port_str = argv[1];
     if (port_str.find_first_not_of("0123456789") != std::string::npos)
-        throw std::invalid_argument("Port must be numeric");
+        throw critical_error("Port must be numeric");
 
     _port = atoi(port_str.c_str());
     if (_port <= 0 || _port > 65535)
-        throw std::invalid_argument("Port must be between 1 and 65535");
+        throw critical_error("Port must be between 1 and 65535");
 
     _password = argv[2];
 
     // Creer la socket du server
     _fd = socket(AF_INET, SOCK_STREAM, 0);
     if (_fd == -1)
-        throw std::runtime_error("socket() error");
+        throw critical_error("socket() error");
 
     // Lier la socket a l'adresse et au port
     sockaddr_in server_addr;
@@ -56,11 +56,11 @@ void    Server::initialize(int argc, char **argv)
     server_addr.sin_addr.s_addr = INADDR_ANY;   // Accept connexions on every available network interface
     server_addr.sin_port = htons(_port);        // Converting port 
     if (bind(_fd, (sockaddr *)&server_addr, sizeof(server_addr)) == -1)
-        throw std::runtime_error("bind() error");
+        throw critical_error("bind() error");
 
     // Mettre en mode ecoute
     if (listen(_fd, 5) == -1)
-        throw std::runtime_error("listen() error");
+        throw critical_error("listen() error");
 
     init_commands();
 

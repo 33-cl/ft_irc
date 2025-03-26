@@ -35,7 +35,7 @@ pollfd  Client::create_socket(int fd, short events, short revents)
 void    Client::send_msg(
     const std::string& str)
 {
-    std::string error_msg = ":" + std::string(SERVER_NAME) + " " + str + "\r\n";
+    std::string error_msg = ":" + std::string(SERVER_NAME) + " " + str;
     this->write(error_msg);
 }
 

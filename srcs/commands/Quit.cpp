@@ -20,7 +20,7 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
 		for (size_t i = 2; i < args.size(); ++i)
 			quitMessage += " " + args[i];
 	}
-	std::string message = client.get_mask() + " QUIT :" + quitMessage;
+	std::string message = client.get_mask() + "QUIT :" + quitMessage;
     std::cout << "|" << message << "|\n";
 
     for (std::map<std::string, Channel>::iterator it = server._channels.begin();
