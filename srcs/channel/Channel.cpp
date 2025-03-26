@@ -49,6 +49,7 @@ void Channel::removeClient(int fd)
 		if (it->socket.fd == fd)
 		{
 			clients.erase(it);
+			close(fd);
 			break;
 		}
 	}
