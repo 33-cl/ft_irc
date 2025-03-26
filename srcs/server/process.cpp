@@ -28,13 +28,16 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
     {
         // Afficher le message recu
         buffer[bytes_received] = '\0';
-
+    
         std::string buffer_str(buffer);
+        
+        if (buffer_str.size() < 4)
+            return;
+
         std::vector<std::string> commands = split(buffer_str, "\r\n");
 
         try
         {
-
             for (size_t i = 0; i < commands.size(); i++)
             {
                 //std::cout << "command: " << commands[i] << std::endl;
@@ -62,13 +65,21 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 void Server::process_input(std::string& input, Client &client)
 {
     std::vector<std::string> args = split(input, " ");
-    
+
     // A SUPPRIMER AVANT DE PUSH
     std::cout << "|" << input << "|\n";
     if (input == "ADMIN")
     {
         client.nickname = "admin";
         client.username = "admin";
+        client.status = REGISTERED;
+    }
+
+    std::cout << "|" << input << "|\n";
+    if (input == "ADMIN2")
+    {
+        client.nickname = "admin2";
+        client.username = "admin2";
         client.status = REGISTERED;
     }
 
