@@ -1,7 +1,7 @@
 # include "server/Server.hpp"
 
 /*
-	Quentin: verifier hasclient(lastpromptgpt to check)
+	Si on fait entre juste apres s'etre co avec netcat ca segfault
 
 
     A Faire
