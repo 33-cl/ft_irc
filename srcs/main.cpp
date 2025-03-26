@@ -29,9 +29,6 @@
     JOIN #general
     :ircserv 443 admin #general :is already on channel
 
-
-
-
 */
 
 int main(int argc, char **argv)
