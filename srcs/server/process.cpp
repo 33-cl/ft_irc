@@ -67,15 +67,12 @@ void Server::process_input(std::string& input, Client &client)
     std::vector<std::string> args = split(input, " ");
 
     // A SUPPRIMER AVANT DE PUSH
-    std::cout << "|" << input << "|\n";
     if (input == "ADMIN")
     {
         client.nickname = "admin";
         client.username = "admin";
         client.status = REGISTERED;
     }
-
-    std::cout << "|" << input << "|\n";
     if (input == "ADMIN2")
     {
         client.nickname = "admin2";
