@@ -1,16 +1,6 @@
 # include "server/Server.hpp"
 
 /*
-	Si on fait entre juste apres s'etre co avec netcat ca segfault
-
-
-    A Faire
-
-        - renseignement sur KICK -> nouvelle classe ds cmd
-        - remplacer toutes les utilisations d'accesseur par
-          l'utilisation directe de la variable avec les classes "friends"
-
-
     A faire en dernier
 
         - virer les commentaires inutiles
