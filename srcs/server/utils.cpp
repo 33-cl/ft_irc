@@ -127,3 +127,13 @@ void    Server::infos()
         }
     }
 }
+
+int	Server::getFdByNickname(const std::string &nickname) const
+{
+	for (std::map<int, Client>::const_iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		if (it->second.nickname == nickname)
+			return it->first;
+	}
+	return -1;
+}

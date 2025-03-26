@@ -1,9 +1,6 @@
 # include "server/Server.hpp"
 
 /*
-	Si on fait entre juste apres s'etre co avec netcat ca segfault
-
-
     A Faire
 
     A faire en dernier

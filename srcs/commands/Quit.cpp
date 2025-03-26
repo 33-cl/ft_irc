@@ -10,7 +10,7 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
     {
         throw recoverable_error(ERR_NOTREGISTERED("*"));
     }
-
+	
 	std::string quitMessage;
 	if (args.size() <= 1 || args[1].empty())
 		quitMessage = "Client disconnected";
@@ -31,6 +31,7 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
         {
             channel.broadcast(message, client);
             channel.removeClient(client.socket.fd);
+			close(client.socket.fd);
         }
     }
 }

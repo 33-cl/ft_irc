@@ -44,6 +44,7 @@ class Server
         void    process_client_data(std::vector<pollfd>& fds, int client_index);
         void    process_input(std::string& input, Client& client);
         void    create_channel(const std::string& channel_name, Client& client);
+		int		getFdByNickname(const std::string &nickname) const;
 
         void    infos();
         
