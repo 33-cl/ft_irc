@@ -38,6 +38,7 @@
 #define ERR_ERRONEUSNICKNAME(nick)       ("432 " + std::string(nick) + " :Erroneous nickname")
 #define ERR_NICKNAMEINUSE(nick)          ("433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use")
 #define ERR_USERONCHANNEL(nick, channel) ("443 " + std::string(nick) + " " + channel + " :is already on channel")
+#define ERR_NOTREGISTERED(nick)          ("451 " + std::string(nick) + " :You have not registered")
 #define ERR_NEEDMOREPARAMS(nick, cmd)    ("461 " + std::string(nick) + " " + std::string(cmd) + " :Not enough parameters")
 #define ERR_TOOMANYPARAMS(nick, cmd)     ("461 " + std::string(nick) + " " + std::string(cmd) + " :Too many parameters")
 #define ERR_ALREADYREGISTERED(nick)      ("462 " + std::string(nick) + " :You may not reregister")

@@ -15,6 +15,9 @@ Join::~Join() {}
 
 void    Join::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
+    if (client.status != REGISTERED)
+        throw recoverable_error(ERR_NOTREGISTERED("*"));
+
     for (size_t i = 1; i < args.size(); i++)
     {
         std::string channel_name = args[i];

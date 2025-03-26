@@ -29,11 +29,10 @@ void    Channel::add_client(Client new_client)
 
 void    Channel::broadcast(const std::string& str, const Client& src)
 {
-	(void)str;
+	(void)src;
 	for (size_t i = 0; i < clients.size(); i++)
 	{
-		(void)src;
-		// if (src.socket.fd == clients[i].socket.fd)
+		if (src.socket.fd != clients[i].socket.fd)
 			clients[i].write(str);
 	}	
 }

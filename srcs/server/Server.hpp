@@ -34,6 +34,8 @@ class Server
         Server();
         ~Server();
 
+        Client& find_client(const std::string& nickname);
+
         void    init_commands();
         void    initialize(int argc, char **argv);
         void    start();

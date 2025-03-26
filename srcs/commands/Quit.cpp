@@ -6,6 +6,11 @@ Quit::~Quit() {}
 
 void   Quit::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
+    if (client.status != REGISTERED)
+    {
+        throw recoverable_error(ERR_NOTREGISTERED("*"));
+    }
+
 	std::string quitMessage;
 	if (args.size() <= 1 || args[1].empty())
 		quitMessage = "Client disconnected";
@@ -15,7 +20,8 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
 		for (size_t i = 2; i < args.size(); ++i)
 			quitMessage += " " + args[i];
 	}
-	std::string message = ":" + client.nickname + "!" + client.username + "@localhost QUIT :" + quitMessage + "\r\n";
+	std::string message = client.get_mask() + " QUIT :" + quitMessage;
+    std::cout << "|" << message << "|\n";
 
     for (std::map<std::string, Channel>::iterator it = server._channels.begin();
          it != server._channels.end(); ++it)

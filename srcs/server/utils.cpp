@@ -1,6 +1,20 @@
 #include "Server.hpp"
 
 /*
+    Returns a reference of the client by finding it via nickname
+*/
+
+Client& Server::find_client(const std::string& nickname)
+{
+    for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        if (it->second.nickname == nickname)
+            return (it->second);
+    }
+    throw recoverable_error("Client not found");
+}
+
+/*
     Some sort of ft_split() for strings
 
     Also suppresses "\r\n" at the end of the string
@@ -43,7 +57,6 @@ std::vector<std::string> split(const std::string& str, const std::string& delimi
         
         tokens.push_back(remaining);
     }
-
     return tokens;
 }
 

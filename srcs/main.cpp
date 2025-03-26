@@ -19,6 +19,21 @@
         - supprimer ADMIN
 */
 
+/*
+➜  ft_irc git:(main) ✗ nc localhost 4141
+    ADMIN
+    JOIN #general dfasdf
+    :admin!admin@localhost JOIN #general
+    :ircserv 476 dfasdf :Bad channel mask
+
+    JOIN #general
+    :ircserv 443 admin #general :is already on channel
+
+
+
+
+*/
+
 int main(int argc, char **argv)
 {
     Server  serv;

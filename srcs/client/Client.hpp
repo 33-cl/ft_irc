@@ -43,7 +43,7 @@ class Client
         
         void    send_msg(const std::string& str);
         void    write(const std::string& str);
-        
+
         friend class Server;
         friend class Channel;
         friend class Command;
