@@ -31,7 +31,6 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
         {
             channel.broadcast(message, client);
             channel.removeClient(client.socket.fd);
-			delete &client;
         }
     }
 }
