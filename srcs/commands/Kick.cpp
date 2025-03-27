@@ -15,24 +15,22 @@ void 	Kick::execute(Client& client, std::vector<std::string>& args, Server& serv
 		throw recoverable_error(ERR_NEEDMOREPARAMS(client.nickname, "KICK"));
 	std::string channelName = args[1];
 	std::string targetNickname = args[2];
+
+
 	std::string comment;
 
 	if (client.nickname == targetNickname)
 		throw recoverable_error(ERR_CANNOTKICKSELF(client.nickname));
 	if (args.size() > 3)
 	{
-		if (!args[3].empty() && args[3][0] == ':')
-			comment = args[3].substr(1);
-		else
-			comment = args[3];
-		// add the rest of the comment
-		for (size_t i = 4; i < args.size(); ++i)
-			comment += " " + args[i];
+		if (args[3].empty() || args[3][0] != ':')
+			throw recoverable_error(ERR_INVALIDKICKMESSAGE(client.nickname));
+		comment = args[3].substr(1);
 	}
 
 	if (server._channels.find(channelName) == server._channels.end())
 		throw recoverable_error(ERR_NOSUCHCHANNEL(client.nickname, channelName));
-	
+
 	//is the operator is present on the chan
 	Channel& channel = server._channels[channelName];
 	if (!channel.hasClient(client.socket.fd))
@@ -45,9 +43,9 @@ void 	Kick::execute(Client& client, std::vector<std::string>& args, Server& serv
 	if (!channel.hasClient(targetFd))
 		throw recoverable_error(ERR_USERNOTINCHANNEL(client.nickname, targetNickname, channelName));
 
-	
+
 	std::string kickMessage = ":" + client.get_mask() + " KICK " + channelName + " " + targetNickname + " :" + comment;
 
 	channel.broadcast(kickMessage, client);
-    channel.removeClient(targetFd);
+	channel.removeClient(targetFd);
 }
