@@ -14,7 +14,7 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
 	if (args.size() > 1 && (!args[1].empty() && args[1][0] != ':'))
 		throw recoverable_error(ERR_INVALIDQUITMESSAGE(client.nickname));
 	if (args.size() <= 1 || args[1].size() <= 1)
-	quitMessage = "Client disconnected";
+		quitMessage = "Client disconnected";
 	else
 		quitMessage = args[1].substr(1);
 	std::string message = client.get_mask() + "QUIT :" + quitMessage;
