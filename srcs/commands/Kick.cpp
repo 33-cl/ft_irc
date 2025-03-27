@@ -16,6 +16,9 @@ void 	Kick::execute(Client& client, std::vector<std::string>& args, Server& serv
 	std::string channelName = args[1];
 	std::string targetNickname = args[2];
 	std::string comment;
+
+	if (client.nickname == targetNickname)
+		throw recoverable_error(ERR_CANNOTKICKSELF(client.nickname));
 	if (args.size() > 3)
 	{
 		if (!args[3].empty() && args[3][0] == ':')
@@ -35,7 +38,7 @@ void 	Kick::execute(Client& client, std::vector<std::string>& args, Server& serv
 	if (!channel.hasClient(client.socket.fd))
 		throw recoverable_error(ERR_NOTONCHANNEL(client.nickname, channelName));
 
-	//nosucknick marche pas bien 
+	//nosucknick
 	int targetFd = server.getFdByNickname(targetNickname);
 	if (targetFd == -1)
 		throw recoverable_error(ERR_NOSUCHNICK(client.nickname, targetNickname));

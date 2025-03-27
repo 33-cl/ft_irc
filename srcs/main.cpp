@@ -3,6 +3,8 @@
 /*
     A Faire
 
+	- Kick, ajouter la verification d'operator
+
     A faire en dernier
 
         - virer les commentaires inutiles
