@@ -44,13 +44,15 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
             }
 
             server._channels[channel_name].add_client(client.socket.fd);
-            std::string confirm_msg = ":" + client.nickname + " JOIN " + channel_name + "\r\n";
-            send(client.socket.fd, confirm_msg.c_str(), confirm_msg.length(), 0);
+            // std::string confirm_msg = ":" + client.nickname + " JOIN " + channel_name + "\r\n";
+            // send(client.socket.fd, confirm_msg.c_str(), confirm_msg.length(), 0);
         }
 
         // Envoyer la reponse JOIN au client 
-        std::string join_msg = client.get_mask() + "JOIN " + channel_name + "\r\n";
-        send(client.socket.fd, join_msg.c_str(), join_msg.length(), 0);
+        std::string join_msg = client.get_mask() + "JOIN " + channel_name;
+       // send(client.socket.fd, join_msg.c_str(), join_msg.length(), 0);
+
+        server._channels[channel_name].broadcast(join_msg, client);
 
         Channel& channel = server._channels[channel_name];
         std::string user_list;
@@ -65,8 +67,8 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
         client.write(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list);
         client.write(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list");
 
-        server._channels[channel_name].broadcast(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list, client);
-        server._channels[channel_name].broadcast(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list", client);
+        // server._channels[channel_name].broadcast(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list, client);
+        // server._channels[channel_name].broadcast(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list", client);
     }
 }
 

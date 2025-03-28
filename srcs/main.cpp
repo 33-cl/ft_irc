@@ -1,6 +1,9 @@
 # include "server/Server.hpp"
 
 /*
+
+	Infinite loop
+		- Quand on quitte avec la croix via hexchat(clean le tableau de socket)
     PASS
         OK
 
@@ -8,8 +11,12 @@
         Affichage du message welcome si j'utilise NICK pour changer de nickname
 
     USER
+<<<<<<< HEAD
         - check des ":" avant le nom du user
         - Parser le username : pas commencer par un chiffre etc.
+=======
+		OK
+>>>>>>> 3d5e5e926a4cc189aacd5a34341c224bf2dc956e
 
     JOIN
         - Parser le nom des channels
