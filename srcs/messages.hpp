@@ -48,12 +48,10 @@
 #define ERR_ALREADYREGISTERED(nick)                 ("462 " + std::string(nick) + " :You may not reregister")
 #define ERR_PASSWDMISMATCH(nick)                    ("464 " + std::string(nick) + " :Password incorrect")
 #define ERR_BADCHANMASK(channel)                    ("476 " + std::string(channel) + " :Bad channel mask")
-
-//Errors not in rfc
-#define ERR_TOOMANYPARAMS(nick, command)	("461 " + std::string(nick) + " " + std::string(command) + " :Too many parameters\r\n")
-#define ERR_CANNOTKICKSELF(nick)			("480 " + std::string(nick) + " :You cannot kick yourself")
-#define ERR_INVALIDQUITMESSAGE(nick)		("465 " + std::string(nick) + " :Quit message must be preceded by ':'\r\n")
-#define ERR_INVALIDKICKMESSAGE(nick)		("465 " + std::string(nick) + " :Invalid KICK message format, comment must begin with ':'\r\n")
+#define ERR_TOOMANYPARAMS(nick, command)	        ("461 " + std::string(nick) + " " + std::string(command) + " :Too many parameters")
+#define ERR_CANNOTKICKSELF(nick)			        ("480 " + std::string(nick) + " :You cannot kick yourself")
+#define ERR_INVALIDQUITMESSAGE(nick)		        ("465 " + std::string(nick) + " :Quit message must be preceded by ':'")
+#define ERR_INVALIDKICKMESSAGE(nick)		        ("465 " + std::string(nick) + " :Invalid KICK message format, comment must begin with ':'")
 
 class critical_error : public std::exception
 {

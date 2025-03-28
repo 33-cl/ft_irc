@@ -1,9 +1,39 @@
 # include "server/Server.hpp"
 
 /*
-    A Faire
+    PASS
+        OK
 
-	- Kick, ajouter la verification d'operator
+    NICK
+        OK
+
+    USER
+        - check des ":" avant le nom du user
+
+    JOIN
+        OK 
+    
+    PRIVMSG
+        - Check si channel/client existe
+        - Diviser par 2 fonctions si client ou channel
+
+    QUIT
+        - Segfault quand le client est dans un channel
+
+    KICK
+        - Ajouter la verif de l'operateur
+
+    PART
+        A FAIRE
+
+    TOPIC
+        A FAIRE
+    
+    MODE
+        A FAIRE
+
+    Makefile
+        ne recompile pas si je touch un .hpp
 
     A faire en dernier
 

@@ -9,16 +9,15 @@ void 	Nick::execute(Client& client, std::vector<std::string>& args, Server& serv
 	if (client.status == UNREGISTERED)
 		throw recoverable_error(ERR_NOTREGISTERED(client.nickname));
 	
-	if (args.size() == 0)
+	if (args.size() < 2)
 		throw recoverable_error(ERR_NONICKNAMEGIVEN(std::string("*")));
-	if (args.size() != 2)
-		recoverable_error(ERR_TOOMANYPARAMS(client.nickname, "NICK"));
+	if (args.size() > 2)
+		throw recoverable_error(ERR_TOOMANYPARAMS(client.nickname, "NICK"));
 
 	std::string new_nickname = args[1];
-
 	for (size_t i = 0; i < new_nickname.length(); ++i)
 	{
-		if ((i == 0 && !isalpha(new_nickname[i])) || !is_nickname_char(new_nickname[i]) || i > 8)
+		if ((i == 0 && !isalpha(new_nickname[i])) || !is_nickname_char(new_nickname[i]) || i > 9)
 			throw recoverable_error(ERR_ERRONEUSNICKNAME(new_nickname));
 	}
 

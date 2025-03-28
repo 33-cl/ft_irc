@@ -7,8 +7,10 @@ User::~User() {}
 void User::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
 	(void)server;
-    if (client.status != PENDING_REGISTRATION)
+    if (client.status == UNREGISTERED)
         throw recoverable_error(ERR_NOTREGISTERED(client.nickname));
+    else if (client.status == REGISTERED)
+        throw recoverable_error(ERR_ALREADYREGISTERED(client.nickname));
     
     std::string new_username, new_realname;
     std::string format = "0 *";
@@ -32,18 +34,17 @@ void User::execute(Client& client, std::vector<std::string>& args, Server& serve
 
     std::string target = client.nickname.empty() ? "*" : client.nickname;
 
-    if (is_valid_username(new_username))
-        client.username = new_username;
-    else
+    if (!is_valid_username(new_username))
         throw recoverable_error(ERR_NEEDMOREPARAMS(target, "USER"));
-
+    
     if (args[2] != "0" || args[3] != "*")
-        throw recoverable_error(ERR_NEEDMOREPARAMS(target, "USER"));
-
+    throw recoverable_error(ERR_NEEDMOREPARAMS(target, "USER"));
+    
     while (!new_realname.empty() && (new_realname[new_realname.size()-1] == '\r' || new_realname[new_realname.size()-1] == '\n')) {
         new_realname.erase(new_realname.size()-1);
     }
-
+    
+    client.username = new_username;
     client.realname = new_realname;
 
     if (client.nickname != "")
