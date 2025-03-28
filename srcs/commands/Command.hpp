@@ -37,9 +37,9 @@ class Nick : public Command
         Nick();
         ~Nick();
 
-        bool    is_nickname_char(char c);
-        bool    nick_already_used(const std::string& nick, const std::map<int, Client>& clients, const Client& current_client);
-        void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+        static bool     is_nickname_valid(std::string str);
+        bool            nick_already_used(const std::string& nick, const std::map<int, Client>& clients, const Client& current_client);
+        void            execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
 
 class User : public Command
@@ -58,7 +58,8 @@ class Join : public Command
         Join();
         ~Join();
 
-        void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+        static bool is_channel_valid(std::string channel);
+        void        execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
 
 class Privmsg : public Command

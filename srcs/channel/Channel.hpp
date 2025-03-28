@@ -16,6 +16,7 @@ class Channel
 {
     private:
         std::string         name;
+        std::string         topic;
         std::vector<Client> clients; // Stocking clients ids
 
     public:

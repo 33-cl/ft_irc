@@ -67,7 +67,7 @@ void    Server::initialize(int argc, char **argv)
     std::cout << "Server initialized on port " << _port << std::endl;
 }
 
-void    Server::start()
+void Server::start()
 {
     std::vector<pollfd> sockets;
     sockets.push_back(Client::create_socket(_fd, POLLIN, 0));
@@ -80,15 +80,34 @@ void    Server::start()
         if (nb_sockets == -1)
             break;
 
-        for (size_t i = 0; i < sockets.size(); i++)
+        for (size_t i = 0; i < sockets.size(); )
         {
             if (sockets[i].revents & POLLIN)
             {
                 if (sockets[i].fd == this->_fd)
+                {
                     new_client(sockets);
+                    i++;
+                }
                 else
-                    process_client_data(sockets, i);
+                {
+                    try
+                    {
+                        process_client_data(sockets, i);
+                        i++;
+                    }
+                    catch(const quit_server& e)
+                    {
+                        std::cerr << "Client disconnected: " << e.what() << '\n';
+                        
+                        close(sockets[i].fd);
+                        _clients.erase(sockets[i].fd);
+                        sockets.erase(sockets.begin() + i);
+                    }
+                }
             }
+            else
+                i++;
         }
     }
 }
