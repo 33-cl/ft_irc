@@ -64,7 +64,7 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 
 void Server::process_input(std::string& input, Client &client)
 {
-    std::vector<std::string> args = split(input, " ");
+    std::vector<std::string> args = split_white_spaces(input);
 
     // A SUPPRIMER AVANT DE PUSH
     if (input == "ADMIN")

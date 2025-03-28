@@ -52,6 +52,7 @@
 #define ERR_CANNOTKICKSELF(nick)			        ("480 " + std::string(nick) + " :You cannot kick yourself")
 #define ERR_INVALIDQUITMESSAGE(nick)		        ("465 " + std::string(nick) + " :Quit message must be preceded by ':'")
 #define ERR_INVALIDKICKMESSAGE(nick)		        ("465 " + std::string(nick) + " :Invalid KICK message format, comment must begin with ':'")
+#define ERR_INVALIDUSERFORMAT(nick)					("465 " + std::string(nick) + " :Invalid USER command format, real name must begin with ':'")
 
 class critical_error : public std::exception
 {

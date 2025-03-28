@@ -15,6 +15,7 @@ Server::~Server()
     delete  _commands["KICK"];   
     delete  _commands["TOPIC"];
     delete  _commands["QUIT"]; 
+	delete  _commands["PART"];
 }
 
 void    Server::init_commands()
@@ -28,6 +29,7 @@ void    Server::init_commands()
     _commands["KICK"]    = new Kick;
     _commands["TOPIC"]   = new Topic;
     _commands["QUIT"]    = new Quit;
+	_commands["PART"]    = new Part;
 }
 
 void    Server::initialize(int argc, char **argv)

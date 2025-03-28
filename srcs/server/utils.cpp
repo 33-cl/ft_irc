@@ -60,6 +60,31 @@ std::vector<std::string> split(const std::string& str, const std::string& delimi
     return tokens;
 }
 
+std::vector<std::string> split_white_spaces(const std::string& str)
+{
+	std::vector<std::string> tokens;
+	size_t i = 0;
+	while (i < str.size())
+	{
+		while (i < str.size() && std::isspace(static_cast<unsigned char>(str[i])))
+			++i;
+		if (i >= str.size())
+			break;
+		
+		if (str[i] == ':')
+		{
+			tokens.push_back(str.substr(i));
+			break;
+		}
+		
+		size_t start = i;
+		while (i < str.size() && !std::isspace(static_cast<unsigned char>(str[i])))
+			++i;
+		tokens.push_back(str.substr(start, i - start));
+	}
+	return tokens;
+}
+
 /*
     Checks if the command given in "input" is "command"
 
