@@ -1,6 +1,9 @@
 # include "server/Server.hpp"
 
 /*
+
+	Infinite loop
+		- Quand on quitte avec la croix via hexchat(clean le tableau de socket)
     PASS
         OK
 
@@ -8,7 +11,7 @@
         OK
 
     USER
-        - check des ":" avant le nom du user
+		OK
 
     JOIN
         OK 
