@@ -60,7 +60,9 @@ class Server
         friend class Kick;
         friend class Topic;
         friend class Quit;
+		friend class Part;
 };
 
 std::vector<std::string>    split(const std::string& str, const std::string& delimiter = "\r\n");
+std::vector<std::string>	split_white_spaces(const std::string& str);
 bool                        check_command(std::string& input, const std::string& command);

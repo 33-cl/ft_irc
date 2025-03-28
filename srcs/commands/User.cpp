@@ -13,24 +13,14 @@ void User::execute(Client& client, std::vector<std::string>& args, Server& serve
         throw recoverable_error(ERR_ALREADYREGISTERED(client.nickname));
     
     std::string new_username, new_realname;
-    std::string format = "0 *";
-    
-    if (args.size() < 4)
+
+    if (args.size() < 5)
         throw recoverable_error(ERR_NEEDMOREPARAMS(client.nickname.empty() ? "*" : client.nickname, "USER"));
     
     new_username = args[1];
-    
-    if (args.size() >= 4) {
-        for (size_t i = 3; i < args.size(); ++i) {
-            if (i == 3 && args[i][0] == ':') {
-                new_realname += args[i].substr(1);
-            } else if (i == 3) {
-                new_realname += args[i];
-            } else {
-                new_realname += " " + args[i];
-            }
-        }
-    }
+	if (args[4].empty() || args[4][0] != ':')
+		throw recoverable_error(ERR_INVALIDUSERFORMAT(client.nickname));
+	new_realname = args[4].substr(1);
 
     std::string target = client.nickname.empty() ? "*" : client.nickname;
 
@@ -38,9 +28,10 @@ void User::execute(Client& client, std::vector<std::string>& args, Server& serve
         throw recoverable_error(ERR_NEEDMOREPARAMS(target, "USER"));
     
     if (args[2] != "0" || args[3] != "*")
-    throw recoverable_error(ERR_NEEDMOREPARAMS(target, "USER"));
+    	throw recoverable_error(ERR_NEEDMOREPARAMS(target, "USER"));
     
-    while (!new_realname.empty() && (new_realname[new_realname.size()-1] == '\r' || new_realname[new_realname.size()-1] == '\n')) {
+    while (!new_realname.empty() && (new_realname[new_realname.size()-1] == '\r' || new_realname[new_realname.size()-1] == '\n'))
+	{
         new_realname.erase(new_realname.size()-1);
     }
     

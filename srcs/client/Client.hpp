@@ -56,6 +56,7 @@ class Client
         friend class Kick;
         friend class Topic;
         friend class Quit;
+		friend class Part;
 };
 
 bool    check_command(std::string& input, const std::string& command);
