@@ -29,6 +29,7 @@ class Server
         std::map<int, Client>           _clients;
         std::map<std::string, Channel>  _channels;
         std::map<std::string, Command*> _commands;
+		std::string                     _name;
 
     public:
         Server();
@@ -61,6 +62,7 @@ class Server
         friend class Topic;
         friend class Quit;
 		friend class Part;
+		friend class Mode;
 };
 
 std::vector<std::string>    split(const std::string& str, const std::string& delimiter = "\r\n");

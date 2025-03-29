@@ -42,7 +42,8 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
                     throw recoverable_error(ERR_USERONCHANNEL(client.nickname, channel_name));
             }
 
-            server._channels[channel_name].add_client(client.socket.fd);
+			//ici j'envoi client plutot que le fd
+            server._channels[channel_name].add_client(client);
             std::string confirm_msg = ":" + client.nickname + " JOIN " + channel_name + "\r\n";
             send(client.socket.fd, confirm_msg.c_str(), confirm_msg.length(), 0);
         }

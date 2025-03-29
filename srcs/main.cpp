@@ -2,6 +2,11 @@
 
 /*
 
+	CHANNEL
+		- ajouter une str pour le topic
+		- ajouter un map de booleens pour les modes
+		- une liste de clients pour les invites
+		- une liste d'operateurs
 	Infinite loop
 		- Quand on quitte avec la croix via hexchat(clean le tableau de socket)
     PASS
@@ -21,7 +26,7 @@
         - Diviser par 2 fonctions si client ou channel
 
     QUIT
-        - Segfault quand le client est dans un channel
+		OK
 
     KICK
         - Ajouter la verif de l'operateur
@@ -30,10 +35,11 @@
         A FAIRE
 
     TOPIC
-        A FAIRE
+        add une chaine de caract
     
     MODE
         A FAIRE
+		- map de booleens, is t 1 or 0
 
     Makefile
         ne recompile pas si je touch un .hpp
@@ -44,6 +50,7 @@
         - traduire les commentaires utiles en anglais
         - remplacer les wildcards
         - supprimer ADMIN
+		- changer le server name dans la liste d'init de server(setup.cpp)
 */
 
 

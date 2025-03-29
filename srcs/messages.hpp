@@ -54,6 +54,9 @@
 #define ERR_INVALIDKICKMESSAGE(nick)		        ("465 " + std::string(nick) + " :Invalid KICK message format, comment must begin with ':'")
 #define ERR_INVALIDUSERFORMAT(nick)					("465 " + std::string(nick) + " :Invalid USER command format, real name must begin with ':'")
 #define ERR_INVALIDPARTMESSAGE(nick)				("465 " + std::string(nick) + " :Invalid PART message format, reason must begin with ':'")
+#define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
+#define RPL_CHANNELMODEIS(nickname, channel, modes)	("324 " + nickname + " " + channel + " " + modes)
+#define ERR_UNKNOWNMODE(nick, channel)				("472 " + std::string(nick) + " " + std::string(channel) + " :is unknown mode char to me")
 
 class critical_error : public std::exception
 {

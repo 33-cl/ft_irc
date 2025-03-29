@@ -108,7 +108,7 @@ bool check_command(std::string& input, const std::string& command)
     Tool for debugging
 */
 
-void    Server::infos()
+void Server::infos()
 {
     std::cout << "     -------------------\n";
 
@@ -135,23 +135,51 @@ void    Server::infos()
     // Channels
     std::cout << "\nChannels (" << _channels.size() << ") :" << std::endl;
     if (_channels.empty())
+    {
         std::cout << "  No channels created" << std::endl;
+    }
     else
     {
         for (std::map<std::string, Channel>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
         {
             std::cout << "  Channel: " << it->first << std::endl;
-
-            std::vector<Client> clients_id = it->second.clients;
-
-            for (size_t i = 0; i < clients_id.size(); i++) {
-                // Accès à l'élément aclients_id clients_id[i]
-                std::cout << _clients[clients_id[i].socket.fd].nickname << "|";
+            
+            // Affichage des membres du canal (clients)
+            std::cout << "    Clients: ";
+            for (size_t i = 0; i < it->second.clients.size(); i++) {
+                // On utilise _clients pour afficher le nickname associé au fd
+                std::cout << _clients.at(it->second.clients[i].socket.fd).nickname << "|";
             }
             std::cout << std::endl;
+            
+            // Affichage des opérateurs
+            std::cout << "    Operators: ";
+            if (it->second.operators.empty())
+                std::cout << "None";
+            else {
+                for (size_t i = 0; i < it->second.operators.size(); i++) {
+                    std::cout << it->second.operators[i].nickname << "|";
+                }
+            }
+            std::cout << std::endl;
+            
+            // Affichage des invités
+            std::cout << "    Invites: ";
+            if (it->second.invites.empty())
+                std::cout << "None";
+            else {
+                for (size_t i = 0; i < it->second.invites.size(); i++) {
+                    std::cout << it->second.invites[i].nickname << "|";
+                }
+            }
+            std::cout << std::endl;
+            
+            // Optionnel: Affichage des modes
+            std::cout << "    Modes: " << it->second.getModesString() << std::endl;
         }
     }
 }
+
 
 int	Server::getFdByNickname(const std::string &nickname) const
 {
