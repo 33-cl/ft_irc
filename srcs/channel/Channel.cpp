@@ -134,6 +134,7 @@ std::string Channel::getModesString() const
 	std::stringstream ss;
 
 	ss << "+";
+	//pou chaque mode actif on l'ajoute a la string
 	for (std::map<char, bool>::const_iterator it = modes.begin(); it != modes.end(); ++it)
 	{
 		if (it->second)
@@ -152,123 +153,6 @@ std::string Channel::getModesString() const
 
 	return ss.str();
 }
-
-// bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams)
-// {
-// 	bool adding = true;
-// 	size_t paramIndex = 0;
-
-// 	// (void)modeParams;
-// 	// (void)paramIndex;
-// 	for (size_t i = 0; i < modeChanges.size(); ++i)
-// 	{
-// 		char c = modeChanges[i];
-
-// 		if (c == '+')
-// 			adding = true;
-// 		else if (c == '-')
-// 			adding = false;
-// 		else
-// 		{
-// 			switch(c)
-// 			{
-// 				case 'i':
-// 					modes['i'] = adding;
-// 					break;
-
-// 				case 't':
-// 					modes['t'] = adding;
-// 					break;
-
-// 				case 'l':
-// 					if (adding)
-// 					{
-// 						if (paramIndex >= modeParams.size())
-// 							return false;
-// 						int limit = atoi(modeParams[paramIndex].c_str());
-// 						if (limit <= 0 || limit > 10000)
-// 							return false;
-// 						usersLimit = limit;
-// 						modes['l'] = true;
-// 						++paramIndex;
-// 					}
-// 					else
-// 					{
-// 						modes['l'] = false;
-// 						usersLimit = 0;
-// 					}
-// 					break;
-
-// 				case 'k':
-// 					if (adding)
-// 					{
-// 						if (paramIndex >= modeParams.size())
-// 							return false;
-// 						if (modeParams[paramIndex].empty())
-// 							return false;
-// 						password = modeParams[paramIndex];
-// 						modes['k'] = true;
-// 						++paramIndex;
-// 					}
-// 					else
-// 					{
-// 						modes['k'] = false;
-// 						password = "";
-// 					}
-// 					break;
-
-// 					case 'o':
-// 					if (adding)
-// 					{
-// 						if (paramIndex >= modeParams.size())
-// 							return false;
-// 						std::string nickToOp = modeParams[paramIndex];
-// 						bool found = false;
-// 						// Check in channel if client exist
-// 						for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
-// 						{
-// 							if (it->nickname == nickToOp)
-// 							{
-// 								if (!isOperator(*it))
-// 									addOperator(*it);
-// 								found = true;
-// 								break;
-// 							}
-// 						}
-// 						if (!found)
-// 							return false;
-// 						++paramIndex;
-// 					}
-// 					else
-// 					{
-// 						if (paramIndex >= modeParams.size())
-// 							return false;
-// 						std::string nickToDeop = modeParams[paramIndex];
-// 						bool found = false;
-// 						for (std::vector<Client>::iterator it = operators.begin(); it != operators.end(); ++it)
-// 						{
-// 							if (it->nickname == nickToDeop)
-// 							{
-// 								removeOperator(*it);
-// 								found = true;
-// 								break;
-// 							}
-// 						}
-// 						if (!found)
-// 							return false;
-// 						++paramIndex;
-// 					}
-// 					break;
-
-// 				default:
-// 					// Mode inconnu
-// 					return false;
-// 			}
-// 		}
-// 	}
-// 	return true;
-// }
-
 
 bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams)
 {
@@ -319,26 +203,26 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 					}
 					break;
 					
-					case 'k':
-						if (adding)
-						{
-							if (paramIndex >= modeParams.size())
-								return false;
-							std::string keyParam = modeParams[paramIndex];
-							
-							if (keyParam.empty())
-								return false;
-							password = keyParam;
-							modes['k'] = true;
-							++paramIndex;
-						}
-						else
-						{
-							modes['k'] = false;
-							password = "";
-						}
-						break;
-				
+				case 'k':
+					if (adding)
+					{
+						if (paramIndex >= modeParams.size())
+							return false;
+						std::string keyParam = modeParams[paramIndex];
+						
+						if (keyParam.empty())
+							return false;
+						password = keyParam;
+						modes['k'] = true;
+						++paramIndex;
+					}
+					else
+					{
+						modes['k'] = false;
+						password = "";
+					}
+					break;
+			
 				case 'o':
 					if (adding)
 					{

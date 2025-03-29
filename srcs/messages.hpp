@@ -57,6 +57,9 @@
 #define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
 #define RPL_CHANNELMODEIS(nickname, channel, modes)	("324 " + nickname + " " + channel + " " + modes)
 #define ERR_UNKNOWNMODE(nick, channel)				("472 " + std::string(nick) + " " + std::string(channel) + " :is unknown mode char to me")
+#define ERR_INVALIDMODESTRING(nick)					("461 " + std::string(nick) + " MODE :Mode string must contain mode flags\r\n")
+#define ERR_MODE_SPACES(nick)						("461 " + std::string(nick) + " MODE :Mode string must not contain spaces\r\n")
+
 
 class critical_error : public std::exception
 {

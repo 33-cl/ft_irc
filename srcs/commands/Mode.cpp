@@ -36,7 +36,23 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
 			return;
 		}
 		std::string modeChanges = args[2];
-		
+
+		if (modeChanges.empty() || (modeChanges[0] != '+' && modeChanges[0] != '-'))
+		{
+			client.write(":" + server._name + " " + ERR_NEEDMOREPARAMS(client.nickname, "MODE"));
+			return;
+		}
+		if (modeChanges.size() < 2)
+		{
+			client.write(":" + server._name + " " + ERR_INVALIDMODESTRING(client.nickname));
+			return;
+		}
+		if (modeChanges.find(' ') != std::string::npos)
+		{
+			client.write(":" + server._name + " " + ERR_MODE_SPACES(client.nickname));
+			return;
+		}
+
 		//add password or nbusers limit
 		std::vector<std::string> modeParams;
         for (size_t i = 3; i < args.size(); ++i)

@@ -43,8 +43,9 @@
         add une chaine de caract
     
     MODE
-        A FAIRE
-		- map de booleens, is t 1 or 0
+        -ajouter toutes les repercutions sur les autres fonctions
+		-gerer les invites
+		-gerer les topics
 
     Makefile
         ne recompile pas si je touch un .hpp
