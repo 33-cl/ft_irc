@@ -42,7 +42,10 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
                 if (it->socket.fd == client.socket.fd)
                     throw recoverable_error(ERR_USERONCHANNEL(client.nickname, channel_name));
             }
-
+			//invite only?is invited?
+			Channel& channel = server._channels[channel_name];
+			if (channel.modes['i'] && !channel.isInvited(client))
+  				throw recoverable_error(ERR_NOTINVITED(client.nickname, channel_name));
 			//ici j'envoi client plutot que le fd
             server._channels[channel_name].add_client(client);
             std::string confirm_msg = ":" + client.nickname + " JOIN " + channel_name + "\r\n";

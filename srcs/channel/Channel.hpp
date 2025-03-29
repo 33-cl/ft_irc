@@ -56,4 +56,5 @@ class Channel
         friend class Command;
         friend class Join;
 		friend class Mode;
+		friend class Invite;
 };

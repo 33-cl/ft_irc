@@ -46,6 +46,8 @@
         -ajouter toutes les repercutions sur les autres fonctions
 		-gerer les invites
 		-gerer les topics
+		- si mode +k, demander mdp
+		- rien de teste avec hexchat atm
 
     Makefile
         ne recompile pas si je touch un .hpp
