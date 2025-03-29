@@ -5,7 +5,7 @@ Mode::Mode() {}
 Mode::~Mode() {}
 
 
-//bien checker le nb de params, actu MODE #43 + o admin2 pose soucis
+//MODE #3 k yes :irc.example.com 461 admin MODE :Not enough parameters, pb?, est-ce que je considere ca comme + si pas de + dans la cmd
 
 void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& server)
 {

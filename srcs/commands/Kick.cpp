@@ -6,6 +6,7 @@ Kick::~Kick() {}
 
 void 	Kick::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
+	
 	if (client.status != REGISTERED)
 		throw recoverable_error(ERR_NOTREGISTERED("*"));
 

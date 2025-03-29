@@ -64,10 +64,10 @@
 #define ERR_UNKNOWNMODE(nick, channel)				("472 " + std::string(nick) + " " + std::string(channel) + " :is unknown mode char to me")
 #define ERR_INVALIDMODESTRING(nick)					("461 " + std::string(nick) + " MODE :Mode string must contain mode flags")
 #define ERR_MODE_SPACES(nick)						("461 " + std::string(nick) + " MODE :Mode string must not contain spaces")
-#define ERR_BADCHANMASK(channel)					("476 " + std::string(channel) + " :Bad channel mask")
 #define ERR_CANNOTINVITESELF(nick)					("480 " + std::string(nick) + " :You cannot invite yourself")
 #define ERR_NOTINVITED(nick, channel)				("473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)")
 #define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
+#define ERR_BADCHANNELKEY(nick, channel)			("475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
 
 
 class critical_error : public std::exception
