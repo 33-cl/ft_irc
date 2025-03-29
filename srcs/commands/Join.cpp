@@ -22,8 +22,9 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
     {
         std::string channel_name = args[i];
 
-        if (channel_name[0] != '#')
+        if (!is_channel_valid(channel_name))
             throw recoverable_error(ERR_BADCHANMASK(channel_name));
+
 
         // Si le channel n'existe pas on le cree puis on ajoute le client
         if (server._channels.find(channel_name) == server._channels.end())
@@ -46,13 +47,14 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
             server._channels[channel_name].add_client(client);
             std::string confirm_msg = ":" + client.nickname + " JOIN " + channel_name + "\r\n";
             send(client.socket.fd, confirm_msg.c_str(), confirm_msg.length(), 0);
+
         }
 
         // Envoyer la reponse JOIN au client 
-        std::string join_msg = client.get_mask() + "JOIN " + channel_name + "\r\n";
-        send(client.socket.fd, join_msg.c_str(), join_msg.length(), 0);
+        std::string join_msg = client.get_mask() + "JOIN " + channel_name;
+       // send(client.socket.fd, join_msg.c_str(), join_msg.length(), 0);
 
-
+        server._channels[channel_name].broadcast(join_msg, client);
 
         Channel& channel = server._channels[channel_name];
         std::string user_list;
@@ -66,5 +68,34 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
 
         client.write(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list);
         client.write(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list");
+
+        // server._channels[channel_name].broadcast(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list, client);
+        // server._channels[channel_name].broadcast(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list", client);
     }
+}
+
+bool Join::is_channel_valid(std::string channel)
+{
+    if (channel.empty())
+        return false;
+
+    if (channel[0] != '#')
+        return false;
+
+    if (channel.length() > 307)
+        return false;
+
+    for (size_t i = 1; i < channel.length(); ++i)
+    {
+        if (channel[i] == ' ' ||
+            channel[i] == ',' ||
+            channel[i] == '\a' ||
+            channel[i] == '\r' ||
+            channel[i] == '\n')
+        {
+            return false;
+        }
+    }
+
+    return true;
 }

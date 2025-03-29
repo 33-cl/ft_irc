@@ -26,6 +26,7 @@ class Channel
 		std::string				modesStr;
 		std::string				password;
 
+
     public:
         Channel();
         Channel(std::string name, const Client& client);

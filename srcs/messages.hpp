@@ -87,3 +87,18 @@ class recoverable_error : public std::exception
             return message.c_str();
         }
 };
+
+class quit_server : public std::exception
+{
+    private:
+        std::string message;
+    
+    public:
+        quit_server(const std::string& str) : message(str) {}
+        virtual ~quit_server() throw() {}
+
+        virtual const char* what() const throw()
+        {
+            return message.c_str();
+        }
+};

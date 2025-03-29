@@ -13,20 +13,25 @@
         OK
 
     NICK
-        OK
+        Affichage du message welcome si j'utilise NICK pour changer de nickname
 
     USER
+        - check des ":" avant le nom du user
+        - Parser le username : pas commencer par un chiffre etc.
 		OK
 
     JOIN
-        OK 
+        - Parser le nom des channels
+        - Si JOIN avec plusieurs argument et erreur sur l'un, les suivants ne sont pas executes
     
     PRIVMSG
         - Check si channel/client existe
         - Diviser par 2 fonctions si client ou channel
 
     QUIT
+
 		OK
+
 
     KICK
         - Ajouter la verif de l'operateur
