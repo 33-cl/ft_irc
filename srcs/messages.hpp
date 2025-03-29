@@ -38,6 +38,9 @@
 #define RPL_WELCOME(nick, mask)                     ("001 " + std::string(nick) + " Welcome to the IRC Network " + std::string(mask))
 #define RPL_CHANNELMODEIS(nickname, channel, modes)	("324 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(modes))
 #define RPL_INVITING(nickname, channel, inviter)	("341 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(target))
+#define RPL_NOTOPIC(nick, channel)					("331 " + std::string(nick) + " " + std::string(channel) + " :No topic is set")
+#define RPL_TOPIC(nick, channel, topic)				("332 " + std::string(nick) + " " + std::string(channel) + " :" + std::string(topic))
+
 
 
 //Error:

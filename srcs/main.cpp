@@ -43,10 +43,7 @@
         add une chaine de caract
     
     MODE
-        -ajouter toutes les repercutions sur les autres fonctions
-		-gerer les invites
 		-gerer les topics
-		- si mode +k, demander mdp
 		- rien de teste avec hexchat atm
 
     Makefile
@@ -59,6 +56,7 @@
         - remplacer les wildcards
         - supprimer ADMIN
 		- changer le server name dans la liste d'init de server(setup.cpp)
+		-verifier qu'a aucun moment on cree pas des channel sans join
 */
 
 

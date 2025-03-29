@@ -57,4 +57,5 @@ class Channel
         friend class Join;
 		friend class Mode;
 		friend class Invite;
+		friend class Topic;
 };
