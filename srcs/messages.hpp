@@ -37,9 +37,9 @@
 //Replies:
 #define RPL_WELCOME(nick, mask)                     ("001 " + std::string(nick) + " Welcome to the IRC Network " + std::string(mask))
 #define RPL_CHANNELMODEIS(nickname, channel, modes)	("324 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(modes))
-#define RPL_INVITING(nickname, channel, inviter)	("341 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(target))
 #define RPL_NOTOPIC(nick, channel)					("331 " + std::string(nick) + " " + std::string(channel) + " :No topic is set")
 #define RPL_TOPIC(nick, channel, topic)				("332 " + std::string(nick) + " " + std::string(channel) + " :" + std::string(topic))
+#define RPL_INVITING(nickname, channel, inviter)	("341 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(target))
 
 
 
@@ -56,21 +56,21 @@
 #define ERR_NEEDMOREPARAMS(nick, cmd)               ("461 " + std::string(nick) + " " + std::string(cmd) + " :Not enough parameters")
 #define ERR_ALREADYREGISTERED(nick)                 ("462 " + std::string(nick) + " :You may not reregister")
 #define ERR_PASSWDMISMATCH(nick)                    ("464 " + std::string(nick) + " :Password incorrect")
-#define ERR_BADCHANMASK(channel)                    ("476 " + std::string(channel) + " :Bad channel mask")
 #define ERR_TOOMANYPARAMS(nick, command)	        ("461 " + std::string(nick) + " " + std::string(command) + " :Too many parameters")
-#define ERR_CANNOTKICKSELF(nick)			        ("480 " + std::string(nick) + " :You cannot kick yourself")
+#define ERR_INVALIDMODESTRING(nick)					("461 " + std::string(nick) + " MODE :Mode string must contain mode flags")
+#define ERR_MODE_SPACES(nick)						("461 " + std::string(nick) + " MODE :Mode string must not contain spaces")
 #define ERR_INVALIDQUITMESSAGE(nick)		        ("465 " + std::string(nick) + " :Invalid QUIT message format, comment must begin with ':'")
 #define ERR_INVALIDKICKMESSAGE(nick)		        ("465 " + std::string(nick) + " :Invalid KICK message format, comment must begin with ':'")
 #define ERR_INVALIDUSERFORMAT(nick)					("465 " + std::string(nick) + " :Invalid USER command format, real name must begin with ':'")
 #define ERR_INVALIDPARTMESSAGE(nick)				("465 " + std::string(nick) + " :Invalid PART message format, reason must begin with ':'")
-#define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
 #define ERR_UNKNOWNMODE(nick, channel)				("472 " + std::string(nick) + " " + std::string(channel) + " :is unknown mode char to me")
-#define ERR_INVALIDMODESTRING(nick)					("461 " + std::string(nick) + " MODE :Mode string must contain mode flags")
-#define ERR_MODE_SPACES(nick)						("461 " + std::string(nick) + " MODE :Mode string must not contain spaces")
-#define ERR_CANNOTINVITESELF(nick)					("480 " + std::string(nick) + " :You cannot invite yourself")
 #define ERR_NOTINVITED(nick, channel)				("473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)")
+#define ERR_BADCHANNELKEY(nick, channel)			("475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)")
+#define ERR_BADCHANMASK(channel)                    ("476 " + std::string(channel) + " :Bad channel mask")
+#define ERR_CANNOTKICKSELF(nick)			        ("480 " + std::string(nick) + " :You cannot kick yourself")
+#define ERR_CANNOTINVITESELF(nick)					("480 " + std::string(nick) + " :You cannot invite yourself")
 #define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
-#define ERR_BADCHANNELKEY(nick, channel)			("475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
+#define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
 
 
 class critical_error : public std::exception

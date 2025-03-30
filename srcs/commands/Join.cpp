@@ -104,7 +104,6 @@ Join::~Join() {}
 //             return false;
 //         }
 //     }
-
 //     return true;
 // }
 
@@ -135,21 +134,27 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
         {
 			Channel&		channel = server._channels[channel_name];
 
-            // Vérifier si le client est déjà dans le channel
-            std::vector<Client> channel_clients = server._channels[channel_name].clients;
-            for (std::vector<Client>::iterator it = channel_clients.begin(); it != channel_clients.end(); ++it)
+            if (is_in_channel(client, channel))
             {
-                if (it->socket.fd == client.socket.fd)
-                    throw recoverable_error(ERR_USERONCHANNEL(client.nickname, channel_name));
+                client.write(ERR_USERONCHANNEL(client.nickname, channel_name));
+                continue;
             }
+
 			//invite only?is invited?
 			if (channel.modes['i'] && !channel.isInvited(client))
-  				throw recoverable_error(ERR_NOTINVITED(client.nickname, channel_name));
+            {
+                client.write(ERR_NOTINVITED(client.nickname, channel_name));
+                continue;
+            }
+
 			if (channel.modes['k'])
 			{
 				//on saute le mdp si on est en mode k ppour ne pasa faire de check dessus 
 				if (i + 1 >= args.size() || args[i + 1] != channel.password)
-					throw recoverable_error(ERR_BADCHANNELKEY(client.nickname, channel_name));
+                {
+                    client.write(ERR_BADCHANNELKEY(client.nickname, channel_name));
+                    continue;
+                }
 				i++;
 			}
 			//ici j'envoi client plutot que le fd
@@ -161,7 +166,8 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
 
         // Envoyer la reponse JOIN au client 
         std::string join_msg = client.get_mask() + "JOIN " + channel_name;
-       // send(client.socket.fd, join_msg.c_str(), join_msg.length(), 0);
+        // send(client.socket.fd, join_msg.c_str(), join_msg.length(), 0);
+        client.write(join_msg);
 
         server._channels[channel_name].broadcast(join_msg, client);
 
@@ -181,6 +187,17 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
         // server._channels[channel_name].broadcast(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list, client);
         // server._channels[channel_name].broadcast(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list", client);
     }
+}
+
+bool Join::is_in_channel(Client& client, Channel& channel)
+{
+    const std::vector<Client>& clients = channel.get_clients();
+    for (std::vector<Client>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+    {
+        if (it->socket.fd == client.socket.fd)
+            return true;
+    }
+    return false;
 }
 
 bool Join::is_channel_valid(std::string channel)
