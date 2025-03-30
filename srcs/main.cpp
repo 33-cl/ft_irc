@@ -21,7 +21,6 @@
     USER
         - check des ":" avant le nom du user
         - Parser le username : pas commencer par un chiffre etc.
-		OK
 
     JOIN
         - Parser le nom des channels

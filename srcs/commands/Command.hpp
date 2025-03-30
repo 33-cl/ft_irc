@@ -3,9 +3,11 @@
 #include "../messages.hpp"
 #include "../client/Client.hpp"
 #include "../server/Server.hpp"
+#include "../channel/Channel.hpp"
 
 #include <map>
 
+class Channel;
 class Client;
 class Server;
 
@@ -58,7 +60,8 @@ class Join : public Command
         Join();
         ~Join();
 
-        static bool is_channel_valid(std::string channel);
+        bool        is_in_channel(Client& client, Channel& channel);
+        static bool is_channel_valid(const std::string& channel);
         void        execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
 

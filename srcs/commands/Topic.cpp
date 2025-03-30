@@ -16,7 +16,7 @@ void 	Topic::execute(Client& client, std::vector<std::string>& args, Server& ser
 
 	if (server._channels.find(channelName) == server._channels.end())
 		throw recoverable_error(ERR_NOSUCHCHANNEL(client.nickname, channelName));
-		
+
 	std::string topicMsg;
 	if (args.size() > 2)
 	{
