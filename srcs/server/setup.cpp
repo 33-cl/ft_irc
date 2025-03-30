@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-Server::Server() : _password(""), _port(0) {}
+Server::Server() : _password(""), _port(0), _name("irc.example.com") {}
 
 Server::~Server() 
 {
@@ -11,11 +11,12 @@ Server::~Server()
     delete  _commands["USER"];   
     delete  _commands["JOIN"];   
     delete  _commands["PRIVMSG"];
-	delete  _commands["MODE"];
     delete  _commands["KICK"];   
     delete  _commands["TOPIC"];
     delete  _commands["QUIT"]; 
 	delete  _commands["PART"];
+	delete  _commands["MODE"];
+	delete  _commands["INVITE"];
 }
 
 void    Server::init_commands()
@@ -30,6 +31,7 @@ void    Server::init_commands()
     _commands["TOPIC"]   = new Topic;
     _commands["QUIT"]    = new Quit;
 	_commands["PART"]    = new Part;
+	_commands["INVITE"]  = new Invite;
 }
 
 void    Server::initialize(int argc, char **argv)

@@ -34,7 +34,16 @@
 
 #define SERVER_NAME "ircserv"
 
+//Replies:
 #define RPL_WELCOME(nick, mask)                     ("001 " + std::string(nick) + " Welcome to the IRC Network " + std::string(mask))
+#define RPL_CHANNELMODEIS(nickname, channel, modes)	("324 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(modes))
+#define RPL_INVITING(nickname, channel, inviter)	("341 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(target))
+#define RPL_NOTOPIC(nick, channel)					("331 " + std::string(nick) + " " + std::string(channel) + " :No topic is set")
+#define RPL_TOPIC(nick, channel, topic)				("332 " + std::string(nick) + " " + std::string(channel) + " :" + std::string(topic))
+
+
+
+//Error:
 #define ERR_NOSUCHNICK(client, nick)                ("401 " + std::string(client) + " " + std::string(nick) + " :No such nick/channel")
 #define ERR_NOSUCHCHANNEL(client, channel)          ("403 " + std::string(client) + " " + std::string(channel) + " :No such channel")
 #define ERR_NONICKNAMEGIVEN(nick)                   ("431 " + std::string(nick) + " :No nickname given")
@@ -54,6 +63,15 @@
 #define ERR_INVALIDKICKMESSAGE(nick)		        ("465 " + std::string(nick) + " :Invalid KICK message format, comment must begin with ':'")
 #define ERR_INVALIDUSERFORMAT(nick)					("465 " + std::string(nick) + " :Invalid USER command format, real name must begin with ':'")
 #define ERR_INVALIDPARTMESSAGE(nick)				("465 " + std::string(nick) + " :Invalid PART message format, reason must begin with ':'")
+#define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
+#define ERR_UNKNOWNMODE(nick, channel)				("472 " + std::string(nick) + " " + std::string(channel) + " :is unknown mode char to me")
+#define ERR_INVALIDMODESTRING(nick)					("461 " + std::string(nick) + " MODE :Mode string must contain mode flags")
+#define ERR_MODE_SPACES(nick)						("461 " + std::string(nick) + " MODE :Mode string must not contain spaces")
+#define ERR_CANNOTINVITESELF(nick)					("480 " + std::string(nick) + " :You cannot invite yourself")
+#define ERR_NOTINVITED(nick, channel)				("473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)")
+#define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
+#define ERR_BADCHANNELKEY(nick, channel)			("475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
+
 
 class critical_error : public std::exception
 {

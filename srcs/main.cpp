@@ -2,6 +2,11 @@
 
 /*
 
+	CHANNEL
+		- ajouter une str pour le topic
+		- ajouter un map de booleens pour les modes
+		- une liste de clients pour les invites
+		- une liste d'operateurs
 	Infinite loop
 		- Quand on quitte avec la croix via hexchat(clean le tableau de socket)
     PASS
@@ -11,6 +16,8 @@
         Affichage du message welcome si j'utilise NICK pour changer de nickname
 
     USER
+        - check des ":" avant le nom du user
+        - Parser le username : pas commencer par un chiffre etc.
 		OK
 
     JOIN
@@ -22,7 +29,9 @@
         - Diviser par 2 fonctions si client ou channel
 
     QUIT
-        OK
+
+		OK
+
 
     KICK
         - Ajouter la verif de l'operateur
@@ -31,10 +40,11 @@
         A FAIRE
 
     TOPIC
-        A FAIRE
+        add une chaine de caract
     
     MODE
-        A FAIRE
+		-gerer les topics
+		- rien de teste avec hexchat atm
 
     Makefile
         ne recompile pas si je touch un .hpp
@@ -45,6 +55,8 @@
         - traduire les commentaires utiles en anglais
         - remplacer les wildcards
         - supprimer ADMIN
+		- changer le server name dans la liste d'init de server(setup.cpp)
+		-verifier qu'a aucun moment on cree pas des channel sans join
 */
 
 

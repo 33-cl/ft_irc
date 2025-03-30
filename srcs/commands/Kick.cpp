@@ -6,8 +6,7 @@ Kick::~Kick() {}
 
 void 	Kick::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
-	//AJOUTER VERIF OPERATOR
-	//Faire qu'on ne puisse pas se kick soit meme
+	
 	if (client.status != REGISTERED)
 		throw recoverable_error(ERR_NOTREGISTERED("*"));
 
@@ -16,7 +15,9 @@ void 	Kick::execute(Client& client, std::vector<std::string>& args, Server& serv
 	std::string channelName = args[1];
 	std::string targetNickname = args[2];
 
-
+	Channel& channel = server._channels[channelName];
+	if (!channel.isOperator(client))
+		throw recoverable_error(ERR_NOTCHANNELOP(client.nickname, channelName));
 	std::string comment;
 
 	if (client.nickname == targetNickname)
@@ -32,7 +33,6 @@ void 	Kick::execute(Client& client, std::vector<std::string>& args, Server& serv
 		throw recoverable_error(ERR_NOSUCHCHANNEL(client.nickname, channelName));
 
 	//is the operator is present on the chan
-	Channel& channel = server._channels[channelName];
 	if (!channel.hasClient(client.socket.fd))
 		throw recoverable_error(ERR_NOTONCHANNEL(client.nickname, channelName));
 

@@ -115,3 +115,12 @@ class Part	: public Command
 
 		void    execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
+
+class Invite : public Command
+{
+	public:
+		Invite();
+		~Invite();
+
+	void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+};
