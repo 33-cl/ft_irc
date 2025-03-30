@@ -61,7 +61,7 @@ class Join : public Command
         ~Join();
 
         bool        is_in_channel(Client& client, Channel& channel);
-        static bool is_channel_valid(std::string channel);
+        static bool is_channel_valid(const std::string& channel);
         void        execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
 
