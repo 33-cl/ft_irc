@@ -5,7 +5,7 @@ Mode::Mode() {}
 Mode::~Mode() {}
 
 
-//MODE #3 k yes :irc.example.com 461 admin MODE :Not enough parameters, pb?, est-ce que je considere ca comme + si pas de + dans la cmd
+//MODE #3 k yes :irc.example.com 461 admin MODE :Not enough parameters, pb au niveau du message d'erreur?
 
 void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& server)
 {

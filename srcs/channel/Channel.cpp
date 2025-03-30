@@ -230,12 +230,7 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 							return false;
 						std::string nickToOp = modeParams[paramIndex];
 						bool found = false;
-
-						for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
-						{
-							std::cerr << it->nickname << " ";
-						}
-						std::cerr << "\n";
+						
 						//is the client present in chan
 						for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
 						{

@@ -12,6 +12,9 @@
     PASS
         OK
 
+	NOTICE
+		A FAIRE
+
     NICK
         Affichage du message welcome si j'utilise NICK pour changer de nickname
 
@@ -29,9 +32,7 @@
         - Diviser par 2 fonctions si client ou channel
 
     QUIT
-
 		OK
-
 
     KICK
         - Ajouter la verif de l'operateur
@@ -56,7 +57,7 @@
         - remplacer les wildcards
         - supprimer ADMIN
 		- changer le server name dans la liste d'init de server(setup.cpp)
-		-verifier qu'a aucun moment on cree pas des channel sans join
+		- verifier qu'a aucun moment on cree pas des channel sans join(j'avais fait de la merde dans topic a ce niveau, je regarderai si tout est ok partout)
 */
 
 
