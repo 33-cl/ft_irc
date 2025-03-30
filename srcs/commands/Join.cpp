@@ -161,7 +161,6 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
             server._channels[channel_name].add_client(client);
             std::string confirm_msg = ":" + client.nickname + " JOIN " + channel_name + "\r\n";
             send(client.socket.fd, confirm_msg.c_str(), confirm_msg.length(), 0);
-
         }
 
         // Envoyer la reponse JOIN au client 

@@ -3,9 +3,11 @@
 #include "../messages.hpp"
 #include "../client/Client.hpp"
 #include "../server/Server.hpp"
+#include "../channel/Channel.hpp"
 
 #include <map>
 
+class Channel;
 class Client;
 class Server;
 
