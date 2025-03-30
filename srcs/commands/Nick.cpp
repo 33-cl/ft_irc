@@ -39,6 +39,7 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
     
     if (args.size() < 2)
         throw recoverable_error(ERR_NONICKNAMEGIVEN(std::string("*")));
+
     if (args.size() > 2)
         throw recoverable_error(ERR_TOOMANYPARAMS(client.nickname, "NICK"));
 
@@ -51,7 +52,7 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
         throw recoverable_error(ERR_NICKNAMEINUSE(new_nickname));
 
     client.nickname = new_nickname;
-    if (client.username != "")
+    if (client.username != "" && client.status != REGISTERED)
     {
         client.send_msg(RPL_WELCOME(client.nickname, client.get_mask()));
         client.status = REGISTERED;
