@@ -71,6 +71,7 @@
 #define ERR_CANNOTINVITESELF(nick)					("480 " + std::string(nick) + " :You cannot invite yourself")
 #define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
 #define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
+#define ERR_OPERATORNOTFOUND(client, nick)			("484 " + std::string(client) + " " + std::string(nick) + " :Operator not found")
 
 
 class critical_error : public std::exception

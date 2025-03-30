@@ -59,7 +59,7 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
             modeParams.push_back(args[i]);
 	
 		
-		if (!channel.changeMode(modeChanges, modeParams))
+		if (!channel.changeMode(modeChanges, modeParams, client))
 		{
 			client.write(":" + server._name + " " + ERR_UNKNOWNMODE(client.nickname, target));
 			return;

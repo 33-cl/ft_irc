@@ -1,4 +1,5 @@
 #include "Channel.hpp"
+#include "../messages.hpp"
 
 
 Channel::Channel() : name(""), topic(""), invites(), operators(), modes(), usersLimit(0), password("")
@@ -154,7 +155,7 @@ std::string Channel::getModesString() const
 	return ss.str();
 }
 
-bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams)
+bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams, Client& client)
 {
 	bool adding = true;
 	size_t paramIndex = 0;
@@ -230,7 +231,7 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 							return false;
 						std::string nickToOp = modeParams[paramIndex];
 						bool found = false;
-						
+
 						//is the client present in chan
 						for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
 						{
@@ -245,7 +246,7 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 							}
 						}
 						if (!found)
-							return false;
+   							throw recoverable_error(ERR_OPERATORNOTFOUND(client.nickname, nickToOp));
 						++paramIndex;
 					}
 					else
@@ -264,7 +265,7 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 							}
 						}
 						if (!found)
-							return false;
+   							throw recoverable_error(ERR_OPERATORNOTFOUND(client.nickname, nickToDeop));
 						++paramIndex;
 					}
 					break;
