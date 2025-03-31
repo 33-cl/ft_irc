@@ -2,6 +2,9 @@
 
 /*
 
+	Probleme, si on est dans un term qu'on register en operator et qu'ensuite on relnce nc localhost 4242 dans le meme term, 
+	si on register avec un autre compte on sera deja present dans le channel!!! et donc operator
+
 	CHANNEL
 		- ajouter une str pour le topic
 		- ajouter un map de booleens pour les modes
@@ -51,6 +54,7 @@
 
     A faire en dernier
 
+		- les messages d'erreur via les throw sont is bon? faut pas mettre le nom du server devant?
         - virer les commentaires inutiles
         - traduire les commentaires utiles en anglais
         - remplacer les wildcards

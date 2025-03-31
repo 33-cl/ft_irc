@@ -11,6 +11,7 @@
 #include <map>
 
 class Client;
+class Server;
 
 
 class Channel
@@ -43,8 +44,8 @@ class Channel
 		bool			isOperator(const Client& client) const;
 		bool			isInvited(const Client& client) const;
 		std::string		getModesString() const;
-		bool			changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams, Client& client);
-
+		bool			changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams, Client& client, Server& server);
+		int				getClientCount(std::vector<Client> clients);
 
 
         void    broadcast(const std::string& str, const Client& src);
