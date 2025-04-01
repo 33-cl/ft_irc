@@ -68,4 +68,5 @@ class Server
 
 std::vector<std::string>    split(const std::string& str, const std::string& delimiter = "\r\n");
 std::vector<std::string>	split_white_spaces(const std::string& str);
+std::string                 unsplit(const std::vector<std::string>& tab) ;
 bool                        check_command(std::string& input, const std::string& command);

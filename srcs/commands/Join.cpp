@@ -4,29 +4,35 @@ Join::Join() {}
 
 Join::~Join() {}
 
-void    Join::execute(Client& client, std::vector<std::string>& args, Server& server)
+void Join::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
     if (client.status != REGISTERED)
         throw recoverable_error(ERR_NOTREGISTERED("*"));
 
-    for (size_t i = 1; i < args.size(); i++)
-    {
-        std::string		channel_name = args[i];
+    std::string unsplited_command = unsplit(args);
+    std::vector<std::pair<std::string, std::string> > to_join = split_join(unsplited_command);
 
-		
+    for (size_t i = 0; i < to_join.size(); i++)
+    {
+        std::string channel_name = to_join[i].first;
+        std::string password = to_join[i].second;
+
         if (!is_channel_valid(channel_name))
-			throw recoverable_error(ERR_BADCHANMASK(channel_name));
-		
-        // Creating channel and joining if it dosen't exist
+        {
+            client.write(ERR_BADCHANMASK(channel_name));
+            continue;
+        }
+
+        // Creating channel and joining if it doesn't exist
         if (server._channels.find(channel_name) == server._channels.end())
-        {	
+        {    
             server._channels.insert(std::pair<std::string, Channel>(channel_name, Channel(channel_name, client)));
             std::cout << "Channel " << channel_name << " created by " << client.nickname << std::endl;
         }
         // Just joining if it exists
         else
         {
-			Channel&		channel = server._channels[channel_name];
+            Channel& channel = server._channels[channel_name];
 
             if (is_in_channel(client, channel))
             {
@@ -34,24 +40,21 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
                 continue;
             }
 
-			// If client should be and is not invited
-			if (channel.modes['i'] && !channel.isInvited(client))
+            // If client should be and is not invited
+            if (channel.modes['i'] && !channel.isInvited(client))
             {
                 client.write(ERR_NOTINVITED(client.nickname, channel_name));
                 continue;
             }
 
-			if (channel.modes['k'])
-			{
-				if (i + 1 >= args.size() || args[i + 1] != channel.password)
-                {
-                    client.write(ERR_BADCHANNELKEY(client.nickname, channel_name));
-                    continue;
-                }
-				// Don't check password as an arg 
-				i++;
-			}
-			// Add client the the channel list
+            // Check password if mode 'k' is set
+            if (channel.modes['k'] && password != channel.password)
+            {
+                client.write(ERR_BADCHANNELKEY(client.nickname, channel_name));
+                continue;
+            }
+
+            // Add client the the channel list
             server._channels[channel_name].add_client(client);
         }
 
@@ -72,6 +75,48 @@ void    Join::execute(Client& client, std::vector<std::string>& args, Server& se
         client.write(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list);
         client.write(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list");
     }
+}
+
+std::vector<std::pair<std::string, std::string> > Join::split_join(const std::string& str)
+{
+    std::vector<std::pair<std::string, std::string> > result;
+    std::vector<std::string> channels = split(str, ",");
+    
+    for (size_t i = 0; i < channels.size(); ++i)
+    {
+        std::string trimmed = channels[i];
+        // Remove leading and trailing whitespace
+        trimmed.erase(0, trimmed.find_first_not_of(" \t"));
+        trimmed.erase(trimmed.find_last_not_of(" \t") + 1);
+        
+        // Count spaces in the string
+        size_t space_count = 0;
+        for (size_t j = 0; j < trimmed.size(); ++j)
+        {
+            if (trimmed[j] == ' ')
+                space_count++;
+        }
+        
+        // Throw error if more than one space
+        if (space_count > 1)
+            throw recoverable_error("Multiple spaces in channel specification");
+        
+        // Split into channel and key
+        std::string channel;
+        std::string key = "";
+        
+        size_t space_pos = trimmed.find(' ');
+        if (space_pos != std::string::npos)
+        {
+            channel = trimmed.substr(0, space_pos);
+            key = trimmed.substr(space_pos + 1);
+        }
+        else
+            channel = trimmed;
+        
+        result.push_back(std::make_pair(channel, key));
+    }
+    return result;
 }
 
 /*

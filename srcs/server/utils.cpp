@@ -60,6 +60,10 @@ std::vector<std::string> split(const std::string& str, const std::string& delimi
     return tokens;
 }
 
+/*
+    Split all whitespaces
+*/
+
 std::vector<std::string> split_white_spaces(const std::string& str)
 {
 	std::vector<std::string> tokens;
@@ -83,6 +87,53 @@ std::vector<std::string> split_white_spaces(const std::string& str)
 		tokens.push_back(str.substr(start, i - start));
 	}
 	return tokens;
+}
+
+/*
+    Reverse split for split_white_space function
+*/
+
+std::string unsplit(const std::vector<std::string>& tab) 
+{
+    if (tab.empty()) {
+        return "";
+    }
+
+    std::string result;
+    bool has_colon_token = false;
+
+    // On commence à l'index 1 pour sauter la commande (ex: "JOIN")
+    for (size_t i = 1; i < tab.size(); ++i) {
+        if (!tab[i].empty() && tab[i][0] == ':') {
+            // Token commençant par ':' - on l'ajoute et on ignore le reste
+            if (!result.empty()) {
+                result += ' ';
+            }
+            result += tab[i];
+            has_colon_token = true;
+            break;
+        }
+
+        if (i != 1) {  // Pas d'espace avant le premier argument
+            result += ' ';
+        }
+        result += tab[i];
+    }
+
+    // Gestion des tokens avec ':' s'ils n'ont pas été traités
+    if (!has_colon_token) {
+        for (size_t i = 1; i < tab.size(); ++i) {
+            if (!tab[i].empty() && tab[i][0] == ':') {
+                if (!result.empty()) {
+                    result += ' ';
+                }
+                result += tab[i];
+                has_colon_token = true;
+            }
+        }
+    }
+
+    return result;
 }
 
 /*

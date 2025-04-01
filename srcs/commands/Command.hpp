@@ -60,9 +60,10 @@ class Join : public Command
         Join();
         ~Join();
 
-        bool        is_in_channel(Client& client, Channel& channel);
-        static bool is_channel_valid(const std::string& channel);
-        void        execute(Client& client, std::vector<std::string>& args, Server &serv);
+        std::vector<std::pair<std::string, std::string> >   split_join(const std::string& str);
+        bool                                                is_in_channel(Client& client, Channel& channel);
+        static bool                                         is_channel_valid(const std::string& channel);
+        void                                                execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
 
 class Privmsg : public Command
