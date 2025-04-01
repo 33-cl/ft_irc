@@ -37,21 +37,14 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
 		}
 		std::string modeChanges = args[2];
 
-		if (modeChanges.empty() || (modeChanges[0] != '+' && modeChanges[0] != '-'))
-		{
-			client.write(":" + server._name + " " + ERR_NEEDMOREPARAMS(client.nickname, "MODE"));
-			return;
-		}
+		if (modeChanges.empty())
+			throw recoverable_error(ERR_NEEDMOREPARAMS(client.nickname, "MODE"));
+		if ((modeChanges[0] != '+' && modeChanges[0] != '-'))
+			throw recoverable_error(ERR_INVALIDMODEFLAG(client.nickname));
 		if (modeChanges.size() < 2)
-		{
-			client.write(":" + server._name + " " + ERR_INVALIDMODESTRING(client.nickname));
-			return;
-		}
+			throw recoverable_error(ERR_INVALIDMODESTRING(client.nickname));
 		if (modeChanges.find(' ') != std::string::npos)
-		{
-			client.write(":" + server._name + " " + ERR_MODE_SPACES(client.nickname));
-			return;
-		}
+			throw recoverable_error(ERR_MODE_SPACES(client.nickname));
 
 		//add password or nbusers limit
 		std::vector<std::string> modeParams;
@@ -59,11 +52,7 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
             modeParams.push_back(args[i]);
 	
 		
-		if (!channel.changeMode(modeChanges, modeParams, client))
-		{
-			client.write(":" + server._name + " " + ERR_UNKNOWNMODE(client.nickname, target));
-			return;
-		}
+		channel.changeMode(modeChanges, modeParams, client, server);
 	
 		//message construction with modes str if l or k
 		std::string modeBroadcast = ":" + client.get_mask() + " MODE " + target + " " + modeChanges;
@@ -72,5 +61,5 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
 		channel.broadcast(modeBroadcast, client);
 	} 
 	else
-		client.write(":" + server._name + " 501 " + client.nickname + " :User mode changes not implemented");
+		throw recoverable_error(ERR_UMODEUNKNOWNFLAG(client.nickname));
 }

@@ -155,11 +155,16 @@ std::string Channel::getModesString() const
 	return ss.str();
 }
 
-bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams, Client& client)
+int		Channel::getClientCount(std::vector<Client> clients)
+{
+	return clients.size();
+}
+
+bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams, Client& client, Server& server)
 {
 	bool adding = true;
 	size_t paramIndex = 0;
-
+	std::vector<std::string> errors;
 
 	for (size_t i = 0; i < modeChanges.size(); ++i)
 	{
@@ -185,17 +190,19 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 					if (adding)
 					{
 						if (paramIndex >= modeParams.size())
+					            errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, "MODE +l"));
+						else
 						{
-							return false;
+							int limit = atoi(modeParams[paramIndex].c_str());
+							if (limit <= 0 || limit > 10000)
+								errors.push_back(ERR_INVALIDUSERLIMIT(client.nickname));
+							else
+							{
+								usersLimit = limit;
+								modes['l'] = true;
+							}
+							++paramIndex;
 						}
-						int limit = atoi(modeParams[paramIndex].c_str());
-						if (limit <= 0 || limit > 10000)
-						{
-							return false;
-						}
-						usersLimit = limit;
-						modes['l'] = true;
-						++paramIndex;
 					}
 					else
 					{
@@ -203,19 +210,24 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 						usersLimit = 0;
 					}
 					break;
-					
+
 				case 'k':
 					if (adding)
 					{
 						if (paramIndex >= modeParams.size())
-							return false;
-						std::string keyParam = modeParams[paramIndex];
-						
-						if (keyParam.empty())
-							return false;
-						password = keyParam;
-						modes['k'] = true;
-						++paramIndex;
+							errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, "MODE +k"));
+						else
+						{
+							std::string keyParam = modeParams[paramIndex];
+							if (keyParam.empty())
+								errors.push_back(ERR_EMPTYKEY(client.nickname));
+							else
+							{
+								password = keyParam;
+								modes['k'] = true;
+							}
+							++paramIndex;
+						}
 					}
 					else
 					{
@@ -223,57 +235,84 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 						password = "";
 					}
 					break;
-			
+
 				case 'o':
 					if (adding)
 					{
 						if (paramIndex >= modeParams.size())
-							return false;
-						std::string nickToOp = modeParams[paramIndex];
-						bool found = false;
-
-						//is the client present in chan
-						for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+							errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, "MODE +o"));
+						else
 						{
-							if (it->nickname == nickToOp)
+							std::string nickToOp = modeParams[paramIndex];
+							bool found = false;
+							for (std::vector<Client>::iterator it = clients.begin(); it != clients.end(); ++it)
 							{
-								if (!isOperator(*it))
+								if (it->nickname == nickToOp)
 								{
-									addOperator(*it);
-									found = true;
-									break;
+									if (!isOperator(*it))
+									{
+										addOperator(*it);
+										found = true;
+										break;
+									}
+									else
+									{
+										errors.push_back(ERR_ALREADYOP(client.nickname, nickToOp));
+										found = true;
+									}
 								}
 							}
+							if (!found)
+							{
+								errors.push_back(ERR_NOSUCHNICK(client.nickname, nickToOp));;
+								found = true;
+							}
+							++paramIndex;
 						}
-						if (!found)
-   							throw recoverable_error(ERR_OPERATORNOTFOUND(client.nickname, nickToOp));
-						++paramIndex;
 					}
 					else
 					{
 						if (paramIndex >= modeParams.size())
-							return false;
-						std::string nickToDeop = modeParams[paramIndex];
-						bool found = false;
-						for (std::vector<Client>::iterator it = operators.begin(); it != operators.end(); ++it)
+							errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, "MODE -o"));
+						else
 						{
-							if (it->nickname == nickToDeop)
+							std::string nickToDeop = modeParams[paramIndex];
+							bool found = false;
+							for (std::vector<Client>::iterator it = operators.begin(); it != operators.end(); ++it)
 							{
-								removeOperator(*it);
-								found = true;
-								break;
+								if (it->nickname == nickToDeop)
+								{
+									if (isOperator(*it))
+									{
+										removeOperator(*it);
+										found = true;
+										break;
+									}
+									else
+									{
+										errors.push_back(ERR_NOTANOPERATOR(client.nickname, nickToDeop));
+										found = true;
+									}
+								}
 							}
+							if (!found)
+								errors.push_back(ERR_NOSUCHNICK(client.nickname, nickToDeop));
+							++paramIndex;
 						}
-						if (!found)
-   							throw recoverable_error(ERR_OPERATORNOTFOUND(client.nickname, nickToDeop));
-						++paramIndex;
 					}
 					break;
 
 				default:
-					return false;
+					errors.push_back(ERR_UNKNOWNMODE(client.nickname, std::string(1, c)));
+					break;
 			}
 		}
 	}
-	return true;
+	for (std::vector<std::string>::const_iterator it = errors.begin(); it != errors.end(); ++it)
+	{
+		client.write(":" + server._name + " " + *it);
+	}
+
+
+	return errors.empty();
 }

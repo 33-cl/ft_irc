@@ -35,5 +35,7 @@ void Part::execute(Client& client, std::vector<std::string>& args, Server& serve
 
 	channel.broadcast(partMessage, client);
 	channel.removeClient(client.socket.fd);
+	channel.removeInvite(client);
+	channel.removeOperator(client);
 
 }

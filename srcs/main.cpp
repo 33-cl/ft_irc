@@ -2,6 +2,10 @@
 
 /*
 
+	Probleme, si on est dans un term qu'on register en operator et qu'ensuite on relnce nc localhost 4242 dans le meme term, 
+	si on register avec un autre compte on sera deja present dans le channel!!! et donc operator
+
+
 	CHANNEL
 		- ajouter une str pour le topic
 		- ajouter un map de booleens pour les modes
@@ -25,6 +29,7 @@
     JOIN
         - Parser le nom des channels
         - Si JOIN avec plusieurs argument et erreur sur l'un, les suivants ne sont pas executes
+		- marche pas si on essai de join plusieurs channel en meme temps avec mot de passe 
     
     PRIVMSG
         - Check si channel/client existe
@@ -51,6 +56,7 @@
 
     A faire en dernier
 
+		- les messages d'erreur via les throw sont is bon? faut pas mettre le nom du server devant?
         - virer les commentaires inutiles
         - traduire les commentaires utiles en anglais
         - remplacer les wildcards

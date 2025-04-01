@@ -46,6 +46,9 @@ void 	Kick::execute(Client& client, std::vector<std::string>& args, Server& serv
 
 	std::string kickMessage = ":" + client.get_mask() + " KICK " + channelName + " " + targetNickname + " :" + comment;
 
+	Client& targetClient = server.find_client(targetNickname);
 	channel.broadcast(kickMessage, client);
 	channel.removeClient(targetFd);
+	channel.removeInvite(targetClient);
+	channel.removeOperator(targetClient);
 }

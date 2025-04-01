@@ -55,6 +55,10 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
             }
 
             // Add client the the channel list
+
+			if (channel.modes['l'] && channel.getClientCount(channel.clients) >= channel.usersLimit)
+				throw recoverable_error(ERR_CHANNELISFULL(client.nickname, channel.name));
+			// Add client the the channel list
             server._channels[channel_name].add_client(client);
         }
 

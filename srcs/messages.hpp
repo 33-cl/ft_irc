@@ -63,15 +63,21 @@
 #define ERR_INVALIDKICKMESSAGE(nick)		        ("465 " + std::string(nick) + " :Invalid KICK message format, comment must begin with ':'")
 #define ERR_INVALIDUSERFORMAT(nick)					("465 " + std::string(nick) + " :Invalid USER command format, real name must begin with ':'")
 #define ERR_INVALIDPARTMESSAGE(nick)				("465 " + std::string(nick) + " :Invalid PART message format, reason must begin with ':'")
+#define ERR_CHANNELISFULL(client, channel)			("471 " + std::string(client) + " " + std::string(channel) + " :Cannot join channel (+l)")
 #define ERR_UNKNOWNMODE(nick, channel)				("472 " + std::string(nick) + " " + std::string(channel) + " :is unknown mode char to me")
+#define ERR_INVALIDMODEFLAG(client)					("472 " + std::string(client) + " :Mode flag must begin with '+' or '-'")
+#define ERR_INVALIDUSERLIMIT(client)				("472 " + std::string(client) + " :Invalid user limit value")
+#define ERR_EMPTYKEY(client)						("472 " + std::string(client) + " :Empty key parameter")
 #define ERR_NOTINVITED(nick, channel)				("473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)")
 #define ERR_BADCHANNELKEY(nick, channel)			("475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)")
 #define ERR_BADCHANMASK(channel)                    ("476 " + std::string(channel) + " :Bad channel mask")
 #define ERR_CANNOTKICKSELF(nick)			        ("480 " + std::string(nick) + " :You cannot kick yourself")
 #define ERR_CANNOTINVITESELF(nick)					("480 " + std::string(nick) + " :You cannot invite yourself")
 #define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
-#define ERR_NOTCHANNELOP(nick, channel)				("482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator")
+#define ERR_ALREADYOP(client, nick)					("482 " + std::string(client) + " " + std::string(nick) + " :is already an operator")
+#define ERR_NOTANOPERATOR(client, nick)				("482 " + std::string(client) + " " + std::string(nick) + " :is not an operator")
 #define ERR_OPERATORNOTFOUND(client, nick)			("484 " + std::string(client) + " " + std::string(nick) + " :Operator not found")
+#define ERR_UMODEUNKNOWNFLAG(client)				("501 " + std::string(client) + " :User mode changes not implemented")
 
 
 class critical_error : public std::exception
