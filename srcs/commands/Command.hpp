@@ -61,6 +61,7 @@ class Join : public Command
         ~Join();
 
         std::vector<std::pair<std::string, std::string> >   split_join(const std::string& str);
+        bool                                                can_join(Client& client, Channel& channel, const std::string& channel_name, const std::string& password);
         bool                                                is_in_channel(Client& client, Channel& channel);
         static bool                                         is_channel_valid(const std::string& channel);
         void                                                execute(Client& client, std::vector<std::string>& args, Server &serv);

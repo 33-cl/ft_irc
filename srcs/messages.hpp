@@ -1,25 +1,3 @@
-/*
-    GESTION D'ERREURS
-
-    1.Erreurs récupérables
-        Exemples : Mot de passe incorrect, commande mal formatée, canal inexistant.
-        Traitement : try -> catch, envoyer un message d'erreur via send(), permettre au client de réessayer.
-
-    2.Erreurs critiques
-        Exemples : Défaillance du serveur, erreur de mémoire, problème réseau.
-        Traitement : try -> catch, journaliser l'erreur, fermer la connexion ou redémarrer, ne pas permettre de réessayer immédiatement.
-
-    3.Erreurs de validation
-        Exemples : Pseudonyme déjà utilisé, canal plein, tentative non autorisée.
-        Traitement : Envoyer un message d'erreur via send(), bloquer l'action, permettre une nouvelle tentative avec des données valides.
-
-    En bref :
-    Récupérables : Client peut réessayer.
-    Critiques : Problème grave, fermer ou redémarrer.
-    Validation : Bloquer l'action, demander une correction.
-
-*/
-
 #pragma once
 
 #include <iostream>
@@ -41,8 +19,6 @@
 #define RPL_TOPIC(nick, channel, topic)				("332 " + std::string(nick) + " " + std::string(channel) + " :" + std::string(topic))
 #define RPL_INVITING(nickname, channel, inviter)	("341 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(target))
 
-
-
 //Error:
 #define ERR_NOSUCHNICK(client, nick)                ("401 " + std::string(client) + " " + std::string(nick) + " :No such nick/channel")
 #define ERR_NOSUCHCHANNEL(client, channel)          ("403 " + std::string(client) + " " + std::string(channel) + " :No such channel")
@@ -54,11 +30,12 @@
 #define ERR_USERONCHANNEL(nick, channel)            ("443 " + std::string(nick) + " " + std::string(channel) + " :is already on channel")
 #define ERR_NOTREGISTERED(nick)                     ("451 " + std::string(nick) + " :You have not registered")
 #define ERR_NEEDMOREPARAMS(nick, cmd)               ("461 " + std::string(nick) + " " + std::string(cmd) + " :Not enough parameters")
-#define ERR_ALREADYREGISTERED(nick)                 ("462 " + std::string(nick) + " :You may not reregister")
-#define ERR_PASSWDMISMATCH(nick)                    ("464 " + std::string(nick) + " :Password incorrect")
 #define ERR_TOOMANYPARAMS(nick, command)	        ("461 " + std::string(nick) + " " + std::string(command) + " :Too many parameters")
 #define ERR_INVALIDMODESTRING(nick)					("461 " + std::string(nick) + " MODE :Mode string must contain mode flags")
 #define ERR_MODE_SPACES(nick)						("461 " + std::string(nick) + " MODE :Mode string must not contain spaces")
+#define ERR_MISMATCHMULTIKICK(client)				("461 " + std::string(client) + " :Number of channels and targets do not match for multi-kick")
+#define ERR_ALREADYREGISTERED(nick)                 ("462 " + std::string(nick) + " :You may not reregister")
+#define ERR_PASSWDMISMATCH(nick)                    ("464 " + std::string(nick) + " :Password incorrect")
 #define ERR_INVALIDQUITMESSAGE(nick)		        ("465 " + std::string(nick) + " :Invalid QUIT message format, comment must begin with ':'")
 #define ERR_INVALIDKICKMESSAGE(nick)		        ("465 " + std::string(nick) + " :Invalid KICK message format, comment must begin with ':'")
 #define ERR_INVALIDUSERFORMAT(nick)					("465 " + std::string(nick) + " :Invalid USER command format, real name must begin with ':'")
@@ -78,7 +55,6 @@
 #define ERR_NOTANOPERATOR(client, nick)				("482 " + std::string(client) + " " + std::string(nick) + " :is not an operator")
 #define ERR_OPERATORNOTFOUND(client, nick)			("484 " + std::string(client) + " " + std::string(nick) + " :Operator not found")
 #define ERR_UMODEUNKNOWNFLAG(client)				("501 " + std::string(client) + " :User mode changes not implemented")
-#define ERR_MISMATCHMULTIKICK(client)				("461 " + std::string(client) + " :Number of channels and targets do not match for multi-kick")
 
 
 class critical_error : public std::exception

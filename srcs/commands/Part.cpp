@@ -85,3 +85,20 @@ void Part::execute(Client& client, std::vector<std::string>& args, Server& serve
 		channel.removeOperator(client);
 	}
 }
+
+std::vector<std::string> Part::split_channels_for_part(const std::string& str)
+{
+	std::vector<std::string> result;
+	std::vector<std::string> channels = split(str, ",");
+
+	for (size_t i = 0; i < channels.size(); ++i)
+	{
+		std::string trimmed = channels[i];
+		trimmed.erase(0, trimmed.find_first_not_of(" \t"));
+		trimmed.erase(trimmed.find_last_not_of(" \t") + 1);
+		if (trimmed.empty())
+			continue;
+		result.push_back(trimmed);
+	}
+	return result;
+}

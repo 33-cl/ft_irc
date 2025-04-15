@@ -23,42 +23,19 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
             continue;
         }
 
-        // Creating channel and joining if it doesn't exist
+        // Create channel
         if (server._channels.find(channel_name) == server._channels.end())
         {    
             server._channels.insert(std::pair<std::string, Channel>(channel_name, Channel(channel_name, client)));
             std::cout << "Channel " << channel_name << " created by " << client.nickname << std::endl;
         }
-        // Just joining if it exists
         else
         {
             Channel& channel = server._channels[channel_name];
 
-            if (is_in_channel(client, channel))
-            {
-                client.write(ERR_USERONCHANNEL(client.nickname, channel_name));
+            if (!can_join(client, channel, channel_name, password))
                 continue;
-            }
 
-            // If client should be and is not invited
-            if (channel.modes['i'] && !channel.isInvited(client))
-            {
-                client.write(ERR_NOTINVITED(client.nickname, channel_name));
-                continue;
-            }
-
-            // Check password if mode 'k' is set
-            if (channel.modes['k'] && password != channel.password)
-            {
-                client.write(ERR_BADCHANNELKEY(client.nickname, channel_name));
-                continue;
-            }
-
-            // Add client the the channel list
-
-			if (channel.modes['l'] && channel.getClientCount(channel.clients) >= channel.usersLimit)
-				throw recoverable_error(ERR_CHANNELISFULL(client.nickname, channel.name));
-			// Add client the the channel list
             server._channels[channel_name].add_client(client);
         }
 
@@ -81,23 +58,42 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
     }
 }
 
-std::vector<std::string> Part::split_channels_for_part(const std::string& str)
+
+
+
+
+
+bool    Join::can_join(Client& client, Channel& channel, const std::string& channel_name, const std::string& password)
 {
-	std::vector<std::string> result;
-	std::vector<std::string> channels = split(str, ",");
+    if (is_in_channel(client, channel))
+    {
+        client.write(ERR_USERONCHANNEL(client.nickname, channel_name));
+        return false;
+    }
 
-	for (size_t i = 0; i < channels.size(); ++i)
-	{
-		std::string trimmed = channels[i];
-		trimmed.erase(0, trimmed.find_first_not_of(" \t"));
-		trimmed.erase(trimmed.find_last_not_of(" \t") + 1);
-		if (trimmed.empty())
-			continue;
-		result.push_back(trimmed);
-	}
-	return result;
+    // If client should be and is not invited
+    if (channel.modes['i'] && !channel.isInvited(client))
+    {
+        client.write(ERR_NOTINVITED(client.nickname, channel_name));
+        return false;
+    }
+
+    // Check password if mode 'k' is set
+    if (channel.modes['k'] && password != channel.password)
+    {
+        client.write(ERR_BADCHANNELKEY(client.nickname, channel_name));
+        return false;
+    }
+
+    // Channel is full
+    if (channel.modes['l'] && channel.getClientCount(channel.clients) >= channel.usersLimit)
+    {
+        client.write(ERR_CHANNELISFULL(client.nickname, channel.name));
+        return false;
+    }
+
+    return true;
 }
-
 
 std::vector<std::pair<std::string, std::string> > Join::split_join(const std::string& str)
 {

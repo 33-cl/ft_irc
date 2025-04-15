@@ -20,17 +20,14 @@
 		A FAIRE
 
     NICK
-        Affichage du message welcome si j'utilise NICK pour changer de nickname
+        OK
 
     USER
-        - check des ":" avant le nom du user
         - Parser le username : pas commencer par un chiffre etc.
 
     JOIN
-        - Parser le nom des channels
-        - Si JOIN avec plusieurs argument et erreur sur l'un, les suivants ne sont pas executes
-		- marche pas si on essai de join plusieurs channel en meme temps avec mot de passe 
-    
+        - OK
+
     PRIVMSG
         - Check si channel/client existe
         - Diviser par 2 fonctions si client ou channel
