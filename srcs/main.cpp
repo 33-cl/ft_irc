@@ -2,7 +2,7 @@
 
 /*
 
-	Probleme, si on est dans un term qu'on register en operator et qu'ensuite on relnce nc localhost 4242 dans le meme term, 
+	Probleme, si on est dans un term qu'on register en operator puis ctrl c et qu'ensuite on relnce nc localhost 4242 dans le meme term, 
 	si on register avec un autre compte on sera deja present dans le channel!!! et donc operator
 
 
