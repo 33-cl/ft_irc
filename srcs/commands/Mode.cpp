@@ -7,6 +7,29 @@ Mode::~Mode() {}
 
 //MODE #3 k yes :irc.example.com 461 admin MODE :Not enough parameters, pb au niveau du message d'erreur?
 
+/*
+   +k <password>: 
+     - Active le mode "clé" (key)
+     - Un mot de passe doit être fourni pour rejoindre le channel
+     - Exemple: MODE #channel +k secretpass
+   
+   +l <limit>:
+     - Active une limite d'utilisateurs pour le channel
+     - Exemple: MODE #channel +l 10
+
+   +t:
+     - Seuls les opérateurs peuvent modifier le topic
+     - Exemple: MODE #channel +t
+
+   +i:
+     - Mode "invite-only": seuls les utilisateurs invités peuvent rejoindre
+     - Exemple: MODE #channel +i
+
+   +o <nickname>:
+     - Donne le statut d'opérateur à un utilisateur
+     - Exemple: MODE #channel +o user1
+ */
+
 void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
 	if (client.status != REGISTERED)

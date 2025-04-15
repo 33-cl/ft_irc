@@ -45,14 +45,17 @@ void User::execute(Client& client, std::vector<std::string>& args, Server& serve
     }
 }
 
-bool	User::is_valid_username(const std::string& user)
+bool User::is_valid_username(const std::string& user) 
 {
-	if (user.empty() || user.length() > 9)
-		return false;
-	for (size_t i = 0; i < user.length(); ++i)
-	{
-		if (isspace(user[i]) || user[i] == '\r' || user[i] == '\n')
-			return false;
-	}
-	return true;
+    if (!user.empty() && isdigit(user[0]))
+    return false;
+
+    const std::string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_[]\\^{}|";
+
+    for (size_t i = 0; i < user.length(); ++i) {
+        if (allowedChars.find(user[i]) == std::string::npos)
+            return false;
+    }
+
+    return true;
 }
