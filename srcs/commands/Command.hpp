@@ -118,6 +118,8 @@ class Part	: public Command
 		~Part();
 
 		void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+		std::vector<std::string> split_channels_for_part(const std::string& str);
+
 };
 
 class Invite : public Command
