@@ -42,7 +42,7 @@
         - Ajouter la verif de l'operateur
 
     PART
-        gerer le fait de pouvoir quitter plusieurs canaux en une seule commande,  genre part #a,#b,#c
+        done?
 
     TOPIC
         add une chaine de caract
