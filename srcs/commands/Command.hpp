@@ -131,3 +131,12 @@ class Invite : public Command
 
 	void    execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
+
+class List : public Command
+{
+	public:
+		List();
+		~List();
+
+	void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+};

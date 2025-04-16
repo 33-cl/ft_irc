@@ -64,6 +64,7 @@ class Server
 		friend class Part;
 		friend class Mode;
 		friend class Invite;
+        friend class List;
 };
 
 std::vector<std::string>    split(const std::string& str, const std::string& delimiter = "\r\n");

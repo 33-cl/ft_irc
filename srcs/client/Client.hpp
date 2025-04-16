@@ -59,6 +59,7 @@ class Client
 		friend class Part;
 		friend class Mode;
 		friend class Invite;
+        friend class List;
 };
 
 bool    check_command(std::string& input, const std::string& command);

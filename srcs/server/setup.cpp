@@ -17,6 +17,7 @@ Server::~Server()
 	delete  _commands["PART"];
 	delete  _commands["MODE"];
 	delete  _commands["INVITE"];
+    delete  _commands["LIST"];
 }
 
 void    Server::init_commands()
@@ -32,6 +33,7 @@ void    Server::init_commands()
     _commands["QUIT"]    = new Quit;
 	_commands["PART"]    = new Part;
 	_commands["INVITE"]  = new Invite;
+    _commands["LIST"]    = new List;
 }
 
 void    Server::initialize(int argc, char **argv)
@@ -51,7 +53,6 @@ void    Server::initialize(int argc, char **argv)
 
     if (!is_password_valid(_password))
         throw critical_error("Invalid password syntax");
-
 
     // Creer la socket du server
     _fd = socket(AF_INET, SOCK_STREAM, 0);

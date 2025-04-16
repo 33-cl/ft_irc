@@ -26,7 +26,6 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 
     if (bytes_received > 0)
     {
-        // Afficher le message recu
         buffer[bytes_received] = '\0';
     
         std::string buffer_str(buffer);
@@ -40,7 +39,7 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
         {
             for (size_t i = 0; i < commands.size(); i++)
             {
-                //std::cout << "command: " << commands[i] << std::endl;
+                std::cout << "command: " << commands[i] << std::endl;
                 process_input(commands[i], _clients[fds[client_index].fd]);
             }
         }
