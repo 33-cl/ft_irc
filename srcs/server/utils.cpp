@@ -154,6 +154,30 @@ bool check_command(std::string& input, const std::string& command)
 }
 
 /*
+    Returns a bool indicating if password is valid
+*/
+
+bool is_password_valid(const std::string& password) 
+{
+    if (password.length() < 4 || password.length() > 32) 
+        return false;
+
+    for (size_t i = 0; i < password.length(); ++i) 
+    {
+        char c = password[i];
+        if (!isalnum(c) && 
+            c != '-' && c != '_' && c != '.' && c != '!' && 
+            c != '@' && c != '#' && c != '$' && c != '%' && 
+            c != '^' && c != '&' && c != '*' && c != '?' && c != '+')
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/*
     Prints all the informations of the server
 
     Tool for debugging

@@ -22,7 +22,7 @@ dev: $(NAME)
 $(NAME): $(OBJ)
 	$(CXX) $(CFLAGS) -o $(NAME) $(OBJ)
 
-$(OBJ_DIR)/%.o: srcs/%.cpp | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: srcs/%.cpp| $(OBJ_DIR)
 	@mkdir -p $(@D)
 	$(CXX) $(CFLAGS) -c $< -o $@
 

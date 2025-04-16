@@ -49,6 +49,10 @@ void    Server::initialize(int argc, char **argv)
 
     _password = argv[2];
 
+    if (!is_password_valid(_password))
+        throw critical_error("Invalid password syntax");
+
+
     // Creer la socket du server
     _fd = socket(AF_INET, SOCK_STREAM, 0);
     if (_fd == -1)

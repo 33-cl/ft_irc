@@ -5,7 +5,6 @@
 	Probleme, si on est dans un term qu'on register en operator puis ctrl c et qu'ensuite on relnce nc localhost 4242 dans le meme term, 
 	si on register avec un autre compte on sera deja present dans le channel!!! et donc operator
 
-
 	CHANNEL
 		- ajouter une str pour le topic
 		- ajouter un map de booleens pour les modes
@@ -13,6 +12,7 @@
 		- une liste d'operateurs
 	Infinite loop
 		- Quand on quitte avec la croix via hexchat(clean le tableau de socket)
+
     PASS
         OK
 
@@ -23,10 +23,10 @@
         OK
 
     USER
-        - Parser le username : pas commencer par un chiffre etc.
+        OK
 
     JOIN
-        - OK
+        OK
 
     PRIVMSG
         - Check si channel/client existe
@@ -52,8 +52,10 @@
         ne recompile pas si je touch un .hpp
 
     A faire en dernier
-
+    
 		- les messages d'erreur via les throw sont is bon? faut pas mettre le nom du server devant?
+            -> Oui c'est bon car le serv appelle client.send_msg qui print le nom du serv
+
         - virer les commentaires inutiles
         - traduire les commentaires utiles en anglais
         - remplacer les wildcards

@@ -1,12 +1,8 @@
 #include "Command.hpp"
 
-Invite::Invite()
-{
-};
+Invite::Invite() {};
 
-Invite::~Invite()
-{
-};
+Invite::~Invite() {};
 
 void 	Invite::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
@@ -29,12 +25,12 @@ void 	Invite::execute(Client& client, std::vector<std::string>& args, Server& se
 	if (!channel.hasClient(client.socket.fd))
 		throw recoverable_error(ERR_NOTONCHANNEL(client.nickname, channelName));
 
-	//si on accpete &en masque de channel faut le mettre partout
+	// si on accepte &en masque de channel faut le mettre partout
 	if (channelName[0] != '#' && channelName[0] != '&')
 		throw recoverable_error(ERR_BADCHANMASK(channelName));
 
 	channel.addInvite(server.find_client(target));
-	server.find_client(target).write(":" + client.get_mask() + " INVITE " + target + " " + channelName + "\r\n");
+	server.find_client(target).write(":" + client.get_mask() + " INVITE " + target + " " + channelName);
 	client.write(":" + server._name + " " + RPL_INVITING(client.nickname, channelName, target));
 }
 
