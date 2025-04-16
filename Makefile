@@ -3,26 +3,27 @@ NAME = ircserv
 CXX = c++
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 
-SRC = 	$(wildcard srcs/*.cpp) \
-		$(wildcard srcs/server/*.cpp) \
-		$(wildcard srcs/client/*.cpp) \
-		$(wildcard srcs/channel/*.cpp) \
-		$(wildcard srcs/commands/*.cpp)
+SRC = 	srcs/main.cpp \
+		srcs/server/process.cpp srcs/server/setup.cpp srcs/server/utils.cpp \
+		srcs/client/Client.cpp \
+		srcs/channel/Channel.cpp \
+		srcs/commands/Invite.cpp srcs/commands/Join.cpp srcs/commands/Kick.cpp \
+		srcs/commands/List.cpp srcs/commands/Mode.cpp srcs/commands/Nick.cpp \
+		srcs/commands/Part.cpp srcs/commands/Pass.cpp srcs/commands/Privmsg.cpp \
+		srcs/commands/Quit.cpp srcs/commands/Topic.cpp srcs/commands/User.cpp
 
 OBJ_DIR = .build
 OBJ = $(SRC:srcs/%.cpp=$(OBJ_DIR)/%.o)
 
-HEADERS = srcs/server/Server.hpp srcs/client/Client.hpp srcs/channel/Channel.hpp srcs/commands/Commands.hpp srcs/messages.hpp;
+HEADERS = srcs/messages.hpp srcs/server/Server.hpp srcs/commands/Command.hpp \
+		  srcs/client/Client.hpp srcs/channel/Channel.hpp
 
 all: $(NAME)
-
-dev: CFLAGS = -std=c++98
-dev: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CXX) $(CFLAGS) -o $(NAME) $(OBJ)
 
-$(OBJ_DIR)/%.o: srcs/%.cpp| $(OBJ_DIR)
+$(OBJ_DIR)/%.o: srcs/%.cpp $(HEADERS) Makefile | $(OBJ_DIR)
 	@mkdir -p $(@D)
 	$(CXX) $(CFLAGS) -c $< -o $@
 
@@ -37,4 +38,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re dev
+.PHONY: all clean fclean re
