@@ -15,7 +15,7 @@
         OK
 
     USER
-        OK
+        - Mauvais message d'erreur quand le format est mauvais
 
     JOIN
         OK

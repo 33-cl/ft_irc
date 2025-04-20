@@ -9,7 +9,10 @@ Client::Client(int fd) : nickname(""), username(""), status(UNREGISTERED)
     this->socket.revents = 0;
 }
 
-Client::~Client() {}
+Client::~Client() 
+{
+
+}
 
 std::string Client::get_mask()
 {
