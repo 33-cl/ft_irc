@@ -52,6 +52,7 @@ class Client
         friend class User;
         friend class Join;
         friend class Privmsg;
+        friend class Notice;
         friend class Mode;
         friend class Kick;
         friend class Topic;

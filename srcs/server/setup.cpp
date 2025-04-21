@@ -18,6 +18,7 @@ Server::~Server()
 	delete  _commands["MODE"];
 	delete  _commands["INVITE"];
     delete  _commands["LIST"];
+    delete  _commands["NOTICE"];
 }
 
 void    Server::init_commands()
@@ -34,6 +35,7 @@ void    Server::init_commands()
 	_commands["PART"]    = new Part;
 	_commands["INVITE"]  = new Invite;
     _commands["LIST"]    = new List;
+    _commands["NOTICE"]  = new Notice;
 }
 
 void    Server::initialize(int argc, char **argv)
