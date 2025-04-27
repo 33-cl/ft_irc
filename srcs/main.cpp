@@ -53,7 +53,6 @@
         - Enlever la fonction infos() dans la boucle
         - virer les commentaires inutiles
         - traduire les commentaires utiles en anglais
-        - remplacer les wildcards
         - supprimer ADMIN
 		- changer le server name dans la liste d'init de server(setup.cpp)
 		- verifier qu'a aucun moment on cree pas des channel sans join(j'avais fait de la merde dans topic a ce niveau, je regarderai si tout est ok partout)
