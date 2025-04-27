@@ -1,6 +1,17 @@
 #include "Server.hpp"
 
 /*
+    Returns a copy of the server itself
+    Used for the signals, an alternative of using a global variable
+*/
+
+Server& Server::get_server()
+{
+    static Server serv;
+    return  serv;
+}
+
+/*
     Returns a reference of the client by finding it via nickname
 */
 

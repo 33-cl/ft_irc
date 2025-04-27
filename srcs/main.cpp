@@ -30,6 +30,7 @@
 
     KICK
         - Ajouter la verif de l'operateur
+        - Fonctionne pas avec hexchat
 
     PART
         OK

@@ -4,7 +4,7 @@ CXX = c++
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 
 SRC = 	srcs/main.cpp \
-		srcs/server/process.cpp srcs/server/setup.cpp srcs/server/utils.cpp \
+		srcs/server/process.cpp srcs/server/setup.cpp srcs/server/utils.cpp srcs/server/signals.cpp\
 		srcs/client/Client.cpp \
 		srcs/channel/Channel.cpp \
 		srcs/commands/Invite.cpp srcs/commands/Join.cpp srcs/commands/Kick.cpp \

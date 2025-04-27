@@ -65,20 +65,6 @@ void Server::process_input(std::string& input, Client &client)
 {
     std::vector<std::string> args = split_white_spaces(input);
 
-    // A SUPPRIMER AVANT DE PUSH
-    if (input == "ADMIN")
-    {
-        client.nickname = "admin";
-        client.username = "admin";
-        client.status = REGISTERED;
-    }
-    else if (input == "ADMIN2")
-    {
-        client.nickname = "admin2";
-        client.username = "admin2";
-        client.status = REGISTERED;
-    }
-
     // Cas ou input n'est pas une commande
     if (_commands.find(args[0]) == _commands.end())
         return;
