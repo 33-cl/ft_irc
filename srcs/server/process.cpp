@@ -85,3 +85,4 @@ void Server::process_input(std::string& input, Client &client)
 
     _commands[args[0]]->execute(client, args, *this);
 }
+

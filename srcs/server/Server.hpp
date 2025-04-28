@@ -14,6 +14,7 @@
 #include <poll.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <ctime> 
 
 class Command;
 class Channel;
