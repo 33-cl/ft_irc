@@ -147,10 +147,13 @@ std::string unsplit(const std::vector<std::string>& tab)
     bool has_colon_token = false;
 
     // On commence à l'index 1 pour sauter la commande (ex: "JOIN")
-    for (size_t i = 1; i < tab.size(); ++i) {
-        if (!tab[i].empty() && tab[i][0] == ':') {
+    for (size_t i = 1; i < tab.size(); ++i)
+	{
+        if (!tab[i].empty() && tab[i][0] == ':')
+		{
             // Token commençant par ':' - on l'ajoute et on ignore le reste
-            if (!result.empty()) {
+            if (!result.empty())
+			{
                 result += ' ';
             }
             result += tab[i];
@@ -166,8 +169,10 @@ std::string unsplit(const std::vector<std::string>& tab)
 
     // Gestion des tokens avec ':' s'ils n'ont pas été traités
     if (!has_colon_token) {
-        for (size_t i = 1; i < tab.size(); ++i) {
-            if (!tab[i].empty() && tab[i][0] == ':') {
+        for (size_t i = 1; i < tab.size(); ++i)
+		{
+            if (!tab[i].empty() && tab[i][0] == ':')
+			{
                 if (!result.empty()) {
                     result += ' ';
                 }
@@ -176,7 +181,6 @@ std::string unsplit(const std::vector<std::string>& tab)
             }
         }
     }
-
     return result;
 }
 

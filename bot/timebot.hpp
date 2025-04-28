@@ -1,39 +1,41 @@
 #pragma once
 
-#include "../srcs/client/Client.hpp"
-#include <string>
-#include <ctime>
-
-#include <iostream>
+#include "../srcs/messages.hpp"
 #include <string>
 #include <vector>
-#include <ctime>
-#include <cstring>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
 
-//besoin de tous ces includes?
 class TimeBot
 {
-	public:
+public:
+    TimeBot() : _sockfd(-1), _port(0) {}
 
-		//3 args pour le constru
-		TimeBot(const std::string &server, int port, const std::string &pass);
+    /**  
+     * Doit être appelé depuis main(int, char**).  
+     * usage: timebot <server_ip> <port> <password>  
+     */
+    void initialize(int argc, char **argv);
 
-		void run();
+    /**  
+     * Envoie PASS/NICK/USER puis boucle recv/process  
+     */
+    void start();
 
-	private:
 
-		void writeBot(const std::string &line);
+private:
+    int         _sockfd;        // descriptor du socket client
+    std::string _server_ip;     // argv[1]
+    int         _port;          // argv[2]
+    std::string _password;      // argv[3]
 
-		std::string formatTime() const;
+    std::string _nick;          // par ex. "TimeBot"
+    std::string _user;          // par ex. "TimeBot 0 * :Time Bot"
+    std::string _buffer;        // pour stocker le dernier recv()
 
-		int			sockfd_;    // Socket descriptor
-		std::string	server_;    // Server address
-		int			port_;      // Server port
-		std::string	pass_;
-		std::string	nick_;
-		std::string	user_;
-		std::string	buffer_;    // Buffer for incoming data
+    // traite une seule ligne sans CRLF
+    void handle_line(const std::string &line);
+	void    write(const std::string& str);
+	std::vector<std::string> split(const std::string &s, const std::string &delim);
+	std::vector<std::string> split_white_spaces(const std::string& str);
+	
 };
+

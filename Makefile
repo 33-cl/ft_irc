@@ -32,7 +32,7 @@ $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
 clean:
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR) timebot
 
 fclean: clean
 	rm -f $(NAME)
@@ -40,3 +40,28 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+# === Bonus : compilation du bot IRC ===
+
+# nom de l’exécutable bonus
+BOT_NAME  = timebot
+
+# source & objet du bot
+BOT_SRC   = bot/timebot.cpp
+BOT_OBJ   = $(OBJ_DIR)/bot/timebot.o
+
+# règle de compilation des .cpp du dossier bots/
+$(OBJ_DIR)/bot/%.o: bot/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CFLAGS) -c $< -o $@
+
+# édition de lien du bot
+$(BOT_NAME): $(BOT_OBJ)
+	$(CXX) $(CFLAGS) -o $(BOT_NAME) $(BOT_OBJ)
+
+# cible bonus pour faire juste le bot
+.PHONY: bonus
+bonus: $(BOT_NAME)
+
+# # nettoyage du bot en même temps que fclean
+# fclean: clean
+# 	rm -f $(NAME) $(BOT_NAME)
