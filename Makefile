@@ -4,13 +4,14 @@ CXX = c++
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 
 SRC = 	srcs/main.cpp \
-		srcs/server/process.cpp srcs/server/setup.cpp srcs/server/utils.cpp \
+		srcs/server/process.cpp srcs/server/setup.cpp srcs/server/utils.cpp srcs/server/signals.cpp\
 		srcs/client/Client.cpp \
 		srcs/channel/Channel.cpp \
 		srcs/commands/Invite.cpp srcs/commands/Join.cpp srcs/commands/Kick.cpp \
 		srcs/commands/List.cpp srcs/commands/Mode.cpp srcs/commands/Nick.cpp \
 		srcs/commands/Part.cpp srcs/commands/Pass.cpp srcs/commands/Privmsg.cpp \
-		srcs/commands/Quit.cpp srcs/commands/Topic.cpp srcs/commands/User.cpp
+		srcs/commands/Quit.cpp srcs/commands/Topic.cpp srcs/commands/User.cpp \
+		srcs/commands/Notice.cpp
 
 OBJ_DIR = .build
 OBJ = $(SRC:srcs/%.cpp=$(OBJ_DIR)/%.o)

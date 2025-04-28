@@ -1,6 +1,17 @@
 #include "Server.hpp"
 
 /*
+    Returns a copy of the server itself
+    Used for the signals, an alternative of using a global variable
+*/
+
+Server& Server::get_server()
+{
+    static Server serv;
+    return  serv;
+}
+
+/*
     Returns a reference of the client by finding it via nickname
 */
 
@@ -12,6 +23,39 @@ Client& Server::find_client(const std::string& nickname)
             return (it->second);
     }
     throw recoverable_error("Client not found");
+}
+
+/*
+    Removes a client from the server
+*/
+
+void Server::remove_client(const Client& client, const std::string& message)
+{
+    std::vector<std::string> channelsToRemove;
+    
+    for (std::map<std::string, Channel>::iterator it = this->_channels.begin();
+			it != this->_channels.end(); ++it)
+	{
+		Channel& channel = it->second;
+		if (channel.hasClient(client.socket.fd))
+		{
+            if (!message.empty())
+                channel.broadcast(message, client);
+			channel.removeClient(client.socket.fd);
+			channel.removeInvite(client);
+			channel.removeOperator(client);
+            
+            // Check if channel is empty after removing the client
+            if (channel.clients.size() == 0)
+                channelsToRemove.push_back(it->first);
+		}
+	}
+    
+    // Remove empty channels
+    for (size_t i = 0; i < channelsToRemove.size(); ++i)
+    {
+        this->_channels.erase(channelsToRemove[i]);
+    }
 }
 
 /*

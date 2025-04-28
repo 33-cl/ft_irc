@@ -140,3 +140,12 @@ class List : public Command
 
 	void    execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
+
+class Notice : public Command
+{
+    public:
+        Notice();
+        ~Notice();
+
+        void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+};

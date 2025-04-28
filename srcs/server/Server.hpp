@@ -6,11 +6,14 @@
 #include "../messages.hpp"
 
 #include <iostream>
+#include <sstream>
 #include <utility>
 #include <cstdlib>
-#include <unistd.h>
 #include <vector>
 #include <map>
+#include <csignal>
+
+#include <unistd.h>
 #include <poll.h>
 #include <arpa/inet.h>
 #include <string.h>
@@ -24,6 +27,7 @@ class Server
 {
 	friend class Client;
     private:
+        bool                            _is_running;
         std::string                     _password;
         int                             _port;
         int                             _fd;
@@ -36,6 +40,8 @@ class Server
         Server();
         ~Server();
 
+        static Server&  get_server();
+
         Client& find_client(const std::string& nickname);
 
         void    init_commands();
@@ -43,13 +49,16 @@ class Server
         void    start();
         
         void    new_client(std::vector<pollfd>& fds);
+        void    remove_client(const Client& client, const std::string& message);
         void    process_client_data(std::vector<pollfd>& fds, int client_index);
         void    process_input(std::string& input, Client& client);
         void    create_channel(const std::string& channel_name, Client& client);
 		int		getFdByNickname(const std::string &nickname) const;
 
         void    infos();
-        
+
+        static void handle_signal(int signal);
+
         friend class Client;
         friend class Channel;
         friend class Command;
@@ -58,6 +67,7 @@ class Server
         friend class User;
         friend class Join;
         friend class Privmsg;
+        friend class Notice;
         friend class Mode;
         friend class Kick;
         friend class Topic;
@@ -67,6 +77,14 @@ class Server
 		friend class Invite;
         friend class List;
 };
+
+template <typename T>
+std::string toString(const T& value)
+{
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
+}
 
 std::vector<std::string>    split(const std::string& str, const std::string& delimiter = "\r\n");
 std::vector<std::string>	split_white_spaces(const std::string& str);

@@ -21,18 +21,7 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
 
 	std::string message = client.get_mask() + "QUIT :" + quitMessage;
 
-	for (std::map<std::string, Channel>::iterator it = server._channels.begin();
-			it != server._channels.end(); ++it)
-	{
-		Channel& channel = it->second;
-		if (channel.hasClient(client.socket.fd))
-		{
-			channel.broadcast(message, client);
-			channel.removeClient(client.socket.fd);
-			channel.removeInvite(client);
-			channel.removeOperator(client);
-		}
-	}
-	close(client.socket.fd);
+	server.remove_client(client, message);
+	
 	throw quit_server("QUIT command called");
 }
