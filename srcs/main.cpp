@@ -62,12 +62,20 @@
 
 int main(int argc, char **argv)
 {
-    Server  serv;
-
     try
     {
-        serv.initialize(argc, argv);
-        serv.start();
+        Server* serv = new Server(argc, argv);
+
+        //serv.initialize(argc, argv);
+        serv->start();
+
+        delete serv;
     }
-    catch (const std::exception& e) {std::cerr << e.what() << '\n'; return 1;}
+    catch (const std::exception& e) 
+    {
+        std::cerr << e.what() << '\n';
+        return 1;
+    }
+
+    return 0;
 } 

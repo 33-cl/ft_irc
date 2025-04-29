@@ -2,6 +2,55 @@
 
 Server::Server() : _password(""), _port(0), _name("irc.example.com") {}
 
+Server::Server(int argc, char **argv)
+{
+    _name = "ircserv";
+
+    // Validation des arguments
+    if (argc != 3)
+        throw critical_error("Invalid nb of args\nusage: ./ircserv <port> <password>");
+    
+    std::string port_str = argv[1];
+    if (port_str.find_first_not_of("0123456789") != std::string::npos)
+        throw critical_error("Port must be numeric");
+
+    _port = atoi(port_str.c_str());
+    if (_port <= 0 || _port > 65535)
+        throw critical_error("Port must be between 1 and 65535");
+
+    _password = argv[2];
+
+    if (!is_password_valid(_password))
+        throw critical_error("Invalid password syntax");
+
+    // Création de la socket
+    _fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (_fd == -1)
+        throw critical_error("socket() error");
+
+    // Configuration et bind
+    sockaddr_in server_addr;
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(_port);
+    if (bind(_fd, (sockaddr *)&server_addr, sizeof(server_addr)) == -1)
+        throw critical_error("bind() error");
+
+    // Mise en écoute
+    if (listen(_fd, 5) == -1)
+        throw critical_error("listen() error");
+
+    // Initialisation des commandes
+    init_commands();
+
+    // Configuration des signaux
+    signal(SIGINT, &Server::handle_signal);
+    signal(SIGQUIT, &Server::handle_signal);
+
+    _is_running = true;
+    std::cout << "Server initialized on port " << _port << std::endl;
+}
+
 Server::~Server() 
 {
     close(_fd);
@@ -126,4 +175,5 @@ void Server::start()
                 i++;
         }
     }
+    delete_clients();
 }

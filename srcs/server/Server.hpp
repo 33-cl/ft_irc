@@ -38,6 +38,7 @@ class Server
 
     public:
         Server();
+        Server(int argc, char **argv);
         ~Server();
 
         static Server&  get_server();
