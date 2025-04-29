@@ -323,3 +323,35 @@ void Server::delete_clients()
     }
     _clients.clear();  // Vidage de la map
 }
+
+void Server::send_user_list(Client& client, Channel& channel)
+{
+	std::string names_list = ":" + _name + " 353 " + client.nickname + " = " + channel.name + " :";
+	bool first = true;
+
+	for (std::vector<Client>::iterator member_it = channel.clients.begin();
+		 member_it != channel.clients.end(); ++member_it)
+	{
+		if (!first)
+			names_list += " ";
+		first = false;
+
+		bool is_operator = false;
+		for (std::vector<Client>::iterator op_it = channel.operators.begin();
+			 op_it != channel.operators.end(); ++op_it)
+		{
+			if (op_it->socket.fd == member_it->socket.fd)
+			{
+				is_operator = true;
+				break;
+			}
+		}
+
+		if (is_operator)
+			names_list += "@";
+		names_list += member_it->nickname;
+	}
+
+	client.write(names_list);
+	client.write(":" + _name + " 366 " + client.nickname + " " + channel.name + " :End of /NAMES list");
+}

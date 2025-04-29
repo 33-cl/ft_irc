@@ -60,4 +60,6 @@ class Channel
 		friend class Invite;
 		friend class Topic;
 		friend class List;
+		friend class Kick;
+		friend class Part;
 };

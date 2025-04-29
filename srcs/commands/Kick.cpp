@@ -92,5 +92,15 @@ void Kick::execute(Client& client, std::vector<std::string>& args, Server& serve
 		channel.removeClient(targetFd);
 		channel.removeInvite(targetClient);
 		channel.removeOperator(targetClient);
+
+		for (std::vector<Client>::iterator member_it = channel.clients.begin();
+			 member_it != channel.clients.end(); ++member_it)
+		{
+			server.send_user_list(*member_it, channel);
+		}
+
+		std::map<int, Client>::iterator kicked_it = server._clients.find(targetFd);
+		if (kicked_it != server._clients.end())
+			server.send_user_list(kicked_it->second, channel);
 	}
 }

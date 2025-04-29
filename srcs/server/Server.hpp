@@ -56,6 +56,7 @@ class Server
         void    process_input(std::string& input, Client& client);
         void    create_channel(const std::string& channel_name, Client& client);
 		int		getFdByNickname(const std::string &nickname) const;
+        void    send_user_list(Client& client, Channel& channel) ;
 
         void    infos();
 
