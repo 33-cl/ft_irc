@@ -313,6 +313,5 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 		client.write(":" + server._name + " " + *it);
 	}
 
-
 	return errors.empty();
 }
