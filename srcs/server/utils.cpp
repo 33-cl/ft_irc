@@ -313,3 +313,13 @@ int	Server::getFdByNickname(const std::string &nickname) const
 	}
 	return -1;
 }
+
+void Server::delete_clients() 
+{
+    for (std::map<int, Client>::iterator it = _clients.begin(); 
+         it != _clients.end(); 
+         ++it) {
+        close(it->second.socket.fd);  // Fermeture simple sans vérification
+    }
+    _clients.clear();  // Vidage de la map
+}

@@ -49,6 +49,7 @@ class Server
         void    start();
         
         void    new_client(std::vector<pollfd>& fds);
+        void    delete_clients();
         void    remove_client(const Client& client, const std::string& message);
         void    process_client_data(std::vector<pollfd>& fds, int client_index);
         void    process_input(std::string& input, Client& client);
