@@ -135,19 +135,16 @@ std::string Channel::getModesString() const
 	std::stringstream ss;
 
 	ss << "+";
-	//pou chaque mode actif on l'ajoute a la string
 	for (std::map<char, bool>::const_iterator it = modes.begin(); it != modes.end(); ++it)
 	{
 		if (it->second)
 			ss << it->first;
 	}
 
-	// add users limit if 'l' mode is set
 	std::map<char, bool>::const_iterator it_l = modes.find('l');
 	if (it_l != modes.end() && it_l->second && usersLimit > 0)
 		ss << " " << usersLimit;
 
-	// add password if 'k' mode is set
 	std::map<char, bool>::const_iterator it_k = modes.find('k');
 	if (it_k != modes.end() && it_k->second && !password.empty())
 		ss << " " << password;

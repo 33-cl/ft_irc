@@ -20,7 +20,6 @@ void    Server::new_client(std::vector<pollfd> &fds)
 
 void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 {
-    // Message d'un client existant
     char    buffer[1024];
     ssize_t bytes_received = recv(fds[client_index].fd, buffer, sizeof(buffer) - 1, 0);
 
@@ -45,14 +44,11 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
         }
         catch(const recoverable_error& e)
         {
-            //std::cerr << e.what() << '\n';
             _clients[fds[client_index].fd].send_msg(std::string(e.what()));
-            //send(fds[client_index].fd, e.what(), strlen(e.what()), 0);
         }
     }
     else
     {
-        // Supprimer le client deconnecte
         std::cout << "Client deconnecte\n";
         close(fds[client_index].fd);
         fds.erase(fds.begin() + client_index);
@@ -65,7 +61,6 @@ void Server::process_input(std::string& input, Client &client)
 {
     std::vector<std::string> args = split_white_spaces(input);
 
-    // Cas ou input n'est pas une commande
     if (_commands.find(args[0]) == _commands.end())
         return;
 

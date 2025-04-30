@@ -18,7 +18,7 @@ class Channel
 {
     private:
 		std::string				name;
-		std::vector<Client>		clients; // Stocking clients ids
+		std::vector<Client>		clients;
 		std::string				topic;
 		std::vector<Client> 	invites;
 		std::vector<Client> 	operators;

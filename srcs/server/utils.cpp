@@ -45,17 +45,13 @@ void Server::remove_client(const Client& client, const std::string& message)
 			channel.removeInvite(client);
 			channel.removeOperator(client);
             
-            // Check if channel is empty after removing the client
             if (channel.clients.size() == 0)
                 channelsToRemove.push_back(it->first);
 		}
 	}
     
-    // Remove empty channels
     for (size_t i = 0; i < channelsToRemove.size(); ++i)
-    {
         this->_channels.erase(channelsToRemove[i]);
-    }
 }
 
 /*
@@ -73,11 +69,9 @@ std::vector<std::string> split(const std::string& str, const std::string& delimi
 
     while (end != std::string::npos && !colon_found) 
     {
-        // Vérifier si ':' est présent dans le segment courant
         size_t colon_pos = str.find(':', start);
         if (colon_pos != std::string::npos && colon_pos < end) 
         {
-            // Si ':' est trouvé avant le prochain délimiteur, tout mettre dans le dernier token
             colon_found = true;
             break;
         }
@@ -88,16 +82,12 @@ std::vector<std::string> split(const std::string& str, const std::string& delimi
         end = str.find(delimiter, start);
     }
 
-    // Gérer le reste de la chaîne (soit après le dernier délimiteur, soit après ':')
     if (start < str.length()) 
     {
         std::string remaining = str.substr(start);
         
-        // Suppression des "\r\n" à la fin
         while (!remaining.empty() && (remaining[remaining.size()-1] == '\r' || remaining[remaining.size()-1] == '\n')) 
-        {
             remaining.erase(remaining.size()-1);
-        }
         
         tokens.push_back(remaining);
     }
@@ -146,28 +136,23 @@ std::string unsplit(const std::vector<std::string>& tab)
     std::string result;
     bool has_colon_token = false;
 
-    // On commence à l'index 1 pour sauter la commande (ex: "JOIN")
     for (size_t i = 1; i < tab.size(); ++i)
 	{
         if (!tab[i].empty() && tab[i][0] == ':')
 		{
-            // Token commençant par ':' - on l'ajoute et on ignore le reste
             if (!result.empty())
-			{
                 result += ' ';
-            }
             result += tab[i];
             has_colon_token = true;
             break;
         }
 
-        if (i != 1) {  // Pas d'espace avant le premier argument
+        if (i != 1) 
             result += ' ';
-        }
+
         result += tab[i];
     }
 
-    // Gestion des tokens avec ':' s'ils n'ont pas été traités
     if (!has_colon_token) {
         for (size_t i = 1; i < tab.size(); ++i)
 		{
@@ -192,8 +177,8 @@ std::string unsplit(const std::vector<std::string>& tab)
 
 bool check_command(std::string& input, const std::string& command) 
 {
-    if (input[input.size() - 1] == '\n') // With some clients, the input be followed by '\n'
-        input.erase(input.size() - 1);   // so we remove it the handle the inputs equally
+    if (input[input.size() - 1] == '\n')
+        input.erase(input.size() - 1);
 
     if (input.size() < command.size() + 2 || input.compare(0, command.size() + 1, command + " ") != 0)
         return false;
@@ -267,15 +252,12 @@ void Server::infos()
         {
             std::cout << "  Channel: " << it->first << std::endl;
             
-            // Affichage des membres du canal (clients)
             std::cout << "    Clients: ";
             for (size_t i = 0; i < it->second.clients.size(); i++) {
-                // On utilise _clients pour afficher le nickname associé au fd
                 std::cout << _clients.at(it->second.clients[i].socket.fd).nickname << "|";
             }
             std::cout << std::endl;
             
-            // Affichage des opérateurs
             std::cout << "    Operators: ";
             if (it->second.operators.empty())
                 std::cout << "None";
@@ -286,7 +268,6 @@ void Server::infos()
             }
             std::cout << std::endl;
             
-            // Affichage des invités
             std::cout << "    Invites: ";
             if (it->second.invites.empty())
                 std::cout << "None";
@@ -297,7 +278,6 @@ void Server::infos()
             }
             std::cout << std::endl;
             
-            // Optionnel: Affichage des modes
             std::cout << "    Modes: " << it->second.getModesString() << std::endl;
         }
     }
@@ -319,9 +299,9 @@ void Server::delete_clients()
     for (std::map<int, Client>::iterator it = _clients.begin(); 
          it != _clients.end(); 
          ++it) {
-        close(it->second.socket.fd);  // Fermeture simple sans vérification
+        close(it->second.socket.fd);
     }
-    _clients.clear();  // Vidage de la map
+    _clients.clear();
 }
 
 void Server::send_user_list(Client& client, Channel& channel)

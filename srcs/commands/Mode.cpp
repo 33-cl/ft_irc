@@ -4,31 +4,28 @@ Mode::Mode() {}
 
 Mode::~Mode() {}
 
-
-//MODE #3 k yes :irc.example.com 461 admin MODE :Not enough parameters, pb au niveau du message d'erreur?
-
 /*
-   +k <password>: 
-     - Active le mode "clé" (key)
-     - Un mot de passe doit être fourni pour rejoindre le channel
-     - Exemple: MODE #channel +k secretpass
+   +k <password>:
+     - Enables "key" mode
+     - A password is required to join the channel
+     - Example: MODE #channel +k secretpass
    
    +l <limit>:
-     - Active une limite d'utilisateurs pour le channel
-     - Exemple: MODE #channel +l 10
+     - Sets a user limit for the channel
+     - Example: MODE #channel +l 10
 
    +t:
-     - Seuls les opérateurs peuvent modifier le topic
-     - Exemple: MODE #channel +t
+     - Only operators can change the topic
+     - Example: MODE #channel +t
 
    +i:
-     - Mode "invite-only": seuls les utilisateurs invités peuvent rejoindre
-     - Exemple: MODE #channel +i
+     - "Invite-only" mode: only invited users can join
+     - Example: MODE #channel +i
 
    +o <nickname>:
-     - Donne le statut d'opérateur à un utilisateur
-     - Exemple: MODE #channel +o user1
- */
+     - Grants operator status to a user
+     - Example: MODE #channel +o user1
+*/
 
 void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
@@ -49,7 +46,6 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
 		if (!channel.hasClient(client.socket.fd))
 			throw recoverable_error(ERR_NOTONCHANNEL(client.nickname, target));
 		
-		//etre op pour pouvoir modifier le mode t
 		if (args.size() >= 3 && channel.modes['t'] && !channel.isOperator(client))
 			throw recoverable_error(ERR_NOTCHANNELOP(client.nickname, target));
 			
@@ -69,15 +65,12 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
 		if (modeChanges.find(' ') != std::string::npos)
 			throw recoverable_error(ERR_MODE_SPACES(client.nickname));
 
-		//add password or nbusers limit
 		std::vector<std::string> modeParams;
         for (size_t i = 3; i < args.size(); ++i)
             modeParams.push_back(args[i]);
 	
-		
 		channel.changeMode(modeChanges, modeParams, client, server);
 	
-		//message construction with modes str if l or k
 		std::string modeBroadcast = ":" + client.get_mask() + " MODE " + target + " " + modeChanges;
 		for (std::vector<std::string>::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it)
 			modeBroadcast += " " + *it;

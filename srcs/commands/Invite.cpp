@@ -25,7 +25,6 @@ void 	Invite::execute(Client& client, std::vector<std::string>& args, Server& se
 	if (!channel.hasClient(client.socket.fd))
 		throw recoverable_error(ERR_NOTONCHANNEL(client.nickname, channelName));
 
-	// si on accepte &en masque de channel faut le mettre partout
 	if (channelName[0] != '#' && channelName[0] != '&')
 		throw recoverable_error(ERR_BADCHANMASK(channelName));
 
