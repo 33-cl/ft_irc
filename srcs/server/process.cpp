@@ -49,10 +49,9 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
     }
     else
     {
-        std::cout << "Client deconnecte\n";
-        close(fds[client_index].fd);
-        fds.erase(fds.begin() + client_index);
-        client_index--;
+        std::string message = _clients[fds[client_index].fd].get_mask() + "QUIT :";
+        remove_client(_clients[fds[client_index].fd], message);
+        throw quit_server("");
     }
 }
 

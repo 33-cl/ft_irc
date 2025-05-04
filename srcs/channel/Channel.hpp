@@ -40,6 +40,7 @@ class Channel
 		void	removeInvite(const Client& client);
 		void	addOperator(const Client& client);
 		void	removeOperator(const Client& client);
+		bool	has_operator() const;
 
 		bool			isOperator(const Client& client) const;
 		bool			isInvited(const Client& client) const;
@@ -62,4 +63,5 @@ class Channel
 		friend class List;
 		friend class Kick;
 		friend class Part;
+		friend class Quit;
 };

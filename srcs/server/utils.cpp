@@ -54,6 +54,21 @@ void Server::remove_client(const Client& client, const std::string& message)
         this->_channels.erase(channelsToRemove[i]);
 }
 
+void Server::destroy_channel(Channel& channel) 
+{
+    const std::string channel_name = channel.name;
+    const std::string message = ":ircserv KICK " + channel_name + 
+                              " * :No operators remaining\r\n";
+
+    for (std::vector<Client>::iterator it = channel.clients.begin(); 
+         it != channel.clients.end(); ) {
+        send(it->socket.fd, message.c_str(), message.length(), 0);
+        it = channel.clients.erase(it);
+    }
+
+    _channels.erase(channel_name);
+}
+
 /*
     Some sort of ft_split() for strings
 
@@ -302,6 +317,21 @@ void Server::delete_clients()
         close(it->second.socket.fd);
     }
     _clients.clear();
+}
+
+void Server::broadcast_channel_lists() 
+{
+    for (std::map<std::string, Channel>::iterator chan_it = _channels.begin(); 
+         chan_it != _channels.end(); ++chan_it) {
+        
+        Channel& channel = chan_it->second;
+        
+        for (std::vector<Client>::iterator member_it = channel.clients.begin();
+             member_it != channel.clients.end(); ++member_it) {
+            
+            this->send_user_list(*member_it, channel);
+        }
+    }
 }
 
 void Server::send_user_list(Client& client, Channel& channel)

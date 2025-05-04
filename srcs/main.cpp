@@ -1,24 +1,30 @@
 # include "server/Server.hpp"
 
 /*
-    Quand on quitte le serv depuis nc avec ctrl+C et non quit ca supprime pas vraiment le client du serv donc il reste OP
+    
 */
 
 int main(int argc, char **argv)
 {
+    Server* serv = NULL;
+
     try
     {
-        Server* serv = new Server(argc, argv);
-
+        serv = new Server(argc, argv);
         serv->start();
-
         delete serv;
+        serv = NULL;
     }
     catch (const std::exception& e) 
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << "Error: " << e.what() << '\n';
+        if (serv != NULL)
+        {
+            delete serv;
+            serv = NULL;
+        }
         return 1;
     }
 
     return 0;
-} 
+}

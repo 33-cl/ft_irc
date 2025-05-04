@@ -120,6 +120,11 @@ bool Channel::isOperator(const Client& client) const
 	return false;
 }
 
+bool Channel::has_operator() const
+{
+    return !operators.empty();
+}
+
 bool Channel::isInvited(const Client& client) const
 {
 	for (size_t i = 0; i < invites.size(); i++)

@@ -48,16 +48,10 @@ void Part::execute(Client& client, std::vector<std::string>& args, Server& serve
 		channel.removeInvite(client);
 		channel.removeOperator(client);
 
-		for (std::vector<Client>::iterator member_it = channel.clients.begin();
-				member_it != channel.clients.end(); ++member_it)
-		{
-			server.send_user_list(*member_it, channel);
-		}
-
-		std::map<int, Client>::iterator kicked_it = server._clients.find(client.socket.fd);
-		if (kicked_it != server._clients.end())
-			server.send_user_list(kicked_it->second, channel);
-		}
+		if (!channel.has_operator())
+			server.destroy_channel(channel);
+	}
+	server.broadcast_channel_lists();
 }
 
 std::vector<std::string> Part::split_channels_for_part(const std::string& str)
