@@ -39,7 +39,7 @@ void Part::execute(Client& client, std::vector<std::string>& args, Server& serve
 			client.write(ERR_NOTONCHANNEL(client.nickname, channelName));
 			continue;
 		}
-		std::string partMessage = ":" + client.get_mask() + " PART " + channelName;
+		std::string partMessage = client.get_mask() + " PART " + channelName;
 		if (!reason.empty())
 			partMessage += " :" + reason;
 			

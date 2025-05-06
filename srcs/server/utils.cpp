@@ -54,20 +54,51 @@ void Server::remove_client(const Client& client, const std::string& message)
         this->_channels.erase(channelsToRemove[i]);
 }
 
+// void Server::destroy_channel(Channel& channel) 
+// {
+//     const std::string channel_name = channel.name;
+//     const std::string message = ":ircserv KICK " + channel_name + 
+//                               " * :No operators remaining\r\n";
+
+//     for (std::vector<Client>::iterator it = channel.clients.begin(); 
+//          it != channel.clients.end(); ) {
+//         send(it->socket.fd, message.c_str(), message.length(), 0);
+//         it = channel.clients.erase(it);
+//     }
+
+//     _channels.erase(channel_name);
+// }
+
 void Server::destroy_channel(Channel& channel) 
 {
-    const std::string channel_name = channel.name;
-    const std::string message = ":ircserv KICK " + channel_name + 
-                              " * :No operators remaining\r\n";
+	const std::string& channel_name = channel.name;
 
-    for (std::vector<Client>::iterator it = channel.clients.begin(); 
-         it != channel.clients.end(); ) {
-        send(it->socket.fd, message.c_str(), message.length(), 0);
-        it = channel.clients.erase(it);
-    }
+	const std::string kick_msg = ":ircserv KICK " + channel_name + 
+		" * :Channel destroyed";
+	const std::string part_msg = ":ircserv PART " + channel_name;
 
-    _channels.erase(channel_name);
+	std::vector<Client> clients_copy = channel.clients;
+
+	for (std::vector<Client>::iterator it = clients_copy.begin(); it != clients_copy.end(); ++it)
+	{
+		int fd = it->socket.fd;
+		std::map<int, Client>::iterator client_it = _clients.find(fd);
+		if (client_it != _clients.end())
+		{
+			Client& original_client = client_it->second;
+
+			original_client.write(kick_msg);
+			original_client.write(part_msg);
+
+			channel.removeClient(fd);
+		}
+	}
+
+	_channels.erase(channel_name);
+
+	std::cout << "Channel " << channel_name << " destroyed" << std::endl;
 }
+
 
 /*
     Some sort of ft_split() for strings
