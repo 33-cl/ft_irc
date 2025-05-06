@@ -57,6 +57,7 @@
         - supprimer ADMIN
 		- changer le server name dans la liste d'init de server(setup.cpp)
 		- verifier qu'a aucun moment on cree pas des channel sans join(j'avais fait de la merde dans topic a ce niveau, je regarderai si tout est ok partout)
+		- check si il y a pas d'erreurs de makefile en raison de l'ajout du make bonus (relink, regle de flcean qui clean tous les executables meme le bonus)
 */
 
 

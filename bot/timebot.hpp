@@ -3,6 +3,7 @@
 #include "../srcs/messages.hpp"
 #include <string>
 #include <vector>
+#include <csignal>
 
 class TimeBot
 {
@@ -19,23 +20,27 @@ public:
      * Envoie PASS/NICK/USER puis boucle recv/process  
      */
     void start();
+	void stop();
+	static TimeBot *instance;
+	int getSockfd() const;
+
 
 
 private:
-    int         _sockfd;        // descriptor du socket client
-    std::string _server_ip;     // argv[1]
-    int         _port;          // argv[2]
-    std::string _password;      // argv[3]
+	int			_sockfd;
+	std::string	_server_ip;
+	int			_port;
+	std::string	_password;
+	std::string	_nick;
+	std::string	_user;
+	std::string	_buffer;
+	bool		_running;
 
-    std::string _nick;          // par ex. "TimeBot"
-    std::string _user;          // par ex. "TimeBot 0 * :Time Bot"
-    std::string _buffer;        // pour stocker le dernier recv()
-
-    // traite une seule ligne sans CRLF
-    void handle_line(const std::string &line);
+	// traite une seule ligne sans CRLF
+	void handle_line(const std::string &line);
 	void    write(const std::string& str);
 	std::vector<std::string> split(const std::string &s, const std::string &delim);
 	std::vector<std::string> split_white_spaces(const std::string& str);
-	
+
 };
 
