@@ -17,7 +17,7 @@
 #define RPL_CHANNELMODEIS(nickname, channel, modes)	("324 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(modes))
 #define RPL_NOTOPIC(nick, channel)					("331 " + std::string(nick) + " " + std::string(channel) + " :No topic is set")
 #define RPL_TOPIC(nick, channel, topic)				("332 " + std::string(nick) + " " + std::string(channel) + " :" + std::string(topic))
-#define RPL_INVITING(nickname, channel, inviter)	("341 " + std::string(nickname) + " " + std::string(channel) + " " + std::string(target))
+#define RPL_INVITING(nickname, channel, inviter)	("341 " + std::string(nickname) + " " + std::string(target) + " " + std::string(channel))
 
 //Error:
 #define ERR_NOSUCHNICK(client, nick)                ("401 " + std::string(client) + " " + std::string(nick) + " :No such nick/channel")
