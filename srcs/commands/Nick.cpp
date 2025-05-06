@@ -23,7 +23,35 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
     if (nick_already_used(new_nickname, server._clients, client))
         throw recoverable_error(ERR_NICKNAMEINUSE(new_nickname));
 
+    // Sauvegarde de l'ancien nickname pour le broadcast
+    std::string old_nickname = client.nickname;
     client.nickname = new_nickname;
+
+    // Envoi de la notification de changement à tous les canaux concernés
+    if (!old_nickname.empty())
+    {
+        std::string nick_change_msg = ":" + old_nickname + "!" + client.username + "@" + client.hostname + 
+                                    " NICK :" + new_nickname;
+        
+        // Broadcast à tous les canaux où le client est présent
+        for (std::map<std::string, Channel>::iterator it = server._channels.begin();
+             it != server._channels.end(); ++it)
+        {
+            Channel& channel = it->second;
+            if (channel.hasClient(client.socket.fd))
+            {
+                channel.broadcast(nick_change_msg, client);
+            }
+        }
+    }
+
+    if (!old_nickname.empty())
+    {
+        std::string nick_change_msg = ":" + old_nickname + "!" + client.username + "@" + client.hostname + 
+                                    " NICK :" + new_nickname;
+    }
+
+    // Gestion de l'enregistrement final
     if (client.username != "" && client.status != REGISTERED)
     {
         client.send_msg(RPL_WELCOME(client.nickname, client.get_mask()));
@@ -56,10 +84,10 @@ bool Nick::is_nickname_valid(std::string str)
 
 bool Nick::nick_already_used(const std::string& nick, const std::map<int, Client>& clients, const Client& current_client)
 {
-	for (std::map<int, Client>::const_iterator it = clients.begin(); it != clients.end(); ++it)
-	{
-		if (it->second.nickname == nick && &it->second != &current_client)
-			return true;
-	}
-	return false;
+    for (std::map<int, Client>::const_iterator it = clients.begin(); it != clients.end(); ++it)
+    {
+        if (it->second.nickname == nick && &it->second != &current_client)
+            return true;
+    }
+    return false;
 }
