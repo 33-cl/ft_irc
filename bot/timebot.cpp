@@ -1,7 +1,26 @@
 #include "timebot.hpp"
 
+void TimeBot::stop()
+{
+    _running = false;
+}
+TimeBot* TimeBot::instance = NULL;
+
+int TimeBot::getSockfd() const
+{
+	return _sockfd;
+}
+
+void sigint_handler(int)
+{
+	if (TimeBot::instance)
+	shutdown(TimeBot::instance->getSockfd(), SHUT_RDWR);//desactive le socket, recv revient avec 0
+	TimeBot::instance->stop();
+}
+
 int main(int argc, char **argv)
 {
+	std::signal(SIGINT, sigint_handler);
 	TimeBot bot;
 	try
 	{
@@ -33,10 +52,11 @@ void TimeBot::initialize(int argc, char **argv)
 	_password = argv[3];
 
 	// creation du socket client
-	_sockfd = ::socket(AF_INET, SOCK_STREAM, 0);
+	_sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_sockfd < 0)
 		throw std::runtime_error("socket() error");
 
+	TimeBot::instance = this;
 	// remplissage de sockaddr_in
 	struct sockaddr_in serv;
 	// memset(&serv, 0, sizeof(serv));
@@ -46,7 +66,7 @@ void TimeBot::initialize(int argc, char **argv)
 		throw std::runtime_error("Invalid server IP");
 
 	// connexion au serveur IRC
-	if (::connect(_sockfd, (struct sockaddr*)&serv, sizeof(serv)) < 0)
+	if (connect(_sockfd, (struct sockaddr*)&serv, sizeof(serv)) < 0)
 		throw std::runtime_error("connect() error");
 
 	// donnees d’enregistrement
@@ -64,11 +84,12 @@ void TimeBot::start()
 	write("NICK " + _nick);
 	write("USER " + _user);
 
+	_running = true;
 	// 2) Boucle de lecture
 	char tmp[1024];
-	while (true)
+	while (_running)
 	{
-		ssize_t n = ::recv(_sockfd, tmp, sizeof(tmp), 0);
+		ssize_t n = recv(_sockfd, tmp, sizeof(tmp), 0);
 		if (n <= 0)
 		{
 			std::cout << "Disconnected from server\n";
@@ -87,8 +108,10 @@ void TimeBot::start()
 			handle_line(lines[i]);
 	}
 
-	::close(_sockfd);
+	close(_sockfd);
 }
+
+
 
 std::vector<std::string> TimeBot::split(const std::string &s, const std::string &delim)
 {
@@ -183,6 +206,14 @@ void TimeBot::handle_line(const std::string &line)
 			if (line.size() > 1 && line[0] == ':' && excl != std::string::npos)
 				sender = line.substr(1, excl - 1);
 			write("PRIVMSG " + sender + " :It's " + tbuf);
+		}
+		else
+		{
+			size_t excl = line.find('!');
+			std::string sender;
+			if (line.size() > 1 && line[0] == ':' && excl != std::string::npos)
+				sender = line.substr(1, excl - 1);
+			write("NOTICE " + sender + " :Unknown command \"" + cmd + "\". Please use !time to get the current time.");
 		}
 	}
 }

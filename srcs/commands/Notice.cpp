@@ -40,7 +40,7 @@ void Notice::execute(Client& client, std::vector<std::string>& args, Server& ser
 		if (!args[2].empty() && args[2][0] == ':')
 		{
 			std::string to_send = client.get_mask() + " NOTICE " + args[1] + " " + args[2];
-			channel.broadcast(to_send, client);
+			channel.broadcastEveryone(to_send, client);
 		}
 	}
 	// NOTICE to client

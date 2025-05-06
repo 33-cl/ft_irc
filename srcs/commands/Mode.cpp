@@ -74,7 +74,7 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
 		std::string modeBroadcast = ":" + client.get_mask() + " MODE " + target + " " + modeChanges;
 		for (std::vector<std::string>::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it)
 			modeBroadcast += " " + *it;
-		channel.broadcast(modeBroadcast, client);
+		channel.broadcastEveryone(modeBroadcast, client);
 	} 
 	else
 		throw recoverable_error(ERR_UMODEUNKNOWNFLAG(client.nickname));

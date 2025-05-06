@@ -87,7 +87,7 @@ void Kick::execute(Client& client, std::vector<std::string>& args, Server& serve
 
 		Client& targetClient = server.find_client(targetNickname);
 
-		channel.broadcast(kickMessage, client);
+		channel.broadcastEveryone(kickMessage, client);
 		channel.removeClient(targetFd);
 		channel.removeInvite(targetClient);
 		channel.removeOperator(targetClient);

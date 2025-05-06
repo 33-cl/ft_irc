@@ -50,7 +50,8 @@ class Channel
 
 
         void    broadcast(const std::string& str, const Client& src);
-
+		void    broadcastEveryone(const std::string& str, const Client& src);
+		
         std::vector<Client>    get_clients() const;  
 
         friend class Server;

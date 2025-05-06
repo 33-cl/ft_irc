@@ -43,7 +43,7 @@ void Part::execute(Client& client, std::vector<std::string>& args, Server& serve
 		if (!reason.empty())
 			partMessage += " :" + reason;
 			
-		channel.broadcast(partMessage, client);
+		channel.broadcastEveryone(partMessage, client);
 		channel.removeClient(client.socket.fd);
 		channel.removeInvite(client);
 		channel.removeOperator(client);
