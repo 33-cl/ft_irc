@@ -5,15 +5,13 @@ Notice::Notice() {}
 Notice::~Notice() {}
 
 /*
-    NOTICE fonctionne comme PRIVMSG a quelques details pres:
-        
-        - En cas d'erreur sur le destinataire (format invalide, mauvais channel/client) aucune
-            erreur n'est renvoyee.
-    
-        - Certains bots IRC peuvent avoir des reponses automatiques a certaines commandes (ex: !help)
-            quand elles sont envoyees avec un PRIVMSG et non un NOTICE. Ca ne change donc pas
-            l'implementation de cette commande.
-                -> Quand tu coderas le bot pour le BONUS il faudra donc le prendre en compte
+   NOTICE is like PRIVMSG but different in some ways:
+   
+   - If the message goes to wrong person/channel, no error message comes back
+   
+   - Some bots answer to commands (like !help) only with PRIVMSG, not NOTICE
+     But your code for NOTICE stays the same
+     -> Remember this when making the bonus bot
 */
 
 

@@ -1,24 +1,48 @@
 #include "Server.hpp"
 
-Server::Server() : _password(""), _port(0), _name("irc.example.com") {}
+Server::Server() : _password(""), _port(0), _name("ircserv") {}
 
-Server::~Server() 
+Server::Server(int argc, char **argv)
 {
-    close(_fd);
+    _name = "ircserv";
 
-    delete  _commands["PASS"]; 
-    delete  _commands["NICK"];   
-    delete  _commands["USER"];   
-    delete  _commands["JOIN"];   
-    delete  _commands["PRIVMSG"];
-    delete  _commands["KICK"];   
-    delete  _commands["TOPIC"];
-    delete  _commands["QUIT"]; 
-	delete  _commands["PART"];
-	delete  _commands["MODE"];
-	delete  _commands["INVITE"];
-    delete  _commands["LIST"];
-    delete  _commands["NOTICE"];
+    if (argc != 3)
+        throw critical_error("Invalid nb of args\nusage: ./ircserv <port> <password>");
+    
+    std::string port_str = argv[1];
+    if (port_str.find_first_not_of("0123456789") != std::string::npos)
+        throw critical_error("Port must be numeric");
+
+    _port = atoi(port_str.c_str());
+    if (_port <= 0 || _port > 65535)
+        throw critical_error("Port must be between 1 and 65535");
+
+    _password = argv[2];
+
+    if (!is_password_valid(_password))
+        throw critical_error("Invalid password syntax");
+
+    _fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (_fd == -1)
+        throw critical_error("socket() error");
+
+    sockaddr_in server_addr;
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(_port);
+    if (bind(_fd, (sockaddr *)&server_addr, sizeof(server_addr)) == -1)
+        throw critical_error("bind() error");
+
+    if (listen(_fd, 5) == -1)
+        throw critical_error("listen() error");
+
+    init_commands();
+
+    signal(SIGINT, &Server::handle_signal);
+    signal(SIGQUIT, &Server::handle_signal);
+
+    _is_running = true;
+    std::cout << "Server initialized on port " << _port << std::endl;
 }
 
 void    Server::init_commands()
@@ -38,51 +62,6 @@ void    Server::init_commands()
     _commands["NOTICE"]  = new Notice;
 }
 
-void    Server::initialize(int argc, char **argv)
-{
-    if (argc != 3)
-        throw critical_error("Invalid nb of args\nusage: ./ircserv <port> <password>");
-    
-    std::string port_str = argv[1];
-    if (port_str.find_first_not_of("0123456789") != std::string::npos)
-        throw critical_error("Port must be numeric");
-
-    _port = atoi(port_str.c_str());
-    if (_port <= 0 || _port > 65535)
-        throw critical_error("Port must be between 1 and 65535");
-
-    _password = argv[2];
-
-    if (!is_password_valid(_password))
-        throw critical_error("Invalid password syntax");
-
-    // Creer la socket du server
-    _fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (_fd == -1)
-        throw critical_error("socket() error");
-
-    // Lier la socket a l'adresse et au port
-    sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;           // Using ipv4
-    server_addr.sin_addr.s_addr = INADDR_ANY;   // Accept connexions on every available network interface
-    server_addr.sin_port = htons(_port);        // Converting port 
-    if (bind(_fd, (sockaddr *)&server_addr, sizeof(server_addr)) == -1)
-        throw critical_error("bind() error");
-
-    // Mettre en mode ecoute
-    if (listen(_fd, 5) == -1)
-        throw critical_error("listen() error");
-
-    init_commands();
-
-    signal(SIGINT, &Server::handle_signal);
-    signal(SIGQUIT, &Server::handle_signal);
-
-    _is_running = true;
-    
-    std::cout << "Server initialized on port " << _port << std::endl;
-}
-
 void Server::start()
 {
     std::vector<pollfd> sockets;
@@ -90,7 +69,7 @@ void Server::start()
 
     while (_is_running)
     {
-        infos();
+        // infos();
 
         int nb_sockets = poll(sockets.data(), sockets.size(), -1);
         if (nb_sockets == -1)
@@ -126,4 +105,24 @@ void Server::start()
                 i++;
         }
     }
+    delete_clients();
+}
+
+Server::~Server() 
+{
+    close(_fd);
+
+    delete  _commands["PASS"]; 
+    delete  _commands["NICK"];   
+    delete  _commands["USER"];   
+    delete  _commands["JOIN"];   
+    delete  _commands["PRIVMSG"];
+    delete  _commands["KICK"];   
+    delete  _commands["TOPIC"];
+    delete  _commands["QUIT"]; 
+	delete  _commands["PART"];
+	delete  _commands["MODE"];
+	delete  _commands["INVITE"];
+    delete  _commands["LIST"];
+    delete  _commands["NOTICE"];
 }

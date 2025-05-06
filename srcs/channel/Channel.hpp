@@ -18,7 +18,7 @@ class Channel
 {
     private:
 		std::string				name;
-		std::vector<Client>		clients; // Stocking clients ids
+		std::vector<Client>		clients;
 		std::string				topic;
 		std::vector<Client> 	invites;
 		std::vector<Client> 	operators;
@@ -40,6 +40,7 @@ class Channel
 		void	removeInvite(const Client& client);
 		void	addOperator(const Client& client);
 		void	removeOperator(const Client& client);
+		bool	has_operator() const;
 
 		bool			isOperator(const Client& client) const;
 		bool			isInvited(const Client& client) const;
@@ -60,4 +61,7 @@ class Channel
 		friend class Invite;
 		friend class Topic;
 		friend class List;
+		friend class Kick;
+		friend class Part;
+		friend class Quit;
 };

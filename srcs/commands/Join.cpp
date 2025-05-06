@@ -23,12 +23,13 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
             continue;
         }
 
-        // Create channel
+        // Create and join
         if (server._channels.find(channel_name) == server._channels.end())
         {    
             server._channels.insert(std::pair<std::string, Channel>(channel_name, Channel(channel_name, client)));
             std::cout << "Channel " << channel_name << " created by " << client.nickname << std::endl;
         }
+        // Just join
         else
         {
             Channel& channel = server._channels[channel_name];
@@ -39,22 +40,22 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
             server._channels[channel_name].add_client(client);
         }
 
-        // Send JOIN 
+
         std::string join_msg = client.get_mask() + "JOIN " + channel_name;
         client.write(join_msg);
         server._channels[channel_name].broadcast(join_msg, client);
 
-        // Send channel list
-        Channel& channel = server._channels[channel_name];
-        std::string user_list;
-        const std::vector<Client>& clients = channel.get_clients();
-        for (std::vector<Client>::const_iterator it = clients.begin(); it != clients.end(); ++it) {
-            if (!user_list.empty())
-                user_list += " ";
-            user_list += it->nickname;
-        }
-        client.write(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list);
-        client.write(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list");
+        // Channel& channel = server._channels[channel_name];
+        // std::string user_list;
+        // const std::vector<Client>& clients = channel.get_clients();
+        // for (std::vector<Client>::const_iterator it = clients.begin(); it != clients.end(); ++it) {
+        //     if (!user_list.empty())
+        //         user_list += " ";
+        //     user_list += it->nickname;
+        // }
+        // client.write(":server 353 " + client.nickname + " = " + channel_name + " :" + user_list);
+        // client.write(":server 366 " + client.nickname + " " + channel_name + " :End of /NAMES list");
+        server.broadcast_channel_lists();
     }
 }
 
@@ -103,11 +104,10 @@ std::vector<std::pair<std::string, std::string> > Join::split_join(const std::st
     for (size_t i = 0; i < channels.size(); ++i)
     {
         std::string trimmed = channels[i];
-        // Remove leading and trailing whitespace
         trimmed.erase(0, trimmed.find_first_not_of(" \t"));
         trimmed.erase(trimmed.find_last_not_of(" \t") + 1);
         
-        // Count spaces in the string
+        // Count spaces
         size_t space_count = 0;
         for (size_t j = 0; j < trimmed.size(); ++j)
         {
@@ -115,11 +115,9 @@ std::vector<std::pair<std::string, std::string> > Join::split_join(const std::st
                 space_count++;
         }
         
-        // Throw error if more than one space
         if (space_count > 1)
             throw recoverable_error("Multiple spaces in channel specification");
         
-        // Split into channel and key
         std::string channel;
         std::string key = "";
         

@@ -7,11 +7,10 @@ Kick::~Kick() {}
 std::vector<std::string> split_params(const std::string& str)
 {
     std::vector<std::string> result;
-    std::vector<std::string> tokens = split(str, ","); // Utilisez votre fonction split existante
+    std::vector<std::string> tokens = split(str, ",");
     for (size_t i = 0; i < tokens.size(); i++)
     {
         std::string trimmed = tokens[i];
-        // Suppression des espaces en début et fin de chaîne
         trimmed.erase(0, trimmed.find_first_not_of(" \t"));
         trimmed.erase(trimmed.find_last_not_of(" \t") + 1);
         if (!trimmed.empty())
@@ -92,5 +91,9 @@ void Kick::execute(Client& client, std::vector<std::string>& args, Server& serve
 		channel.removeClient(targetFd);
 		channel.removeInvite(targetClient);
 		channel.removeOperator(targetClient);
+
+		if (!channel.has_operator())
+			server.destroy_channel(channel);
 	}
+	server.broadcast_channel_lists();
 }

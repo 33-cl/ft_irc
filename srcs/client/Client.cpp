@@ -11,7 +11,6 @@ Client::Client(int fd) : nickname(""), username(""), status(UNREGISTERED)
 
 Client::~Client() 
 {
-
 }
 
 std::string Client::get_mask()
