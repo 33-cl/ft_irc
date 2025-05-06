@@ -39,6 +39,6 @@ void 	Topic::execute(Client& client, std::vector<std::string>& args, Server& ser
 		throw recoverable_error(ERR_NOTCHANNELOP(client.nickname, channelName));
 	channel.topic = topicMsg;
 	std::string topicMessage = ":" + client.get_mask() + " TOPIC " + channelName + " :" + topicMsg;
-	channel.broadcast(topicMessage, client);
+	channel.broadcastEveryone(topicMessage, client);
 
 }

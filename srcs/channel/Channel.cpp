@@ -56,6 +56,15 @@ void    Channel::broadcast(const std::string& str, const Client& src)
 	}	
 }
 
+void    Channel::broadcastEveryone(const std::string& str, const Client& src)
+{
+	(void)src;
+	for (size_t i = 0; i < clients.size(); i++)
+	{
+		clients[i].write(str);
+	}	
+}
+
 std::vector<Client>    Channel::get_clients() const
 {
     return this->clients;

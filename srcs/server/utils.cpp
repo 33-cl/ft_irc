@@ -40,7 +40,7 @@ void Server::remove_client(const Client& client, const std::string& message)
 		if (channel.hasClient(client.socket.fd))
 		{
             if (!message.empty())
-                channel.broadcast(message, client);
+                channel.broadcastEveryone(message, client);
 			channel.removeClient(client.socket.fd);
 			channel.removeInvite(client);
 			channel.removeOperator(client);
