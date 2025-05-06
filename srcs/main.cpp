@@ -1,6 +1,5 @@
 # include "server/Server.hpp"
 
-
 int main(int argc, char **argv)
 {
     Server* serv = NULL;
