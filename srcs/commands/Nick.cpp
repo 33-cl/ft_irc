@@ -38,9 +38,10 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
             if (channel.hasClient(client.socket.fd))
                 channel.broadcastEveryone(nick_change_msg, client);
         }
+        
+        client.write(nick_change_msg);
     }
 
-    client.write(nick_change_msg);
 
     if (client.username != "" && client.status != REGISTERED)
     {
