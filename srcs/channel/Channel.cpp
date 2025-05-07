@@ -41,7 +41,7 @@ bool	Channel::hasClient(int fd) const
 	return false;
 }
 
-void    Channel::add_client(Client new_client)
+void    Channel::add_client(const Client& new_client)
 {
     clients.push_back(new_client);
 }
@@ -106,7 +106,6 @@ void Channel::removeInvite(const Client& client)
 	}
 }
 
-
 void Channel::removeOperator(const Client& client)
 {
 	for (std::vector<Client>::iterator it = operators.begin(); it != operators.end(); ++it)
@@ -166,7 +165,7 @@ std::string Channel::getModesString() const
 	return ss.str();
 }
 
-int		Channel::getClientCount(std::vector<Client> clients)
+int		Channel::getClientCount() const
 {
 	return clients.size();
 }
@@ -275,7 +274,7 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 							}
 							if (!found)
 							{
-								errors.push_back(ERR_NOSUCHNICK(client.nickname, nickToOp));;
+								errors.push_back(ERR_NOSUCHNICK(client.nickname, nickToOp));
 								found = true;
 							}
 							++paramIndex;
