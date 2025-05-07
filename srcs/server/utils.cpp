@@ -306,6 +306,8 @@ void Server::infos()
             std::cout << std::endl;
             
             std::cout << "    Modes: " << it->second.getModesString() << std::endl;
+
+            std::cout << "    Topic: " << it->second.topic << std::endl;
         }
     }
 }
