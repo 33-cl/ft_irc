@@ -60,6 +60,7 @@ class Server
 
         void    send_user_list(Client& client, Channel& channel);
         void    broadcast_channel_lists();
+        void    remove_and_broadcast_list(const Client& client);
         void    infos();
 
         static void handle_signal(int signal);

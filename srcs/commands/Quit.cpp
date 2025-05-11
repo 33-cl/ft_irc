@@ -16,31 +16,11 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
 
 	std::string message = client.get_mask() + "QUIT :" + quitMessage;
 
-
-    std::vector<std::string> channelsToDestroy;
-    for (std::map<std::string, Channel>::iterator it = server._channels.begin();
-         it != server._channels.end(); ++it) 
-    {
-        Channel& channel = it->second;
-        if (channel.hasClient(client.socket.fd)) 
-        {
-            channel.removeClient(client.socket.fd);
-            channel.removeOperator(client);
-            
-            if (!channel.has_operator())
-                channelsToDestroy.push_back(channel.name);
-        }
-    }
-
-    for (std::vector<std::string>::iterator it = channelsToDestroy.begin();
-         it != channelsToDestroy.end(); ++it)
-    {
-        if (server._channels.find(*it) != server._channels.end())
-            server.destroy_channel(server._channels[*it]);
-    }
-
+	// Utiliser la nouvelle fonction qui combine la suppression et la diffusion des listes
+	server.remove_and_broadcast_list(client);
+	
+	// Garder le client_remove qui gère la deconnexion du client
 	server.remove_client(client, message);
-	server.broadcast_channel_lists();
 
 	throw quit_server("QUIT command called");
 }

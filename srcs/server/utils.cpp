@@ -379,3 +379,43 @@ void Server::send_user_list(Client& client, Channel& channel)
 	client.write(names_list);
 	client.write(":" + _name + " 366 " + client.nickname + " " + channel.name + " :End of /NAMES list");
 }
+
+void Server::remove_and_broadcast_list(const Client& client)
+{
+    std::vector<std::string> channels_to_update;
+    
+    // Parcourir tous les canaux pour trouver ceux où le client est présent
+    for (std::map<std::string, Channel>::iterator chan_it = _channels.begin(); 
+         chan_it != _channels.end(); ++chan_it) {
+        
+        Channel& channel = chan_it->second;
+        
+        // Vérifier si le client est dans ce canal
+        if (channel.hasClient(client.socket.fd)) {
+            channels_to_update.push_back(chan_it->first);
+            
+            // Supprimer le client du canal
+            channel.removeClient(client.socket.fd);
+            channel.removeInvite(client);
+            channel.removeOperator(client);
+        }
+    }
+    
+    // Envoyer les listes à jour uniquement aux canaux concernés
+    for (size_t i = 0; i < channels_to_update.size(); ++i) {
+        if (_channels.find(channels_to_update[i]) != _channels.end()) {
+            Channel& channel = _channels[channels_to_update[i]];
+            
+            for (std::vector<Client>::iterator member_it = channel.clients.begin();
+                 member_it != channel.clients.end(); ++member_it) {
+                
+                this->send_user_list(*member_it, channel);
+            }
+            
+            // Détruire le canal s'il n'y a plus d'opérateurs
+            if (!channel.has_operator()) {
+                destroy_channel(channel);
+            }
+        }
+    }
+}

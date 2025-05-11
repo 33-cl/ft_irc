@@ -44,14 +44,23 @@ void Part::execute(Client& client, std::vector<std::string>& args, Server& serve
 			partMessage += " :" + reason;
 			
 		channel.broadcastEveryone(partMessage, client);
+		
+		// Supprimer le client du canal
 		channel.removeClient(client.socket.fd);
 		channel.removeInvite(client);
 		channel.removeOperator(client);
+		
+		// Envoyer la liste mise à jour uniquement aux membres de ce canal
+		for (std::vector<Client>::iterator member_it = channel.clients.begin();
+			 member_it != channel.clients.end(); ++member_it) {
+			server.send_user_list(*member_it, channel);
+		}
 
+		// Détruire le canal s'il n'y a plus d'opérateurs
 		if (!channel.has_operator())
 			server.destroy_channel(channel);
 	}
-	server.broadcast_channel_lists();
+	// Ne pas appeler broadcast_channel_lists qui enverrait à tous les canaux
 }
 
 std::vector<std::string> Part::split_channels_for_part(const std::string& str)
