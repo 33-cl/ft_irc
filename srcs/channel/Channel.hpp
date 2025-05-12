@@ -48,6 +48,8 @@ class Channel
 		bool			changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams, Client& client, Server& server);
 		int				getClientCount(std::vector<Client> clients);
 
+		// void	renameMember(const std::string& oldNick, const std::string& newNick);
+		
 
         void    broadcast(const std::string& str, const Client& src);
 		void    broadcastEveryone(const std::string& str, const Client& src);

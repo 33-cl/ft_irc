@@ -28,6 +28,7 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
 
     if (!old_nickname.empty())
     {
+		std::cout << "\n\n ICI TOCARD\n\n" << std::endl;
         std::string nick_change_msg = ":" + old_nickname + "!" + client.username + "@" + client.hostname + 
                                     " NICK :" + new_nickname;
         
@@ -36,7 +37,10 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
         {
             Channel& channel = it->second;
             if (channel.hasClient(client.socket.fd))
+			{
+				// channel.renameMember(old_nickname, new_nickname);
                 channel.broadcastEveryone(nick_change_msg, client);
+			}
         }
     }
 
@@ -46,6 +50,19 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
         client.status = REGISTERED;
     }
 }
+
+// void Channel::renameMember(const std::string& oldNick, const std::string& newNick)
+// {
+//     for (std::vector<Client>::iterator it = clients.begin();
+//          it != clients.end(); ++it)
+//     {
+//         if (it->nickname == oldNick)
+//         {
+//             it->nickname = newNick;
+//             break;
+//         }
+//     }
+// }
 
 bool Nick::is_nickname_valid(std::string str)
 {
