@@ -62,8 +62,9 @@ void TimeBot::initialize(int argc, char **argv)
 	// memset(&serv, 0, sizeof(serv));
 	serv.sin_family = AF_INET;
 	serv.sin_port   = htons(_port);
-	if (inet_pton(AF_INET, _server_ip.c_str(), &serv.sin_addr) <= 0)
-		throw std::runtime_error("Invalid server IP");
+	serv.sin_addr.s_addr = inet_addr(_server_ip.c_str());
+	if (serv.sin_addr.s_addr == INADDR_NONE)
+    	throw std::runtime_error("Invalid IPv4 address");
 
 	// connexion au serveur IRC
 	if (connect(_sockfd, (struct sockaddr*)&serv, sizeof(serv)) < 0)
