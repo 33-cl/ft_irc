@@ -10,6 +10,13 @@ void    Server::new_client(std::vector<pollfd> &fds)
     if (client_fd == -1)
         return;
 
+    if (!set_non_blocking(client_fd))
+    {
+        std::cerr << "Failed to set client socket to non-blocking mode" << std::endl;
+        close(client_fd);
+        return;
+    }
+
     std::cout << "Client connecte\n";
 
     Client  new_client(client_fd);

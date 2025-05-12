@@ -18,6 +18,7 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <ctime> 
+#include <fcntl.h>
 
 class Command;
 class Channel;
@@ -57,6 +58,7 @@ class Server
         void    create_channel(const std::string& channel_name, Client& client);
         void    destroy_channel(Channel& channel);
 		int		getFdByNickname(const std::string &nickname) const;
+        bool    set_non_blocking(int fd);
 
         void    send_user_list(Client& client, Channel& channel);
         void    broadcast_channel_lists();
