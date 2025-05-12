@@ -67,7 +67,10 @@ void TimeBot::initialize(int argc, char **argv)
 
 	// connexion au serveur IRC
 	if (connect(_sockfd, (struct sockaddr*)&serv, sizeof(serv)) < 0)
+	{
+		close(_sockfd);
 		throw std::runtime_error("connect() error");
+	}
 
 	// donnees d’enregistrement
 	_nick = "TimeBot";

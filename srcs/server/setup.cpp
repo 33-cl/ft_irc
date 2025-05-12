@@ -31,10 +31,16 @@ Server::Server(int argc, char **argv)
     server_addr.sin_addr.s_addr = INADDR_ANY;
     server_addr.sin_port = htons(_port);
     if (bind(_fd, (sockaddr *)&server_addr, sizeof(server_addr)) == -1)
+	{
+		close(_fd);
         throw critical_error("bind() error");
+	}
 
     if (listen(_fd, 5) == -1)
+	{
+		close(_fd);
         throw critical_error("listen() error");
+	}
 
     init_commands();
 

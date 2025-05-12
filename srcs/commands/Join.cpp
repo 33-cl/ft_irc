@@ -10,6 +10,8 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
         throw recoverable_error(ERR_NOTREGISTERED("*"));
 
     std::string unsplited_command = unsplit(args);
+
+
     std::vector<std::pair<std::string, std::string> > to_join = split_join(unsplited_command);
 
     for (size_t i = 0; i < to_join.size(); i++)
@@ -42,10 +44,10 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
 
 
         std::string join_msg = client.get_mask() + "JOIN " + channel_name;
-        client.write(join_msg);
+        // client.write(join_msg);
         server._channels[channel_name].broadcastEveryone(join_msg, client);
-        server.broadcast_channel_lists();
     }
+    server.broadcast_channel_lists();//avant c'etait dans le for
 }
 
 
@@ -85,43 +87,81 @@ bool    Join::can_join(Client& client, Channel& channel, const std::string& chan
     return true;
 }
 
+// std::vector<std::pair<std::string, std::string> > Join::split_join(const std::string& str)
+// {
+//     std::vector<std::pair<std::string, std::string> > result;
+//     std::vector<std::string> channels = split(str, ",");
+    
+//     for (size_t i = 0; i < channels.size(); ++i)
+//     {
+//         std::string trimmed = channels[i];
+//         trimmed.erase(0, trimmed.find_first_not_of(" \t"));
+//         trimmed.erase(trimmed.find_last_not_of(" \t") + 1);
+        
+//         // Count spaces
+//         size_t space_count = 0;
+//         for (size_t j = 0; j < trimmed.size(); ++j)
+//         {
+//             if (trimmed[j] == ' ')
+//                 space_count++;
+//         }
+        
+//         if (space_count > 1)
+//             throw recoverable_error("Multiple spaces in channel specification");
+        
+//         std::string channel;
+//         std::string key = "";
+        
+//         size_t space_pos = trimmed.find(' ');
+//         if (space_pos != std::string::npos)
+//         {
+//             channel = trimmed.substr(0, space_pos);
+//             key = trimmed.substr(space_pos + 1);
+//         }
+//         else
+//             channel = trimmed;
+        
+//         result.push_back(std::make_pair(channel, key));
+//     }
+//     return result;
+// }
+
 std::vector<std::pair<std::string, std::string> > Join::split_join(const std::string& str)
 {
-    std::vector<std::pair<std::string, std::string> > result;
-    std::vector<std::string> channels = split(str, ",");
-    
-    for (size_t i = 0; i < channels.size(); ++i)
-    {
-        std::string trimmed = channels[i];
-        trimmed.erase(0, trimmed.find_first_not_of(" \t"));
-        trimmed.erase(trimmed.find_last_not_of(" \t") + 1);
-        
-        // Count spaces
-        size_t space_count = 0;
-        for (size_t j = 0; j < trimmed.size(); ++j)
-        {
-            if (trimmed[j] == ' ')
-                space_count++;
-        }
-        
-        if (space_count > 1)
-            throw recoverable_error("Multiple spaces in channel specification");
-        
-        std::string channel;
-        std::string key = "";
-        
-        size_t space_pos = trimmed.find(' ');
-        if (space_pos != std::string::npos)
-        {
-            channel = trimmed.substr(0, space_pos);
-            key = trimmed.substr(space_pos + 1);
-        }
-        else
-            channel = trimmed;
-        
-        result.push_back(std::make_pair(channel, key));
-    }
-    return result;
+	size_t space_pos = str.find(' ');
+	std::string channels_part;
+	std::string keys_part;
+	if (space_pos == std::string::npos)
+		channels_part = str;
+	else
+	{
+		channels_part = str.substr(0, space_pos);
+		keys_part     = str.substr(space_pos + 1);
+	}
+
+	std::vector<std::string> channels = split(channels_part, ",");
+	std::vector<std::string> keys;
+	if (!keys_part.empty())
+		keys = split(keys_part, ",");
+
+	std::vector<std::pair<std::string, std::string> > result;
+	for (size_t i = 0; i < channels.size(); ++i)
+	{
+		std::string trimmed = channels[i];
+		trimmed.erase(0, trimmed.find_first_not_of(" \t"));
+		trimmed.erase(trimmed.find_last_not_of(" \t") + 1);
+
+		std::string key = "";
+		if (i < keys.size())
+		{
+			key = keys[i];
+			key.erase(0, key.find_first_not_of(" \t"));
+			key.erase(key.find_last_not_of(" \t") + 1);
+		}
+
+		result.push_back(std::make_pair(trimmed, key));
+	}
+	return result;
 }
 
 /*

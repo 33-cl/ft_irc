@@ -156,9 +156,8 @@ std::vector<std::string> split_white_spaces(const std::string& str)
 
 std::string unsplit(const std::vector<std::string>& tab) 
 {
-    if (tab.empty()) {
+    if (tab.empty())
         return "";
-    }
 
     std::string result;
     bool has_colon_token = false;
