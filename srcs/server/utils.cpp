@@ -410,11 +410,22 @@ void Server::remove_and_broadcast_list(const Client& client)
                 
                 this->send_user_list(*member_it, channel);
             }
-            
-            // Détruire le canal s'il n'y a plus d'opérateurs
-            if (!channel.has_operator()) {
-                destroy_channel(channel);
-            }
         }
     }
+}
+
+/*
+    Configure a socket to be non-blocking using fcntl
+*/
+bool Server::set_non_blocking(int fd)
+{
+    int flags = fcntl(fd, F_GETFL, 0);
+    if (flags == -1)
+        return false;
+    
+    flags |= O_NONBLOCK;
+    if (fcntl(fd, F_SETFL, flags) == -1)
+        return false;
+    
+    return true;
 }

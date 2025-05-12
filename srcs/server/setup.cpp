@@ -26,6 +26,9 @@ Server::Server(int argc, char **argv)
     if (_fd == -1)
         throw critical_error("socket() error");
 
+    if (!set_non_blocking(_fd))
+        throw critical_error("Failed to set server socket to non-blocking mode");
+
     sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = INADDR_ANY;
