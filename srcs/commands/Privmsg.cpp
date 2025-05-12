@@ -40,7 +40,7 @@ void 	Privmsg::execute(Client& client, std::vector<std::string>& args, Server& s
 		if (!args[2].empty() && args[2][0] == ':')
 		{
 			std::string to_send = client.get_mask() + "PRIVMSG " + args[1] + " " + args[2];
-			Client	dest = server.find_client(args[1]);
+			Client&	dest = server.find_client(args[1]);
 			dest.write(to_send);
 		}
 	}
