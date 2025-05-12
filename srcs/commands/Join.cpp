@@ -76,7 +76,7 @@ bool    Join::can_join(Client& client, Channel& channel, const std::string& chan
     }
 
     // Channel is full
-    if (channel.modes['l'] && channel.getClientCount(channel.clients) >= channel.usersLimit)
+    if (channel.modes['l'] && channel.getClientCount() >= channel.usersLimit)
     {
         client.write(ERR_CHANNELISFULL(client.nickname, channel.name));
         return false;

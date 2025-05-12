@@ -54,49 +54,30 @@ void Server::remove_client(const Client& client, const std::string& message)
         this->_channels.erase(channelsToRemove[i]);
 }
 
-// void Server::destroy_channel(Channel& channel) 
-// {
-//     const std::string channel_name = channel.name;
-//     const std::string message = ":ircserv KICK " + channel_name + 
-//                               " * :No operators remaining\r\n";
-
-//     for (std::vector<Client>::iterator it = channel.clients.begin(); 
-//          it != channel.clients.end(); ) {
-//         send(it->socket.fd, message.c_str(), message.length(), 0);
-//         it = channel.clients.erase(it);
-//     }
-
-//     _channels.erase(channel_name);
-// }
-
 void Server::destroy_channel(Channel& channel) 
 {
-	const std::string& channel_name = channel.name;
+    const std::string channel_name = channel.name;
+    
+    const std::string kick_msg = ":ircserv KICK " + channel_name +  
+                               " * :No operators remaining\r\n";
+    
+    const std::string destroy_msg = ":ircserv NOTICE " + channel_name + 
+                                  " :Channel being destroyed (no operators left)\r\n";
+    
+    const std::string kill_msg = ":ircserv KILL " + channel_name + 
+                               " :No operators remaining (channel destroyed)\r\n";
 
-	const std::string kick_msg = ":ircserv KICK " + channel_name + 
-		" * :Channel destroyed";
-	const std::string part_msg = ":ircserv PART " + channel_name;
+    for (std::vector<Client>::iterator it = channel.clients.begin(); 
+         it != channel.clients.end(); ) 
+    {
+        send(it->socket.fd, destroy_msg.c_str(), destroy_msg.length(), 0);
+        send(it->socket.fd, kick_msg.c_str(), kick_msg.length(), 0);  
+        send(it->socket.fd, kill_msg.c_str(), kill_msg.length(), 0);
+          
+        it = channel.clients.erase(it);
+    }
 
-	std::vector<Client> clients_copy = channel.clients;
-
-	for (std::vector<Client>::iterator it = clients_copy.begin(); it != clients_copy.end(); ++it)
-	{
-		int fd = it->socket.fd;
-		std::map<int, Client>::iterator client_it = _clients.find(fd);
-		if (client_it != _clients.end())
-		{
-			Client& original_client = client_it->second;
-
-			original_client.write(kick_msg);
-			original_client.write(part_msg);
-
-			channel.removeClient(fd);
-		}
-	}
-
-	_channels.erase(channel_name);
-
-	std::cout << "Channel " << channel_name << " destroyed" << std::endl;
+    _channels.erase(channel_name);
 }
 
 
@@ -325,6 +306,8 @@ void Server::infos()
             std::cout << std::endl;
             
             std::cout << "    Modes: " << it->second.getModesString() << std::endl;
+
+            std::cout << "    Topic: " << it->second.topic << std::endl;
         }
     }
 }
@@ -395,4 +378,44 @@ void Server::send_user_list(Client& client, Channel& channel)
 
 	client.write(names_list);
 	client.write(":" + _name + " 366 " + client.nickname + " " + channel.name + " :End of /NAMES list");
+}
+
+void Server::remove_and_broadcast_list(const Client& client)
+{
+    std::vector<std::string> channels_to_update;
+    
+    // Parcourir tous les canaux pour trouver ceux où le client est présent
+    for (std::map<std::string, Channel>::iterator chan_it = _channels.begin(); 
+         chan_it != _channels.end(); ++chan_it) {
+        
+        Channel& channel = chan_it->second;
+        
+        // Vérifier si le client est dans ce canal
+        if (channel.hasClient(client.socket.fd)) {
+            channels_to_update.push_back(chan_it->first);
+            
+            // Supprimer le client du canal
+            channel.removeClient(client.socket.fd);
+            channel.removeInvite(client);
+            channel.removeOperator(client);
+        }
+    }
+    
+    // Envoyer les listes à jour uniquement aux canaux concernés
+    for (size_t i = 0; i < channels_to_update.size(); ++i) {
+        if (_channels.find(channels_to_update[i]) != _channels.end()) {
+            Channel& channel = _channels[channels_to_update[i]];
+            
+            for (std::vector<Client>::iterator member_it = channel.clients.begin();
+                 member_it != channel.clients.end(); ++member_it) {
+                
+                this->send_user_list(*member_it, channel);
+            }
+            
+            // Détruire le canal s'il n'y a plus d'opérateurs
+            if (!channel.has_operator()) {
+                destroy_channel(channel);
+            }
+        }
+    }
 }

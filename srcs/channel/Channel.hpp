@@ -33,7 +33,7 @@ class Channel
         Channel(std::string name, const Client& client);
         ~Channel();
 
-        void    add_client(Client new_client);
+        void    add_client(const Client& new_client);
 		bool	hasClient(int fd) const;
 		void	removeClient(int fd);
 		void	addInvite(const Client& client);
@@ -46,10 +46,7 @@ class Channel
 		bool			isInvited(const Client& client) const;
 		std::string		getModesString() const;
 		bool			changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams, Client& client, Server& server);
-		int				getClientCount(std::vector<Client> clients);
-
-		// void	renameMember(const std::string& oldNick, const std::string& newNick);
-		
+		int				getClientCount() const;
 
         void    broadcast(const std::string& str, const Client& src);
 		void    broadcastEveryone(const std::string& str, const Client& src);

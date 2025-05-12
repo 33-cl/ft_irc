@@ -26,6 +26,8 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
     std::string old_nickname = client.nickname;
     client.nickname = new_nickname;
 
+    std::string nick_change_msg = ":" + old_nickname + "!" + client.username + "@" + client.hostname + " NICK :" + new_nickname;
+   
     if (!old_nickname.empty())
     {
 		std::cout << "\n\n ICI TOCARD\n\n" << std::endl;
@@ -42,7 +44,10 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
                 channel.broadcastEveryone(nick_change_msg, client);
 			}
         }
+        
+        client.write(nick_change_msg);
     }
+
 
     if (client.username != "" && client.status != REGISTERED)
     {
