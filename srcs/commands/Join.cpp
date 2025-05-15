@@ -42,17 +42,17 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
             server._channels[channel_name].add_client(client);
         }
 
-
+        // On récupère la référence au canal après s'être assuré qu'il existe
+        Channel& current_channel = server._channels[channel_name];
+        
+        // Envoyer le message JOIN uniquement pour ce canal
         std::string join_msg = client.get_mask() + "JOIN " + channel_name;
-        // client.write(join_msg);
-        server._channels[channel_name].broadcastEveryone(join_msg, client);
+        current_channel.broadcastEveryone(join_msg, client);
+        
+        // Envoyer la liste des utilisateurs uniquement pour ce canal et seulement au client qui vient de rejoindre
+        server.send_user_list(client, current_channel);
     }
-    server.broadcast_channel_lists();//avant c'etait dans le for
 }
-
-
-
-
 
 
 bool    Join::can_join(Client& client, Channel& channel, const std::string& channel_name, const std::string& password)
