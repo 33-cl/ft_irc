@@ -42,16 +42,14 @@ void    Client::send_msg(const std::string& str)
 
 void    Client::write(const std::string& str) 
 {
-    std::string message = str + "\r\n";
-    ssize_t bytes_sent = send(socket.fd, message.c_str(), message.length(), MSG_NOSIGNAL);
-    if (bytes_sent == -1)
+	std::string message = str + "\r\n";
+	ssize_t bytes_sent = send(socket.fd, message.c_str(), message.length(), MSG_NOSIGNAL);
+	if (bytes_sent == -1)
 	{
-        std::cerr << "Error while sending data" << std::endl;
+		std::cerr << "Error while sending data" << std::endl;
 		Server& serv = Server::get_server();
-        serv.remove_client(*this, "");  
-        // apres remove_client, le this peut etre invalide si le client est detruit
-        // donc on fait ensuite return pour ne plus toucher a this.
-        return;
+		serv.remove_client(*this, "");  
+		return;
 	}
 }
 
