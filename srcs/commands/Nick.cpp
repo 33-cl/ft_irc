@@ -39,7 +39,7 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
             Channel& channel = it->second;
             if (channel.hasClient(client.socket.fd))
 			{
-                channel.broadcastEveryone(nick_change_msg, client);
+                channel.broadcast(nick_change_msg, client);
 			}
         }
         
