@@ -50,38 +50,58 @@ std::vector<std::string> split_inputs(const std::string& str, const std::string&
     return tokens;
 }
 
-void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
+void Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 {
-    char    buffer[1024];
+    char buffer[1024];
     ssize_t bytes_received = recv(fds[client_index].fd, buffer, sizeof(buffer) - 1, 0);
 
     if (bytes_received > 0)
     {
         buffer[bytes_received] = '\0';
-    
-        std::string buffer_str(buffer);
         
-        if (buffer_str.size() < 4)
-            return;
-
-        std::vector<std::string> commands = split_inputs(buffer_str, "\n");
-
-        try
+        // Récupérer le client actuel
+        Client& current_client = _clients[fds[client_index].fd];
+        
+        // Ajouter les nouvelles données au buffer existant
+        std::string current_data = current_client.get_buffer() + std::string(buffer);
+        
+        // Vérifier si l'entrée se termine par "\n"
+        bool is_complete = (current_data.size() > 0 && current_data[current_data.size() - 1] == '\n');
+        
+        if (is_complete)
         {
-            for (size_t i = 0; i < commands.size(); i++)
+            // Traiter l'entrée complète
+            if (current_data.size() >= 4) // Garder votre vérification de taille minimale
             {
-                std::string cmd = commands[i];
+                std::vector<std::string> commands = split_inputs(current_data, "\r\n");
                 
-                if (cmd.size() >= 2 && cmd.substr(cmd.size() - 2) == "\r\n")
+                try
                 {
-                    cmd = cmd.substr(0, cmd.size() - 2);
-                    process_input(cmd, _clients[fds[client_index].fd]);
+                    for (size_t i = 0; i < commands.size(); i++)
+                    {
+                        if (commands[i].size() >= 2 && commands[i].substr(commands[i].size() - 2) == "\r\n")
+                        {
+                            std::string cmd = commands[i].substr(0, commands[i].size() - 2);
+                            std::cout << "command: " << cmd << std::endl;
+                            process_input(cmd, current_client);
+                        }
+                    }
+                }
+                catch(const recoverable_error& e)
+                {
+                    current_client.send_msg(std::string(e.what()));
                 }
             }
+            
+            // Effacer le buffer après traitement
+            current_client.clear_buffer();
         }
-        catch(const recoverable_error& e)
+        else
         {
-            _clients[fds[client_index].fd].send_msg(std::string(e.what()));
+            // Stocker l'entrée incomplète dans le buffer du client
+            current_client.clear_buffer();
+            current_client.append_to_buffer(current_data);
+            std::cout << "Storing incomplete data in buffer. Current buffer: " << current_client.get_buffer() << std::endl;
         }
     }
     else
