@@ -69,7 +69,6 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
         for (size_t i = 3; i < args.size(); ++i)
             modeParams.push_back(args[i]);
 	
-		// channel.changeMode(modeChanges, modeParams, client, server);
 		bool success = channel.changeMode(modeChanges, modeParams, client, server);
 		if (success)
 		{
