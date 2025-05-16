@@ -54,3 +54,15 @@ void    Client::write(const std::string& str)
         return;
 	}
 }
+
+void Client::append_to_buffer(const std::string& data) {
+    input_buffer += data;
+}
+
+std::string Client::get_buffer() {
+    return input_buffer;
+}
+
+void Client::clear_buffer() {
+    input_buffer.clear();
+}

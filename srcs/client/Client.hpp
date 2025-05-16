@@ -31,6 +31,7 @@ class Client
 		std::string realname;
         std::string hostname;
         short       status;
+        std::string input_buffer;
 
     public:
         Client();
@@ -43,6 +44,10 @@ class Client
         
         void    send_msg(const std::string& str);
         void    write(const std::string& str);
+
+        void append_to_buffer(const std::string& data);
+        std::string get_buffer();
+        void clear_buffer();
 
         friend class Server;
         friend class Channel;
