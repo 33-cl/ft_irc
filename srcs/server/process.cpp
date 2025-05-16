@@ -25,6 +25,31 @@ void    Server::new_client(std::vector<pollfd> &fds)
     fds.push_back(new_client.socket);
 }
 
+/*
+    PASS aaaa\r\nNICK maeferre\r\nUSER mael 0 * :real name\r\n
+
+*/
+
+std::vector<std::string> split_inputs(const std::string& str, const std::string& delimiter)
+{
+    std::vector<std::string> tokens;
+    size_t start = 0;
+    size_t end = 0;
+    
+    while ((end = str.find(delimiter, start)) != std::string::npos)
+    {
+        // Inclure le délimiteur à la fin de chaque token
+        tokens.push_back(str.substr(start, end - start + delimiter.length()));
+        start = end + delimiter.length();
+    }
+    
+    // Ajouter le reste de la chaîne si elle ne se termine pas par le délimiteur
+    if (start < str.length())
+        tokens.push_back(str.substr(start));
+    
+    return tokens;
+}
+
 void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
 {
     char    buffer[1024];
@@ -39,14 +64,19 @@ void    Server::process_client_data(std::vector<pollfd> &fds, int client_index)
         if (buffer_str.size() < 4)
             return;
 
-        std::vector<std::string> commands = split(buffer_str, "\r\n");
+        std::vector<std::string> commands = split_inputs(buffer_str, "\n");
 
         try
         {
             for (size_t i = 0; i < commands.size(); i++)
             {
-                std::cout << "command: " << commands[i] << std::endl;
-                process_input(commands[i], _clients[fds[client_index].fd]);
+                std::string cmd = commands[i];
+                
+                if (cmd.size() >= 2 && cmd.substr(cmd.size() - 2) == "\r\n")
+                {
+                    cmd = cmd.substr(0, cmd.size() - 2);
+                    process_input(cmd, _clients[fds[client_index].fd]);
+                }
             }
         }
         catch(const recoverable_error& e)
