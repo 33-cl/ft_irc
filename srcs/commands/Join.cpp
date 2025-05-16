@@ -16,12 +16,15 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
 
     for (size_t i = 0; i < to_join.size(); i++)
     {
-        std::string channel_name = to_join[i].first;
+        std::string raw_channel_name = to_join[i].first;
         std::string password = to_join[i].second;
-
-        if (!is_channel_valid(channel_name))
+        
+        // Parse and validate the channel name
+        std::string channel_name = parse_channel_name(raw_channel_name);
+        
+        if (channel_name.empty())
         {
-            client.write(ERR_BADCHANMASK(channel_name));
+            client.write(ERR_BADCHANMASK(raw_channel_name));
             continue;
         }
 
@@ -87,45 +90,6 @@ bool    Join::can_join(Client& client, Channel& channel, const std::string& chan
     return true;
 }
 
-// std::vector<std::pair<std::string, std::string> > Join::split_join(const std::string& str)
-// {
-//     std::vector<std::pair<std::string, std::string> > result;
-//     std::vector<std::string> channels = split(str, ",");
-    
-//     for (size_t i = 0; i < channels.size(); ++i)
-//     {
-//         std::string trimmed = channels[i];
-//         trimmed.erase(0, trimmed.find_first_not_of(" \t"));
-//         trimmed.erase(trimmed.find_last_not_of(" \t") + 1);
-        
-//         // Count spaces
-//         size_t space_count = 0;
-//         for (size_t j = 0; j < trimmed.size(); ++j)
-//         {
-//             if (trimmed[j] == ' ')
-//                 space_count++;
-//         }
-        
-//         if (space_count > 1)
-//             throw recoverable_error("Multiple spaces in channel specification");
-        
-//         std::string channel;
-//         std::string key = "";
-        
-//         size_t space_pos = trimmed.find(' ');
-//         if (space_pos != std::string::npos)
-//         {
-//             channel = trimmed.substr(0, space_pos);
-//             key = trimmed.substr(space_pos + 1);
-//         }
-//         else
-//             channel = trimmed;
-        
-//         result.push_back(std::make_pair(channel, key));
-//     }
-//     return result;
-// }
-
 std::vector<std::pair<std::string, std::string> > Join::split_join(const std::string& str)
 {
 	size_t space_pos = str.find(' ');
@@ -179,30 +143,48 @@ bool Join::is_in_channel(Client& client, Channel& channel)
     return false;
 }
 
+std::string Join::parse_channel_name(const std::string& input_channel)
+{
+    std::string channel = input_channel;
+    channel.erase(0, channel.find_first_not_of(" \t"));
+    channel.erase(channel.find_last_not_of(" \t") + 1);
+    
+    if (channel.empty())
+        return "";
+
+    if (channel.length() < 3)
+        return "";
+
+    if (channel.length() > 50)
+        return "";
+    
+    if (channel[0] != '#')
+        return "";
+    
+    if (channel.length() > 1 && isdigit(channel[1]))
+        return "";
+    
+    for (size_t i = 1; i < channel.length(); ++i) {
+        const char c = channel[i];
+        if (!isalnum(c) && c != '-' && c != '_' && c != '.') {
+            return "";
+        }
+    }
+    
+    if (channel.find(' ') != std::string::npos)
+        return "";
+    
+    if (channel.find(',') != std::string::npos)
+        return "";
+    
+    return channel;
+}
+
 /*
     Returns a bool indicating if the channel name is ok
 */
 
 bool Join::is_channel_valid(const std::string& channel) 
 {    
-    if (channel.empty() || channel.length() > 50)
-        return false;
-
-    if (channel[0] != '#')
-        return false;
-
-    if (channel.length() > 1 && isdigit(channel[1]))
-        return false;
-
-    for (size_t i = 1; i < channel.length(); ++i) {
-        const char c = channel[i];
-        if (!isalnum(c) && c != '-' && c != '_' && c != '.') {
-            return false;
-        }
-    }
-
-    if (channel.find(' ') != std::string::npos)
-        return false;
-
-    return true;
+    return !parse_channel_name(channel).empty();
 }

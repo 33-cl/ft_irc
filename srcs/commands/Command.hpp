@@ -64,6 +64,7 @@ class Join : public Command
         bool                                                can_join(Client& client, Channel& channel, const std::string& channel_name, const std::string& password);
         bool                                                is_in_channel(Client& client, Channel& channel);
         static bool                                         is_channel_valid(const std::string& channel);
+        static std::string                                  parse_channel_name(const std::string& input_channel);
         void                                                execute(Client& client, std::vector<std::string>& args, Server &serv);
 };
 
