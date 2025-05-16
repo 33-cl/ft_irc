@@ -54,19 +54,6 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
     }
 }
 
-// void Channel::renameMember(const std::string& oldNick, const std::string& newNick)
-// {
-//     for (std::vector<Client>::iterator it = clients.begin();
-//          it != clients.end(); ++it)
-//     {
-//         if (it->nickname == oldNick)
-//         {
-//             it->nickname = newNick;
-//             break;
-//         }
-//     }
-// }
-
 bool Nick::is_nickname_valid(std::string str)
 {
     if (str.length() == 0 || str.length() > 9)
