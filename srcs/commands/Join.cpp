@@ -152,7 +152,7 @@ std::string Join::parse_channel_name(const std::string& input_channel)
     if (channel.empty())
         return "";
 
-    if (channel.length() < 3)
+    if (channel.length() < 2)
         return "";
 
     if (channel.length() > 50)

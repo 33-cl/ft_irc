@@ -1,2 +1,3 @@
 script.sh
 slow_send.sh
+stress_irc.py
