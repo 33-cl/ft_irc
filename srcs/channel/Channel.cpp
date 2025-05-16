@@ -203,15 +203,26 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 					            errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, "MODE +l"));
 						else
 						{
-							int limit = atoi(modeParams[paramIndex].c_str());
-							if (limit <= 0 || limit > 10000)
-								errors.push_back(ERR_INVALIDUSERLIMIT(client.nickname));
-							else
-							{
-								usersLimit = limit;
-								modes['l'] = true;
+							const std::string& limitStr = modeParams[paramIndex];
+							for (size_t j = 0; j < limitStr.size(); ++j) {
+								if (!isdigit(limitStr[j])) {
+									errors.push_back(ERR_INVALIDUSERLIMIT(client.nickname));
+									++paramIndex;
+									break;
+								}
 							}
-							++paramIndex;
+
+							if (errors.empty()) {
+								int limit = atoi(limitStr.c_str());
+								if (limit <= 0 || limit > 10000)
+									errors.push_back(ERR_INVALIDUSERLIMIT(client.nickname));
+								else
+								{
+									usersLimit = limit;
+									modes['l'] = true;
+								}
+								++paramIndex;
+							}
 						}
 					}
 					else
@@ -229,12 +240,24 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 						else
 						{
 							std::string keyParam = modeParams[paramIndex];
-							if (keyParam.empty())
+							if (keyParam.empty() || keyParam[0] == ' ')
 								errors.push_back(ERR_EMPTYKEY(client.nickname));
 							else
 							{
-								password = keyParam;
-								modes['k'] = true;
+								bool valid = true;
+								for (size_t j = 0; j < keyParam.size(); ++j) {
+									if (keyParam[j] < 32 || keyParam[j] > 126) {
+										valid = false;
+										break;
+									}
+								}
+								
+								if (!valid) {
+									errors.push_back(ERR_EMPTYKEY(client.nickname));
+								} else {
+									password = keyParam;
+									modes['k'] = true;
+								}
 							}
 							++paramIndex;
 						}
