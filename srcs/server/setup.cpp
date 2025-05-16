@@ -39,7 +39,7 @@ Server::Server(int argc, char **argv)
         throw critical_error("bind() error");
 	}
 
-    if (listen(_fd, 5) == -1)
+    if (listen(_fd, 128) == -1)
 	{
 		close(_fd);
         throw critical_error("listen() error");
