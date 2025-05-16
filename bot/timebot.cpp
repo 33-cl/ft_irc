@@ -13,8 +13,9 @@ int TimeBot::getSockfd() const
 
 void sigint_handler(int)
 {
+	//When the socket is deactivated, recv() returns 0.
 	if (TimeBot::instance)
-	shutdown(TimeBot::instance->getSockfd(), SHUT_RDWR);//desactive le socket, recv revient avec 0
+		shutdown(TimeBot::instance->getSockfd(), SHUT_RDWR);
 	TimeBot::instance->stop();
 }
 
@@ -51,29 +52,28 @@ void TimeBot::initialize(int argc, char **argv)
 
 	_password = argv[3];
 
-	// creation du socket client
+	// create client socket
 	_sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_sockfd < 0)
 		throw std::runtime_error("socket() error");
 
 	TimeBot::instance = this;
-	// remplissage de sockaddr_in
+	// fullfiled sockaddr struct
 	struct sockaddr_in serv;
-	// memset(&serv, 0, sizeof(serv));
 	serv.sin_family = AF_INET;
 	serv.sin_port   = htons(_port);
 	serv.sin_addr.s_addr = inet_addr(_server_ip.c_str());
 	if (serv.sin_addr.s_addr == INADDR_NONE)
     	throw std::runtime_error("Invalid IPv4 address");
 
-	// connexion au serveur IRC
+	// connect to ircserv
 	if (connect(_sockfd, (struct sockaddr*)&serv, sizeof(serv)) < 0)
 	{
 		close(_sockfd);
 		throw std::runtime_error("connect() error");
 	}
 
-	// donnees d’enregistrement
+	//data to connect
 	_nick = "TimeBot";
 	_user = "TimeBot 0 * :Time Bot";
 
@@ -81,7 +81,6 @@ void TimeBot::initialize(int argc, char **argv)
 				<< _server_ip << ":" << _port << "\n";
 }
 
-// --- start, calque sur Server::start() mais mono-socket ---
 void TimeBot::start()
 {
 	write("PASS " + _password);
@@ -89,7 +88,6 @@ void TimeBot::start()
 	write("USER " + _user);
 
 	_running = true;
-	// 2) Boucle de lecture
 	char tmp[1024];
 	while (_running)
 	{
@@ -99,15 +97,11 @@ void TimeBot::start()
 			std::cout << "Disconnected from server\n";
 			break;
 		}
-		// on reconstitue dans _buffer
 		_buffer.append(tmp, n);
 
-		// on cherche toutes les lignes completes
+		// search for completed lines
 		std::vector<std::string> lines = split(_buffer, "\r\n");
-		// dernier element = fragment résiduel
 		_buffer = lines.back();
-
-		// chaque ligne complete to handle
 		for (size_t i = 0; i + 1 < lines.size(); ++i)
 			handle_line(lines[i]);
 	}
@@ -143,24 +137,20 @@ std::vector<std::string> TimeBot::split_white_spaces(const std::string &str)
 	std::vector<std::string> tokens;
 	size_t i = 0;
 
-	// 1) Si : present, skip it
 	if (i < str.size() && str[i] == ':')
 	{
 		while (i < str.size() && str[i] != ' ') ++i;
 		++i;
 	}
-
-	// 2) extraire jusqu'a trois tokens classiques
 	for (int count = 0; count < 2 && i < str.size(); ++count)
 	{
-		// sskip spaces
 		while (i < str.size() && std::isspace((unsigned char)str[i])) ++i;
 		size_t start = i;
 		while (i < str.size() && !std::isspace((unsigned char)str[i])) ++i;
 		tokens.push_back(str.substr(start, i - start));
 	}
 
-	// 3) le reste : trailing parameter
+	// handle trailing parameter
 	while (i < str.size() && std::isspace((unsigned char)str[i])) ++i;
 	if (i < str.size())
 	{
@@ -174,7 +164,7 @@ void TimeBot::handle_line(const std::string &line)
 {
 	std::cout << "<<< " << line << "\n";
 
-	// 1) Si la ligne commence par ":", on vire le prefixe ":nick!ident@host "
+	//  If the line begins with ":", strip the ":nick!ident@host " prefix
 	std::string rest = line;
 	if (!rest.empty() && rest[0] == ':')
 	{
@@ -184,11 +174,11 @@ void TimeBot::handle_line(const std::string &line)
 		rest = rest.substr(sp + 1);
 	}
 
-	// 2) Tokenisation en 3 tokens max + trailing
+	// Tokenization in 3 tokens max + trailing
 	std::vector<std::string> args = split_white_spaces(rest);
 	if (args.empty()) return;
 
-	// 4) PRIVMSG DM-only → !time
+	//PRIVMSG DM-only -> !time
 	if (args[0] == "PRIVMSG" && args.size() >= 3 && args[1] == _nick)
 	{
 		// args[2] = ":!time"
@@ -198,13 +188,11 @@ void TimeBot::handle_line(const std::string &line)
 
 		if (cmd == "time" || cmd == "!time")
 		{
-			// calcul de l'heure locale
 			time_t now = time(NULL);
 			char tbuf[9];
 			strftime(tbuf, sizeof(tbuf), "%H:%M:%S", localtime(&now));
 
-			// extraire l'expediteur du prefixe original
-			// (on pouvait le stocker avant, ou le reprendre ici)
+			// find expeditor to answer him
 			size_t excl = line.find('!');
 			std::string sender;
 			if (line.size() > 1 && line[0] == ':' && excl != std::string::npos)
