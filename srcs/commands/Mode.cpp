@@ -69,12 +69,15 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
         for (size_t i = 3; i < args.size(); ++i)
             modeParams.push_back(args[i]);
 	
-		channel.changeMode(modeChanges, modeParams, client, server);
-	
-		std::string modeBroadcast = ":" + client.get_mask() + " MODE " + target + " " + modeChanges;
-		for (std::vector<std::string>::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it)
-			modeBroadcast += " " + *it;
-		channel.broadcastEveryone(modeBroadcast, client);
+		// channel.changeMode(modeChanges, modeParams, client, server);
+		bool success = channel.changeMode(modeChanges, modeParams, client, server);
+		if (success)
+		{
+			std::string modeBroadcast = ":" + client.get_mask() + " MODE " + target + " " + modeChanges;
+			for (std::vector<std::string>::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it)
+				modeBroadcast += " " + *it;
+			channel.broadcastEveryone(modeBroadcast, client);
+		}
 	} 
 	else
 		throw recoverable_error(ERR_UMODEUNKNOWNFLAG(client.nickname));
