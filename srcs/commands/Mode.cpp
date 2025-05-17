@@ -73,7 +73,7 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
 		std::string applied = channel.getLastAppliedModes();  
 		if (!applied.empty())
 		{
-			std::string reply = ":" + client.get_mask() + " MODE " + target + " " + applied;
+			std::string reply = client.get_mask() + " MODE " + target + " " + applied;
 
 			const std::vector<std::string>& params = channel.getLastAppliedParams();
 			for (size_t i = 0; i < params.size(); ++i)

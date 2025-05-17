@@ -81,7 +81,7 @@ void Kick::execute(Client& client, std::vector<std::string>& args, Server& serve
 			continue;
 		}
 
-		std::string kickMessage = ":" + client.get_mask() + " KICK " + channelName + " " + targetNickname;
+		std::string kickMessage = client.get_mask() + " KICK " + channelName + " " + targetNickname;
 		if (!comment.empty())
 			kickMessage += " :" + comment;
 

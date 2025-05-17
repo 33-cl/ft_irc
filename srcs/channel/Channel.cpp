@@ -90,6 +90,8 @@ void Channel::addInvite(const Client& client)
 
 void Channel::addOperator(const Client& client)
 {
+	std::cout << "addops\n";
+
 	if (!isOperator(client))
 		operators.push_back(client);
 }
@@ -291,6 +293,7 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 
 		if (c == 'o')
 		{
+			std::cout << "ooooo\n";
 			if (paramIndex >= modeParams.size())
 				errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, adding ? "MODE +o" : "MODE -o"));
 			else
