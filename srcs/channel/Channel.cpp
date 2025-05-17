@@ -360,9 +360,7 @@ const std::vector<std::string>& Channel::getLastAppliedParams() const
 // }
 
 
-bool Channel::changeMode(const std::string &modeChanges,
-                         const std::vector<std::string>& modeParams,
-                         Client& client, Server& server)
+bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams, Client& client, Server& server)
 {
     bool adding = true;
     size_t paramIndex = 0;
@@ -475,7 +473,7 @@ bool Channel::changeMode(const std::string &modeChanges,
     while (paramIndex < modeParams.size())
     {
         errors.push_back(ERR_UNKNOWNMODE(
-            client.nickname,
+            client.nickname,  
             "Unexpected parameter: " + modeParams[paramIndex++]));
     }
 

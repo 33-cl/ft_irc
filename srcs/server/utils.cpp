@@ -413,15 +413,10 @@ void Server::remove_and_broadcast_list(const Client& client)
 /*
     Configure a socket to be non-blocking using fcntl
 */
+
 bool Server::set_non_blocking(int fd)
 {
-    int flags = fcntl(fd, F_GETFL, 0);
-    if (flags == -1)
+    if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
         return false;
-    
-    flags |= O_NONBLOCK;
-    if (fcntl(fd, F_SETFL, flags) == -1)
-        return false;
-    
     return true;
 }
