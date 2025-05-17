@@ -181,7 +181,7 @@ const std::vector<std::string>& Channel::getLastAppliedParams() const
 }
 
 
-bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams, Client& client, Server& server)
+bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams,Client& client, Server& server)
 {
     bool adding = true;
     size_t paramIndex = 0;

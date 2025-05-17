@@ -21,7 +21,7 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
         
         // Parse and validate the channel name
         std::string channel_name = parse_channel_name(raw_channel_name);
-        
+
         if (channel_name.empty())
         {
             client.write(ERR_BADCHANMASK(raw_channel_name));
@@ -47,7 +47,7 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
 
         // take channel's reference
         Channel& current_channel = server._channels[channel_name];
-        
+
         // throw join message for this channel
         std::string join_msg = client.get_mask() + "JOIN " + channel_name;
         current_channel.broadcastEveryone(join_msg, client);
