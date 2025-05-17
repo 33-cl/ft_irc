@@ -99,3 +99,4 @@ std::vector<std::string>	split_white_spaces(const std::string& str);
 std::string                 unsplit(const std::vector<std::string>& tab) ;
 bool                        check_command(std::string& input, const std::string& command);
 bool                        is_password_valid(const std::string& password);
+void                        print_spec(const std::string& str);

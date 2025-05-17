@@ -45,15 +45,17 @@ void Join::execute(Client& client, std::vector<std::string>& args, Server& serve
             server._channels[channel_name].add_client(client);
         }
 
-        // take channel's reference
         Channel& current_channel = server._channels[channel_name];
 
-        // throw join message for this channel
         std::string join_msg = client.get_mask() + "JOIN " + channel_name;
         current_channel.broadcastEveryone(join_msg, client);
         
-		//throw user list of this channel only to the client who just joined
 		server.send_user_list(client, current_channel);
+        
+        if (current_channel.topic.empty())
+            client.write(":" + server._name + " " + RPL_NOTOPIC(client.nickname, channel_name));
+        else
+            client.write(":" + server._name + " " + RPL_TOPIC(client.nickname, channel_name, current_channel.topic));
     }
 }
 

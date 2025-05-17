@@ -57,7 +57,7 @@ void Server::process_client_data(std::vector<pollfd> &fds, int client_index)
         Client& current_client = _clients[fds[client_index].fd];
         
         std::string current_data = current_client.get_buffer() + std::string(buffer);
-        
+
         bool is_complete = (current_data.size() > 0 && current_data[current_data.size() - 1] == '\n');
         
         if (is_complete)
@@ -66,21 +66,21 @@ void Server::process_client_data(std::vector<pollfd> &fds, int client_index)
             {
                 std::vector<std::string> commands = split_inputs(current_data, "\r\n");
                 
-                try
+                for (size_t i = 0; i < commands.size(); i++)
                 {
-                    for (size_t i = 0; i < commands.size(); i++)
+                    if (commands[i].size() >= 2 && commands[i].substr(commands[i].size() - 2) == "\r\n")
                     {
-                        if (commands[i].size() >= 2 && commands[i].substr(commands[i].size() - 2) == "\r\n")
+                        std::string cmd = commands[i].substr(0, commands[i].size() - 2);
+                        
+                        try
                         {
-                            std::string cmd = commands[i].substr(0, commands[i].size() - 2);
-                            std::cout << "command: " << cmd << std::endl;
                             process_input(cmd, current_client);
                         }
+                        catch(const recoverable_error& e)
+                        {
+                            current_client.send_msg(std::string(e.what()));
+                        }
                     }
-                }
-                catch(const recoverable_error& e)
-                {
-                    current_client.send_msg(std::string(e.what()));
                 }
             }
             
@@ -90,7 +90,6 @@ void Server::process_client_data(std::vector<pollfd> &fds, int client_index)
         {
             current_client.clear_buffer();
             current_client.append_to_buffer(current_data);
-            std::cout << "Storing incomplete data in buffer. Current buffer: " << current_client.get_buffer() << std::endl;
         }
     }
     else

@@ -55,6 +55,7 @@
 #define ERR_NOTANOPERATOR(client, nick)				("482 " + std::string(client) + " " + std::string(nick) + " :is not an operator")
 #define ERR_OPERATORNOTFOUND(client, nick)			("484 " + std::string(client) + " " + std::string(nick) + " :Operator not found")
 #define ERR_UMODEUNKNOWNFLAG(client)				("501 " + std::string(client) + " :User mode changes not implemented")
+#define ERR_NOSUCHNICK_DETAILED(client, nick)     ("401 " + std::string(client) + " " + std::string(nick) + " :No such nickname")
 
 
 class critical_error : public std::exception

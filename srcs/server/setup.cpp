@@ -78,7 +78,7 @@ void Server::start()
 
     while (_is_running)
     {
-        infos();
+        // infos();
 
         int nb_sockets = poll(sockets.data(), sockets.size(), -1);
         if (nb_sockets == -1)

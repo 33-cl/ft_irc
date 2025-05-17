@@ -22,7 +22,7 @@ Client& Server::find_client(const std::string& nickname)
         if (it->second.nickname == nickname)
             return (it->second);
     }
-    throw recoverable_error("Client not found");
+    throw recoverable_error(ERR_NOSUCHNICK_DETAILED("*", nickname));
 }
 
 /*
@@ -419,4 +419,28 @@ bool Server::set_non_blocking(int fd)
     if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
         return false;
     return true;
+}
+
+/*
+    Prints a string with special characters
+*/
+
+void print_spec(const std::string& str)
+{
+    for (size_t i = 0; i < str.length(); ++i)
+    {
+        char c = str[i];
+        switch (c)
+        {
+            case '\n': std::cout << "\\n"; break;
+            case '\r': std::cout << "\\r"; break;
+            case '\t': std::cout << "\\t"; break;
+            case '\v': std::cout << "\\v"; break;
+            case '\b': std::cout << "\\b"; break;
+            case '\f': std::cout << "\\f"; break;
+            case '\a': std::cout << "\\a"; break;
+            case '\\': std::cout << "\\\\"; break;
+            default: std::cout << c;
+        }
+    }
 }

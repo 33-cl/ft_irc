@@ -43,7 +43,7 @@ void    Client::send_msg(const std::string& str)
 void    Client::write(const std::string& str) 
 {
 	std::string message = str + "\r\n";
-	ssize_t bytes_sent = send(socket.fd, message.c_str(), message.length(), MSG_NOSIGNAL);
+	ssize_t bytes_sent = send(socket.fd, message.c_str(), message.length(), MSG_NOSIGNAL | MSG_DONTWAIT);
 	if (bytes_sent == -1)
 	{
 		std::cerr << "Error while sending data" << std::endl;
