@@ -68,36 +68,16 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
 		std::vector<std::string> modeParams;
         for (size_t i = 3; i < args.size(); ++i)
             modeParams.push_back(args[i]);
-	
-		// bool success = channel.changeMode(modeChanges, modeParams, client, server);
-		// if (success)
-		// {
-		// 	std::string modeBroadcast = ":" + client.get_mask() + " MODE " + target + " " + modeChanges;
-		// 	for (std::vector<std::string>::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it)
-		// 		modeBroadcast += " " + *it;
-		// 	channel.broadcastEveryone(modeBroadcast, client);
-		// }
+
 		channel.changeMode(modeChanges, modeParams, client, server);
-
-		// On envoie d’abord toutes les erreurs (c’est déjà fait DANS changeMode)
-
-		// Puis on regarde si le serveur a effectivement appliqué
-		// au moins un mode :
 		std::string applied = channel.getLastAppliedModes();  
-		// applied = ""   si rien n’a été appliqué
-		// applied = "+ik" si i et k ont été appliqués
-
 		if (!applied.empty())
 		{
-			std::string reply =
-				":" + client.get_mask()
-			+ " MODE " + target + " "
-			+ applied;
+			std::string reply = ":" + client.get_mask() + " MODE " + target + " " + applied;
 
 			const std::vector<std::string>& params = channel.getLastAppliedParams();
 			for (size_t i = 0; i < params.size(); ++i)
 				reply += " " + params[i];
-
 			channel.broadcastEveryone(reply, client);
 		}
 	}

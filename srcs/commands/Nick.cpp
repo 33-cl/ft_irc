@@ -6,6 +6,7 @@ Nick::~Nick() {}
 
 void Nick::execute(Client& client, std::vector<std::string>& args, Server& server)
 {
+	bool	alreadybroadcasted = false;
     if (client.status == UNREGISTERED)
         throw recoverable_error(ERR_NOTREGISTERED(client.nickname));
     
@@ -39,11 +40,12 @@ void Nick::execute(Client& client, std::vector<std::string>& args, Server& serve
             Channel& channel = it->second;
             if (channel.hasClient(client.socket.fd))
 			{
-                channel.broadcast(nick_change_msg, client);
+                channel.broadcastEveryone(nick_change_msg, client);
+				alreadybroadcasted = true;
 			}
         }
-        
-        client.write(nick_change_msg);
+		if (alreadybroadcasted == false)
+      		client.write(nick_change_msg);
     }
 
 

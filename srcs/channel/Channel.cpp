@@ -183,64 +183,63 @@ const std::vector<std::string>& Channel::getLastAppliedParams() const
 
 bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::string>& modeParams,Client& client, Server& server)
 {
-    bool adding = true;
-    size_t paramIndex = 0;
-    std::vector<std::string> errors;
+	bool adding = true;
+	size_t paramIndex = 0;
+	std::vector<std::string> errors;
+	std::string appliedModes;
+	std::vector<std::string> appliedParams;
 
-    std::string appliedModes;
-    std::vector<std::string> appliedParams;
+	for (size_t i = 0; i < modeChanges.size(); ++i)
+	{
+		char c = modeChanges[i];
 
-    for (size_t i = 0; i < modeChanges.size(); ++i)
-    {
-        char c = modeChanges[i];
-
-        if (c == '+' || c == '-')
-        {
-            adding = (c == '+');
-            appliedModes += c;
-            continue;
-        }
-        if (c == 'i' || c == 't')
-        {
-            modes[c] = adding;
-            appliedModes += c;
-            continue;
-        }
+		if (c == '+' || c == '-')
+		{
+			adding = (c == '+');
+			appliedModes += c;
+			continue;
+		}
+		if (c == 'i' || c == 't')
+		{
+			modes[c] = adding;
+			appliedModes += c;
+			continue;
+		}
 		if (c == 'l')
 		{
 			if (adding)
 			{
-                if (paramIndex >= modeParams.size())
-                {
-                    errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, "MODE +l"));
-                }
-                else
-                {
-                    const std::string limitStr = modeParams[paramIndex++];
-                    bool valid = true;
-                    for (size_t j = 0; j < limitStr.size(); ++j)
+				if (paramIndex >= modeParams.size())
+				{
+					errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, "MODE +l"));
+				}
+				else
+				{
+					const std::string limitStr = modeParams[paramIndex++];
+					bool valid = true;
+					for (size_t j = 0; j < limitStr.size(); ++j)
 					{
-                        if (!isdigit(limitStr[j]))
+						if (!isdigit(limitStr[j]))
 						{
 							valid = false;
 							break;
 						}
 					}
-                    if (!valid)
-                        errors.push_back(ERR_INVALIDUSERLIMIT(client.nickname));
-                    else
-                    {
-                        int limit = atoi(limitStr.c_str());
-                        if (limit <= 0 || limit > 10000)
-                            errors.push_back(ERR_INVALIDUSERLIMIT(client.nickname));
-                        else
-                        {
-                            modes['l'] = true;
-                            usersLimit = limit;
-                            appliedModes   += 'l';
-                            appliedParams.push_back(limitStr);
-                        }
-                    }
+					if (!valid)
+						errors.push_back(ERR_INVALIDUSERLIMIT(client.nickname));
+					else
+					{
+						int limit = atoi(limitStr.c_str());
+						if (limit <= 0 || limit > 10000)
+							errors.push_back(ERR_INVALIDUSERLIMIT(client.nickname));
+						else
+						{
+							modes['l'] = true;
+							usersLimit = limit;
+							appliedModes   += 'l';
+							appliedParams.push_back(limitStr);
+						}
+					}
 				}
 			}
 			else
@@ -290,59 +289,62 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 			continue;
 		}
 
-        if (c == 'o')
-        {
-            if (paramIndex >= modeParams.size())
-                errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, adding ? "MODE +o" : "MODE -o"));
-            else
-            {
-                const std::string nick = modeParams[paramIndex++];
-                bool found = false;
+		if (c == 'o')
+		{
+			if (paramIndex >= modeParams.size())
+				errors.push_back(ERR_NEEDMOREPARAMS(client.nickname, adding ? "MODE +o" : "MODE -o"));
+			else
+			{
+				const std::string nick = modeParams[paramIndex++];
+				bool found = false;
 
-                std::vector<Client>& list = (adding ? clients : operators);
-                for (std::vector<Client>::iterator it = list.begin(); it != list.end(); ++it)
-                {
-                    if (it->nickname == nick)
-                    {
-                        found = true;
-                        if (adding)
-                        {
-                            if (isOperator(*it))
-                                errors.push_back(ERR_ALREADYOP(client.nickname, nick));
-                            else
-                                addOperator(*it);
-                        }
-                        else
-                        {
-                            if (!isOperator(*it))
-                                errors.push_back(ERR_NOTANOPERATOR(client.nickname, nick));
-                            else
-                                removeOperator(*it);
-                        }
-                        break;
-                    }
-                }
-                if (!found)
-                    errors.push_back(ERR_NOSUCHNICK(client.nickname, nick));
-                else
-                {
-                    appliedModes   += 'o';
-                    appliedParams.push_back(nick);
-                }
-            }
-            continue;
-        }
-        errors.push_back(ERR_UNKNOWNMODE(client.nickname, std::string(1, c)));
-    }
+				std::vector<Client>& list = (adding ? clients : operators);
+				for (std::vector<Client>::iterator it = list.begin(); it != list.end(); ++it)
+				{
+					if (it->nickname == nick)
+					{
+						found = true;
+						if (adding)
+						{
+							if (isOperator(*it))
+								errors.push_back(ERR_ALREADYOP(client.nickname, nick));
+							else
+							{
+								addOperator(*it);
+								appliedModes   += 'o';
+								appliedParams.push_back(nick);
+							}
+						}
+						else
+						{
+							if (!isOperator(*it))
+								errors.push_back(ERR_NOTANOPERATOR(client.nickname, nick));
+							else
+							{
+								removeOperator(*it);
+								appliedModes   += 'o';
+                        		appliedParams.push_back(nick);
+							}
+						}
+						break;
+					}
+				}
+				if (!found)
+					errors.push_back(ERR_NOSUCHNICK(client.nickname, nick));
+			}
+			continue;
+		}
+		errors.push_back(ERR_UNKNOWNMODE(client.nickname, std::string(1, c)));
+	}
 
-    while (paramIndex < modeParams.size())
-        errors.push_back(ERR_UNKNOWNMODE(client.nickname, "Unexpected parameter: " + modeParams[paramIndex++]));
+	while (paramIndex < modeParams.size())
+		errors.push_back(ERR_UNKNOWNMODE(client.nickname, "Unexpected parameter: " + modeParams[paramIndex++]));
 
-    for (std::vector<std::string>::const_iterator eit = errors.begin(); eit != errors.end(); ++eit)
-        client.write(":" + server._name + " " + *eit);
+	for (std::vector<std::string>::const_iterator eit = errors.begin(); eit != errors.end(); ++eit)
+		client.write(":" + server._name + " " + *eit);
 
-    _lastAppliedModes  = appliedModes;
-    _lastAppliedParams = appliedParams;
+	_lastAppliedModes  = appliedModes;
+	_lastAppliedParams = appliedParams;
 
-    return errors.empty();
+	return errors.empty();
 }
