@@ -353,13 +353,15 @@ bool Channel::changeMode(const std::string &modeChanges, const std::vector<std::
 void Channel::renameClient(const std::string& oldNick,
 	const std::string& newNick)
 {
-// Membres
-for (size_t i = 0; i < clients.size(); ++i)
-if (clients[i].nickname == oldNick)
-clients[i].nickname = newNick;
+	for (size_t i = 0; i < clients.size(); ++i)
+	{
+		if (clients[i].nickname == oldNick)
+			clients[i].nickname = newNick;
+	}
 
-// Opérateurs
-for (size_t i = 0; i < operators.size(); ++i)
-if (operators[i].nickname == oldNick)
-operators[i].nickname = newNick;
+	for (size_t i = 0; i < operators.size(); ++i)
+	{
+		if (operators[i].nickname == oldNick)
+			operators[i].nickname = newNick;
+	}
 }
