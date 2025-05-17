@@ -69,15 +69,24 @@ void 	Mode::execute(Client& client, std::vector<std::string>& args, Server& serv
         for (size_t i = 3; i < args.size(); ++i)
             modeParams.push_back(args[i]);
 	
+		// bool success = channel.changeMode(modeChanges, modeParams, client, server);
+		// if (success)
+		// {
+		// 	std::string modeBroadcast = ":" + client.get_mask() + " MODE " + target + " " + modeChanges;
+		// 	for (std::vector<std::string>::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it)
+		// 		modeBroadcast += " " + *it;
+		// 	channel.broadcastEveryone(modeBroadcast, client);
+		// }
 		bool success = channel.changeMode(modeChanges, modeParams, client, server);
 		if (success)
 		{
-			std::string modeBroadcast = ":" + client.get_mask() + " MODE " + target + " " + modeChanges;
-			for (std::vector<std::string>::const_iterator it = modeParams.begin(); it != modeParams.end(); ++it)
-				modeBroadcast += " " + *it;
-			channel.broadcastEveryone(modeBroadcast, client);
+			std::string reply = ":" + client.get_mask() + " MODE " + target + " " + channel.getLastAppliedModes();
+			const std::vector<std::string>& params = channel.getLastAppliedParams();
+			for (size_t i = 0; i < params.size(); ++i)
+				reply += " " + params[i];
+			channel.broadcastEveryone(reply, client);
 		}
-	} 
+	}
 	else
 		throw recoverable_error(ERR_UMODEUNKNOWNFLAG(client.nickname));
 }

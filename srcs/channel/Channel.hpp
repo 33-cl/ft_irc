@@ -26,6 +26,8 @@ class Channel
 		int						usersLimit;
 		std::string				modesStr;
 		std::string				password;
+		std::string				_lastAppliedModes;
+    	std::vector<std::string> _lastAppliedParams;
 
 
     public:
@@ -41,6 +43,8 @@ class Channel
 		void	addOperator(const Client& client);
 		void	removeOperator(const Client& client);
 		bool	has_operator() const;
+		const std::string&  getLastAppliedModes()  const;
+   		const std::vector<std::string>& getLastAppliedParams() const;
 
 		bool			isOperator(const Client& client) const;
 		bool			isInvited(const Client& client) const;

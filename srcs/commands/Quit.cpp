@@ -16,10 +16,8 @@ void   Quit::execute(Client& client, std::vector<std::string>& args, Server& ser
 
 	std::string message = client.get_mask() + "QUIT :" + quitMessage;
 
-	// Utiliser la nouvelle fonction qui combine la suppression et la diffusion des listes
 	server.remove_and_broadcast_list(client);
 	
-	// Garder le client_remove qui gère la deconnexion du client
 	server.remove_client(client, message);
 
 	throw quit_server("QUIT command called");
