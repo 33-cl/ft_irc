@@ -35,6 +35,8 @@ class Channel
         Channel(std::string name, const Client& client);
         ~Channel();
 
+		void renameClient(const std::string& oldNick, const std::string& newNick);
+
         void    add_client(const Client& new_client);
 		bool	hasClient(int fd) const;
 		void	removeClient(int fd);
