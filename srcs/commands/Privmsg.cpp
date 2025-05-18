@@ -106,8 +106,8 @@ bool Privmsg::handleBot(const std::vector<std::string>& args, Client& client, Se
         const char* names[3] = { "rock", "paper", "scissors" };
         int result = (3 + user - bot) % 3;
         std::string outcome;
-        if
-			(result == 0) outcome = "It's a tie!";
+        if (result == 0)
+			outcome = "It's a tie!";
         else if (result == 1)
 			outcome = "You win!";
         else
