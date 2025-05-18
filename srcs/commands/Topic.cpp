@@ -35,6 +35,7 @@ void 	Topic::execute(Client& client, std::vector<std::string>& args, Server& ser
 			client.write(":" + server._name + " " + RPL_TOPIC(client.nickname, channelName, channel.topic));
 		return;
 	}
+	
 	if (channel.modes['t'] && !channel.isOperator(client))
 		throw recoverable_error(ERR_NOTCHANNELOP(client.nickname, channelName));
 	channel.topic = topicMsg;

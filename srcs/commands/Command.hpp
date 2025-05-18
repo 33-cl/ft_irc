@@ -75,6 +75,10 @@ class Privmsg : public Command
         ~Privmsg();
 
         void    execute(Client& client, std::vector<std::string>& args, Server &serv);
+	#ifdef BONUS
+	private:
+		bool	handleBot(const std::vector<std::string>& args, Client& client, Server& server);
+	#endif
 };
 
 class Mode : public Command

@@ -92,12 +92,10 @@ void Kick::execute(Client& client, std::vector<std::string>& args, Server& serve
 		// delete client on canal
 		channel.removeClient(targetFd);
 		channel.removeInvite(targetClient);
+		channel.removeOperator(targetClient);
 		
 		// throw updated list to canal members
-		for (std::vector<Client>::iterator member_it = channel.clients.begin();
-			 member_it != channel.clients.end(); ++member_it) {
+		for (std::vector<Client>::iterator member_it = channel.clients.begin(); member_it != channel.clients.end(); ++member_it)
 			server.send_user_list(*member_it, channel);
-		}
-
 	}
 }
