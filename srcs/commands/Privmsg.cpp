@@ -71,57 +71,58 @@ namespace
 
 bool Privmsg::handleBot(const std::vector<std::string>& args, Client& client, Server& server)
 {
-    const std::string&	target  = args[1];
-    std::string			message = args[2].size() > 0 ? args[2].substr(1) : "";
+	const std::string&	target  = args[1];
+	std::string			message = args[2].size() > 0 ? args[2].substr(1) : "";
 
-    if (target != "Bot")
-        return false;
-    std::string dest = client.nickname;
+	if (target != "Bot")
+		return false;
+	std::string dest = client.nickname;
 
-    //!time
-    if (message == "time" || message == "!time")
-    {
-        time_t now = std::time(NULL);
-        char tbuf[9];
-        std::strftime(tbuf, sizeof(tbuf), "%H:%M:%S", std::localtime(&now));
+	//!time
+	if (message == "time" || message == "!time")
+	{
+		time_t now = std::time(NULL);
+		char tbuf[9];
+		std::strftime(tbuf, sizeof(tbuf), "%H:%M:%S", std::localtime(&now));
 
-        std::string reply = ":Bot!" + server._name + " PRIVMSG " + dest + " :It's " + tbuf;
-        client.write(reply);
-        return true;
-    }
+		std::string reply = ":Bot!" + server._name + " PRIVMSG " + dest + " :It's " + tbuf;
+		client.write(reply);
+		return true;
+	}
 
-    //!rps rock|paper|scissors
-    const std::string cmd = "!rps ";
-    if (message.size() > cmd.size() && message.compare(0, cmd.size(), cmd) == 0)
-    {
-        std::string choice = message.substr(cmd.size());
-        int user = map_choice(choice);
-        if (user == INVALID)
-        {
-            client.write(":Bot!" + server._name + " PRIVMSG " + dest + " :Usage: !rps rock|paper|scissors");
-            return true;
-        }
+	//!rps rock|paper|scissors
+	const std::string cmd = "!rps ";
+	if (message.size() > cmd.size() && message.compare(0, cmd.size(), cmd) == 0)
+	{
+		std::string choice = message.substr(cmd.size());
+		int user = map_choice(choice);
+		if (user == INVALID)
+		{
+			client.write(":Bot!" + server._name + " PRIVMSG " + dest + " :Usage: !rps rock|paper|scissors");
+			return true;
+		}
 
-        int bot = std::rand() % 3;
-        const char* names[3] = { "rock", "paper", "scissors" };
-        int result = (3 + user - bot) % 3;
-        std::string outcome;
-        if (result == 0)
+		int bot = std::rand() % 3;
+		const char* names[3] = { "rock", "paper", "scissors" };
+		int result = (3 + user - bot) % 3;
+		std::string outcome;
+		
+		if (result == 0)
 			outcome = "It's a tie!";
-        else if (result == 1)
+		else if (result == 1)
 			outcome = "You win!";
-        else
+		else
 			outcome = "I win!";
 
-        std::string reply = ":Bot!" + server._name + " PRIVMSG " + dest + " :You played " + names[user] + ", I played " + names[bot] + " — " + outcome;
-        client.write(reply);
-        return true;
-    }
+		std::string reply = ":Bot!" + server._name + " PRIVMSG " + dest + " :You played " + names[user] + ", I played " + names[bot] + " — " + outcome;
+		client.write(reply);
+		return true;
+	}
 
-    //unknown command
-    std::string notice = ":Bot!" + server._name + " NOTICE " + dest + " :Unknown command. Use !time or !rps.";
-    
+	//unknown command
+	std::string notice = ":Bot!" + server._name + " NOTICE " + dest + " :Unknown command. Use !time or !rps.";
+
 	client.write(notice);
-    return true;
+	return true;
 }
 #endif
